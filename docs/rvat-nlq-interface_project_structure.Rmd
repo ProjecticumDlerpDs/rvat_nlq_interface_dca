@@ -90,24 +90,32 @@ rvat-nlq-interface/
     │   └── greeting.md                  # UI onboarding content /exteded greeting/ instructions
     │
     ├── scripts/
-    │   ├── 10_renv_setup.R              # install/load dependencies       
-    │   ├── 20_run_app.R                 # developer convenience script
-    │   ├── 30_process_logs.R            # clean + transform logs
-    │   └── 40_evaluate.R                # EM / EX / VES evaluation
+    │   ├── 00_renv_setup.R              # install/load dependencies
+    |   ├── 10_data_preparation.R        # sets full rvat-db or varInfo_synthetic 
+    |   ├── 20_run_triage_pipeline.R     # script that loops and dumps the files into data/triage/
+    │   ├── 30_run_app.R                 # developer convenience script
+    │   ├── 40_process_logs.R            # clean + transform logs
+    │   └── 50_evaluate.R                # EM / EX / VES evaluation
     │
     ├── data/
-    │   ├── raw/                        # log_&lt;model&gt;_&lt;date&gt;.rds
-    │   ├── processed/                  # converted to .csv for data/evaluation and analysis/ 
+    │   ├── triage/                            # Stored raw/processed triage runs here
+    │   |    ├── triage_raw_metrics.csv        # the direct data table with eval_count, durations, etc.
+    │   |    └── triage_decision_matrix.csv    # Simple 2-column table: [model_name, status (PASS/FAIL)]
+    |   ├── raw/                               # log_&lt;model&gt;_&lt;date&gt;.rds
+    │   ├── processed/                         # converted to .csv for data/evaluation and analysis/ 
     │   └── evaluation/                 
-    │       └── golden_dataset.csv      # Benchmark NLQ/SQL queries/answers to compare with LLM's output 
+    │       └── golden_dataset.csv             # Benchmark NLQ/SQL queries/answers to compare with LLM's output 
     │
     ├── analysis/
-    │   ├── exploratory.Rmd
-    │   ├── evaluation.Rmd
+    │   ├── 00_triage_filter.Rmd               #Generates the pass/fail triage chapter & charts
+    |   ├── 01_exploratory.Rmd
+    │   ├── 02_evaluation.Rmd
     │   └── figures/
+    |       ├── triage_latency_comparison.png  #Visual distribution of tokens/sec vs duration
+    |       └── evaluation_accuracy.png
     │
     ├── tests/
-    │   └── test_sql_generation.R      #Includes functional checks used during development
+    │   └── checks_troubleshooting_scripts.R      #Includes functional checks used during development
     │
     ├── docs/
     │   ├── methodology.md
