@@ -40,7 +40,11 @@ vignettes/*.pdf
 .Renviron
 
 # pkgdown site
-docs/
+#docs/
+docs/renv_changes.md
+docs/renv_changes.html
+docs/renv_changes_files/
+docs/renv_changes.preview.html
 
 # pkgdown site - manual entry
 demo/

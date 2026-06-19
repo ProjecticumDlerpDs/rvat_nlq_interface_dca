@@ -1,0 +1,245 @@
+---
+title: "RVAT NLQ Interface Project Structure"
+author: "Diógenes Cruz de Arcelino"
+date: "`r Sys.Date()`"
+output:
+  # HTML output (primary deliverable)
+  html_document:
+    toc: true            # enable table of contents
+    toc_depth: 3         # include up to level-3 headers
+    theme: cosmo         # Bootstrap theme for styling
+    highlight: tango     # syntax highlighting style
+
+  # Word output (for stakeholders / reporting)
+  word_document:
+    toc: true
+    toc_depth: 3
+
+  # PDF output (for archival / formal docs)
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    
+---
+
+<style>
+.box {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+.tree {
+  font-family: "Courier New", monospace;
+  white-space: pre;
+  background-color: #f4f6f8;
+
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+
+  font-size: 0.95em;
+  line-height: 1.4;
+
+  overflow-x: auto;   /* Enables horizontal scrolling */
+  display: block;
+}
+
+/* Must be OUTSIDE .tree */
+.tree::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tree::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
+}
+</style>
+
+
+# 📘 Overview
+
+<div class="box">
+This repository is organized to support a reproducible, maintainable, and scalable Natural Language Query (NLQ) interface for RVAT data. The structure separates core logic, application code, data pipelines, and analysis.
+</div>
+
+# 🗂️ Project Structure
+
+<div class="tree"><pre>
+rvat-nlq-interface/
+└── rvat-nlq-interface/
+    │
+    ├── README.md
+    ├── LICENSE
+    ├── .gitignore
+    ├── renv.lock                        # reproducibility
+    ├── .Rprofile                        # auto-load renv
+    │
+    ├── R/
+    │   ├── 01_db_connection.R           # database connection
+    │   ├── 02_ollama_config.R           # Ollama + system prompt
+    │   ├── 03_sql_pipeline.R            # NL → SQL → DB → result
+    │   ├── 04_logging.R                 # logging + timing (VES)
+    │   ├── 05_shiny_ui.R                # Shiny UI
+    │   └── 06_shiny_server.R            # Shiny server
+    │
+    ├── app/
+    │   ├── rvat_nlq_app.R               # entry point (Shiny wrapper)
+    │   └── greeting.md                  # UI onboarding content /exteded greeting/ instructions
+    │
+    ├── scripts/
+    │   ├── 10_renv_setup.R              # install/load dependencies       
+    │   ├── 20_run_app.R                 # developer convenience script
+    │   ├── 30_process_logs.R            # clean + transform logs
+    │   └── 40_evaluate.R                # EM / EX / VES evaluation
+    │
+    ├── data/
+    │   ├── raw/                        # log_&lt;model&gt;_&lt;date&gt;.rds
+    │   ├── processed/                  # converted to .csv for data/evaluation and analysis/ 
+    │   └── evaluation/                 
+    │       └── golden_dataset.csv      # Benchmark NLQ/SQL queries/answers to compare with LLM's output 
+    │
+    ├── analysis/
+    │   ├── exploratory.Rmd
+    │   ├── evaluation.Rmd
+    │   └── figures/
+    │
+    ├── tests/
+    │   └── test_sql_generation.R      #Includes functional checks used during development
+    │
+    ├── docs/
+    │   ├── methodology.md
+    │   └── architecture.md
+</pre></div>
+
+
+
+# 🔍 Components
+
+<details open>
+<summary><b>⚙️ Core Logic (R/)</b></summary>
+
+<div class="box">
+
+- Database connection (`01_db_connection.R`)
+- Ollama + system prompt (`02_ollama_config.R`)
+- Pipeline NL → SQL → DB → result (`03_sql_pipeline.R`)
+- Output logging + timing (VES) (`04_logging.R`)
+- Shiny UI (`05_shiny_ui.R`)
+- Shiny server (`06_shiny_server.R`)
+</div>
+</details>
+
+<details>
+<summary><b>🖥️ Application (app/)</b></summary>
+
+<div class="box">
+
+- `rvat_nlq_app.R`: Shiny-based NL → SQL interface         
+- `greeting.md`: UI onboarding content  
+
+</div>
+</details>
+
+<details>
+<summary><b>🔄 Pipelines (scripts/)</b></summary>
+
+<div class="box">
+
+- `10_setup.R`: Environment setup  
+- `20_run_app.R`: Developer convenience script  
+- `30_process_logs.R`: Log processing (clean + transform logs) 
+- `40_evaluate.R`: Evaluation pipeline (EM / EX / VES evaluation)  
+
+**Exact Match (EM):**
+Measured as whether the generated SQL query exactly matches the predefined golden (reference) SQL query.
+
+**Execution Match (EX):**  
+Measured as whether the result of executing the generated SQL query is identical to the result of executing the corresponding golden SQL query.
+
+**Latency (VES):**  
+Measured as total execution time from user query submission to database result return.
+
+</div>
+</details>
+
+
+<details>
+<summary><b>💾 Data Layer (data/)</b></summary>
+
+<div class="box">
+
+**Structure:**
+
+- `raw/` — raw outputs (`log_<model>_<date>.rds`)
+- `processed/` — cleaned and exported data (.csv)
+- `evaluation/` — golden dataset and evaluation outputs
+
+**Experiment Tracking:**
+
+Each experimental run is identified by:
+
+- `model` — the LLM used (e.g., qwen2.5-coder)
+- `run_id` — unique identifier per run
+
+Logs are saved per run to enable reproducibility and model comparison.
+
+</div>
+</details>
+
+
+<details>
+<summary><b>📊 Analysis (analysis/)</b></summary>
+
+<div class="box">
+
+- Contains exploratory and evaluation reports
+- Operates on processed logs (.csv derived from .rds)
+- Produces visualisations and summaries for:
+  - Exact Match (EM)
+  - Execution Match (EX)
+  - Latency (VES)
+
+</div>
+</details>
+
+<details>
+<summary><b>✅ Testing (tests/)</b></summary>
+
+<div class="box">
+
+- Verifies NL → SQL → DB pipeline behavior
+- Includes functional checks used during development (demo validation steps)
+
+
+**Example test (future):**
+
+```r
+testthat::expect_true(
+  grepl("SELECT", generate_sql_ollama("show rows"))
+)
+
+</div>
+</details>
+
+<details>
+<summary><b>📚 Documentation (docs/)</b></summary>
+
+<div class="box">
+
+- Methodology  
+- Architecture design  
+
+</div>
+</details>
+
+# 🔁 Reproducibility
+
+<div class="box">
+
+Restore the environment:
+
+```r
+renv::restore()
