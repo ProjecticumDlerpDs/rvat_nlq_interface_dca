@@ -11,7 +11,7 @@
 
 <meta name="author" content="Diógenes Cruz de Arcelino" />
 
-<meta name="date" content="2026-06-19" />
+<meta name="date" content="2026-06-20" />
 
 <title>RVAT NLQ Interface Project Structure</title>
 
@@ -341,7 +341,7 @@ display: none;
 
 <h1 class="title toc-ignore">RVAT NLQ Interface Project Structure</h1>
 <h4 class="author">Diógenes Cruz de Arcelino</h4>
-<h4 class="date">2026-06-19</h4>
+<h4 class="date">2026-06-20</h4>
 
 </div>
 
@@ -420,12 +420,14 @@ rvat-nlq-interface/
     │   └── greeting.md                  # UI onboarding content /exteded greeting/ instructions
     │
     ├── scripts/
-    │   ├── 00_renv_setup.R              # install/load dependencies
-    |   ├── 10_data_preparation.R        # sets full rvat-db or varInfo_synthetic 
-    |   ├── 20_run_triage_pipeline.R     # script that loops and dumps the files into data/triage/
-    │   ├── 30_run_app.R                 # developer convenience script
-    │   ├── 40_process_logs.R            # clean + transform logs
-    │   └── 50_evaluate.R                # EM / EX / VES evaluation
+    │   ├── 00_renv_setup.R                # install/load dependencies
+    |   ├── 10_data_preparation.R          # sets full rvat-db or varInfo_synthetic 
+    |   ├── 20_select_model_interactive.R  #
+    |   ├── 30_run_triage_llm.R            # script that loops and dumps the files into data/triage/
+    │   ├── 31_run_triage_executor.R
+    |   ├── 40_run_app.R                   # developer convenience script
+    │   ├── 50_process_logs.R              # clean + transform logs
+    │   └── 60_evaluate.R                  # EM / EX / VES evaluation
     │
     ├── data/
     │   ├── triage/                            # Stored raw/processed triage runs here
@@ -445,7 +447,7 @@ rvat-nlq-interface/
     |       └── evaluation_accuracy.png
     │
     ├── tests/
-    │   └── checks_troubleshooting_scripts.R      #Includes functional checks used during development
+    │   └── 100_checks_db_connection.R        #
     │
     ├── docs/
     │   ├── methodology.md

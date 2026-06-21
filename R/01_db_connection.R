@@ -27,18 +27,42 @@ library(rvatData)
 # "synthetic" (DEFAULT)
 #   - creates/uses a smaller, augmented dataset
 #   - faster and more stable for NL→SQL queries
+# 
 #
-# "multi"
-#   - uses the full database (varInfo, var, pheno)
-#   - allows joins and more complex queries
+# "full_gdb"
+#   - uses the full RVAT geodatabase schema
+#   - includes all tables available in the database (e.g. varInfo, var, pheno, anno, meta, dosage, etc.)
+#   - allows complex queries and joins across multiple tables
+#   - LLM prompting focuses on core tables (varInfo, var, pheno) but is not restricted to them
 #
-DB_MODE <- "synthetic"
+#
+# ------------------------------------------------------------
+# DEFAULT MODE (CHANGE FOR PRODUCTION)
+# ------------------------------------------------------------
 
-# Optional override via environment variable:
-# Sys.setenv(RVAT_DB_MODE = "multi")
+# Development default:
+DB_MODE_DEFAULT <- "synthetic"
 
+# 👉 For production, switch to:
+# DB_MODE_DEFAULT <- "full_gdb"
+
+# ------------------------------------------------------------
+# RESOLVE DB MODE
+# ------------------------------------------------------------
+
+# 1. Start with default
+DB_MODE <- DB_MODE_DEFAULT
+
+# 2. Override via environment variable (if set)
 env_mode <- Sys.getenv("RVAT_DB_MODE", unset = NA)
-if (!is.na(env_mode)) DB_MODE <- tolower(env_mode)
+
+if (!is.na(env_mode) && nzchar(env_mode)) {
+  DB_MODE <- tolower(env_mode)
+}
+
+# 3. LOG RESOLVED MODE
+cat("✅ DB_MODE resolved to:", DB_MODE, "\n")
+
 
 # ------------------------------------------------------------
 # CONNECT TO DATABASE
@@ -82,14 +106,14 @@ get_active_context <- function() {
     ))
   }
   
-  if (DB_MODE == "multi") {
+  if (DB_MODE == "full_gdb") {
     return(list(
       restriction = FALSE,
       tables = DBI::dbListTables(con)
     ))
   }
   
-  stop("Invalid DB_MODE")
+  stop("Invalid DB_MODE. Use 'synthetic' or 'full_gdb'")
 }
 
 # ------------------------------------------------------------
@@ -112,7 +136,7 @@ create_active_view <- function() {
     ))
     
   } else {
-    message("Multi mode: using full database schema")
+    message("full_gdb mode: using full database schema")
   }
 }
 

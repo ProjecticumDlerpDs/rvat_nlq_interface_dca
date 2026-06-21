@@ -20,7 +20,7 @@
 #   - Creates 'varInfo_synthetic' if it does not exist
 #   - Based on R-based augmentation of 'varInfo'
 #
-# "multi"
+# "full_gdb"
 #   - Uses full database as-is
 #   - No modifications performed
 #
@@ -31,8 +31,8 @@ prepare_database <- function(con, mode = "synthetic") {
   # ----------------------------------------------------------
   # VALIDATION
   # ----------------------------------------------------------
-  if (!mode %in% c("synthetic", "multi")) {
-    stop("Invalid mode. Must be 'synthetic' or 'multi'.")
+  if (!mode %in% c("synthetic", "full_gdb")) {
+    stop("Invalid mode. Must be 'synthetic' or 'full_gdb'.")
   }
   
   message("Preparing database (mode = ", mode, ")")
@@ -85,9 +85,9 @@ prepare_database <- function(con, mode = "synthetic") {
   }
   
   # ----------------------------------------------------------
-  # MULTI MODE → NO MODIFICATIONS
+  # FULL_GDB MODE → NO MODIFICATIONS
   # ----------------------------------------------------------
-  if (mode == "multi") {
+  if (mode == "full_gdb") {
     message("✅ Full database mode — no preparation required")
   }
   

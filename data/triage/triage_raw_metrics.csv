@@ -1,0 +1,88 @@
+"model","query","table","prompt_tokens","generated_tokens","eval_duration_sec","total_duration_sec","tokens_per_sec","time_total_sec","status","sql","run_id","run_date"
+"qwen3:8b","Select number of variants in NEK1","varInfo_synthetic",136,266,30.246655273,46.178122056,8.79436081772148,46.2296407222748,"PASS","SELECT COUNT(VAR_id) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",1,"20260620"
+"qwen3:8b","What is the variant with the highest allele frequency?","varInfo_synthetic",138,371,42.595168279,43.40613918,8.70990807149618,43.4291517734528,"PASS","SELECT * FROM varInfo_synthetic WHERE AF = (SELECT MAX(AF) FROM varInfo_synthetic);",1,"20260620"
+"qwen3:8b","Select number of variants in NEK1","varInfo_synthetic",136,247,28.048049697,28.696384445,8.80631639876262,28.7102835178375,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",2,"20260620"
+"qwen3:8b","What is the variant with the highest allele frequency?","varInfo_synthetic",138,392,45.187387623,46.069331683,8.67498699571814,46.0835983753204,"PASS","SELECT * FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1;",2,"20260620"
+"qwen3:8b","Select number of variants in NEK1","varInfo_synthetic",136,246,27.891923458,28.590667583,8.81975746027089,28.608565568924,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",3,"20260620"
+"qwen3:8b","What is the variant with the highest allele frequency?","varInfo_synthetic",138,359,41.352189303,42.163636295,8.68152342236341,42.1841466426849,"PASS","SELECT VAR_id, AF FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1;",3,"20260620"
+"qwen3:8b","Select number of variants in NEK1","varInfo_synthetic",136,301,34.528837711,35.240556216,8.71735105940473,35.2539856433868,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",4,"20260620"
+"qwen3:8b","What is the variant with the highest allele frequency?","varInfo_synthetic",138,764,89.856969343,91.004075376,8.50240115581549,91.0172355175018,"PASS","SELECT * FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1;",4,"20260620"
+"qwen3:8b","Select number of variants in NEK1","varInfo_synthetic",136,354,40.933723148,41.682830001,8.64812611157009,41.6956551074982,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",5,"20260620"
+"qwen3:8b","What is the variant with the highest allele frequency?","varInfo_synthetic",138,337,38.890184931,39.698160124,8.66542549483666,39.7129864692688,"PASS","SELECT * FROM varInfo_synthetic WHERE AF = (SELECT MAX(AF) FROM varInfo_synthetic);",5,"20260620"
+"qwen2.5-coder:latest","Select number of variants in NEK1","varInfo_synthetic",155,22,1.80563147,8.882659638,12.1841031049376,8.89946007728577,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",1,"20260620"
+"qwen2.5-coder:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",157,23,1.89819983,2.451808633,12.1167432619568,2.46315455436707,"PASS","SELECT VAR_id FROM varInfo_synthetic WHERE AF = (SELECT MAX(AF) FROM varInfo_synthetic)",1,"20260620"
+"qwen2.5-coder:latest","Select number of variants in NEK1","varInfo_synthetic",155,22,1.807721577,2.303274591,12.1700157147596,2.31447649002075,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",2,"20260620"
+"qwen2.5-coder:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",157,16,1.331269169,1.843205155,12.0186062838206,1.8544397354126,"PASS","SELECT VAR_id FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1",2,"20260620"
+"qwen2.5-coder:latest","Select number of variants in NEK1","varInfo_synthetic",155,22,1.787763718,2.281476172,12.3058767657573,2.29275393486023,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",3,"20260620"
+"qwen2.5-coder:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",157,15,1.191721312,1.702839796,12.5868354026717,1.71389079093933,"PASS","SELECT * FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1",3,"20260620"
+"qwen2.5-coder:latest","Select number of variants in NEK1","varInfo_synthetic",155,22,1.80902133,2.297646781,12.16127175239,2.30875611305237,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",4,"20260620"
+"qwen2.5-coder:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",157,23,1.877723017,2.411438742,12.2488779185051,2.42245173454285,"PASS","SELECT VAR_id FROM varInfo_synthetic WHERE AF = (SELECT MAX(AF) FROM varInfo_synthetic);",4,"20260620"
+"qwen2.5-coder:latest","Select number of variants in NEK1","varInfo_synthetic",155,22,1.905691312,2.409099537,11.5443670553922,2.42017006874084,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",5,"20260620"
+"qwen2.5-coder:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",157,15,1.194141068,1.700711053,12.5613299818276,1.71163702011108,"PASS","SELECT * FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1",5,"20260620"
+"mistral:latest","Select number of variants in NEK1","varInfo_synthetic",157,75,8.638339648,15.359881806,8.68222402176145,15.3707141876221,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';
+
+This query will return the count of rows (number of variants) for the gene named 'NEK1' from the table `varInfo_synthetic`.",1,"20260620"
+"mistral:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",159,86,9.985263786,10.369247657,8.61269184701737,10.3799681663513,"PASS","SELECT statement to find the variant with the highest allele frequency (AF):
+
+
+SELECT VAR_id, AF
+FROM varInfo_synthetic
+ORDER BY AF DESC
+LIMIT 1;
+
+
+This query will return the variant ID and its corresponding allele frequency in descending order and select only one row with the highest value.",1,"20260620"
+"mistral:latest","Select number of variants in NEK1","varInfo_synthetic",157,81,9.374856252,9.72549345,8.64013248018813,9.73622822761536,"PASS","SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';
+
+This query selects the count of rows (number of variants) where the gene_name column is equal to 'NEK1'.",2,"20260620"
+"mistral:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",159,104,12.068444544,12.476183653,8.61751484384167,12.4870638847351,"PASS","SELECT statement to find the variant with the highest allele frequency (AF) among all records in the table 'varInfo_synthetic':
+
+
+SELECT * FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1;
+
+
+This query orders the results by allele frequency (AF) in descending order and returns the first (top) result, which should be the variant with the highest allele frequency.",2,"20260620"
+"mistral:latest","Select number of variants in NEK1","varInfo_synthetic",157,89,10.317359081,10.668903485,8.62623848809319,10.6796040534973,"PASS","SELECT statement you requested:
+
+
+SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';
+
+
+This statement will return the count of rows (i.e., number of variants) in the `varInfo_synthetic` table where the `gene_name` column equals 'NEK1'.",3,"20260620"
+"mistral:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",159,120,13.976258105,14.396828319,8.58598911800792,14.4080231189728,"PASS","SELECT statement to find the variant with the highest allele frequency (AF):
+
+
+SELECT VAR_id, AF
+FROM varInfo_synthetic
+ORDER BY AF DESC
+LIMIT 1;
+
+
+This statement will return the ID of the variant with the highest allele frequency and its corresponding allele frequency value. The ORDER BY clause sorts the results in descending order based on the AF column, and LIMIT 1 selects only the first row, which is the one with the highest AF.",3,"20260620"
+"mistral:latest","Select number of variants in NEK1","varInfo_synthetic",157,81,9.414974951,9.768896475,8.60331550764208,9.77987790107727,"PASS","select the count (number) of variants in the 'NEK1' gene, you can use the following SQL query:
+
+
+SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';
+
+This will return the total number of rows where `gene_name` equals 'NEK1'.",4,"20260620"
+"mistral:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",159,114,13.315182619,13.727452547,8.56165501157517,13.7386908531189,"PASS","SELECT VAR_id, AF
+FROM varInfo_synthetic
+ORDER BY AF DESC
+LIMIT 1;
+
+
+This statement selects the `VAR_id` and `AF` columns from the table `varInfo_synthetic`, sorts the results in descending order by the `AF` column, and returns only the first row (the one with the highest `AF` value).",4,"20260620"
+"mistral:latest","Select number of variants in NEK1","varInfo_synthetic",157,55,6.287307221,6.62109287,8.74778312348036,6.63182377815247,"PASS","select the count of rows for variants related to the gene NEK1:
+
+
+SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';",5,"20260620"
+"mistral:latest","What is the variant with the highest allele frequency?","varInfo_synthetic",159,97,11.27276653,11.683911997,8.60480874343097,11.6948578357697,"PASS","SELECT statement to find the variant with the highest allele frequency (AF):
+
+
+SELECT VAR_id, AF
+FROM varInfo_synthetic
+ORDER BY AF DESC
+LIMIT 1;
+
+
+This query sorts all records in the `varInfo_synthetic` table by the `AF` column in descending order and selects the first (highest) record.",5,"20260620"
