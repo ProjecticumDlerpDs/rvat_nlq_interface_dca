@@ -11,6 +11,7 @@
 # - Displays SQL and results
 # - Tracks execution status
 # - Saves query logs to file
+# - Handles async execution safely
 #
 # DEPENDENCIES:
 # -------------
@@ -22,6 +23,7 @@
 
 library(shiny)
 library(DT)
+library(later)
 
 # ------------------------------------------------------------
 # SERVER LOGIC
@@ -61,31 +63,48 @@ server <- function(input, output, session) {
   })
   
   # ----------------------------------------------------------
-  # RUN QUERY
+  # RUN QUERY (FIXED VERSION)
   # ----------------------------------------------------------
   
   observeEvent(input$run_query, {
     
     req(input$user_query)
     
-    # ✅ Update status
+    # ✅ Update status immediately
     status_msg("Running...")
     
-    # ✅ Small delay ensures UI updates BEFORE execution
+    # ✅ Capture reactive value BEFORE async call
+    query <- input$user_query
+    
+    # ✅ Async execution (non-blocking UI)
     later::later(function() {
       
-      res <- log_query_execution(input$user_query, con, verbose = FALSE)
-      
-      # ✅ Store results
-      result_data(res$data)
-      result_sql(res$sql)
-      
-      # ✅ Update status
-      if (is.null(res$error)) {
-        status_msg("Completed")
-      } else {
+      tryCatch({
+        
+        res <- log_query_execution(query, con, verbose = FALSE)
+        
+        # ✅ Update results
+        result_data(res$data)
+        result_sql(res$sql)
+        
+        # ✅ Update status
+        if (is.null(res$error)) {
+          status_msg("Completed")
+        } else {
+          status_msg("Error occurred")
+          showNotification(res$error, type = "error")
+        }
+        
+      }, error = function(e) {
+        
+        # ✅ Catch unexpected failures
         status_msg("Error occurred")
-      }
+        
+        showNotification(
+          paste("Unexpected error:", e$message),
+          type = "error"
+        )
+      })
       
     }, delay = 0.1)
     
@@ -101,9 +120,11 @@ server <- function(input, output, session) {
     
     DT::datatable(
       result_data(),
-      options = list(pageLength = 10, scrollX = TRUE)
+      options = list(
+        pageLength = 10,
+        scrollX = TRUE
+      )
     )
-    
   })
   
   # ----------------------------------------------------------
