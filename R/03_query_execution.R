@@ -33,56 +33,57 @@
 # MAIN EXECUTION FUNCTION
 # ------------------------------------------------------------
 
-run_sql_pipeline <- function(user_query, con, verbose = TRUE) {
-
+execute_query <- function(user_query, con, verbose = TRUE) {
+  
   if (missing(user_query) || nchar(user_query) == 0) {
     stop("❌ 'user_query' must be a non-empty string")
   }
-
+  
   ctx <- get_active_context()
-
+  
+  sql <- NA
+  data <- NULL
+  error_msg <- NULL
+  
   # ----------------------------------------------------------
   # GENERATE SQL
   # ----------------------------------------------------------
-
+  
   sql <- tryCatch({
     generate_sql_ollama(user_query, con, ctx)
   }, error = function(e) {
-    return(list(
-      data  = NULL,
-      sql   = NA,
-      error = paste("SQL generation failed:", e$message)
-    ))
+    error_msg <<- paste("SQL generation failed:", e$message)
+    return(NA)
   })
-
-  if (is.list(sql)) return(sql)
-
-  if (verbose) {
+  
+  if (!is.na(sql) && verbose) {
     cat("\nGenerated SQL:\n")
     cat("-------------------------------------\n")
     cat(sql, "\n")
     cat("-------------------------------------\n")
   }
-
+  
   # ----------------------------------------------------------
-  # EXECUTE SQL
+  # EXECUTE SQL (only if SQL exists)
   # ----------------------------------------------------------
-
-  result <- tryCatch({
-    DBI::dbGetQuery(con, sql)
-  }, error = function(e) {
-    return(list(
-      data  = NULL,
-      sql   = sql,
-      error = paste("SQL execution failed:", e$message)
-    ))
-  })
-
-  if (is.list(result)) return(result)
-
+  
+  if (!is.na(sql) && is.null(error_msg)) {
+    
+    data <- tryCatch({
+      DBI::dbGetQuery(con, sql)
+    }, error = function(e) {
+      error_msg <<- paste("SQL execution failed:", e$message)
+      return(NULL)
+    })
+  }
+  
+  # ----------------------------------------------------------
+  # FINAL RETURN (ALWAYS CONSISTENT)
+  # ----------------------------------------------------------
+  
   return(list(
-    data  = result,
+    data  = data,
     sql   = sql,
-    error = NULL
+    error = error_msg
   ))
 }
