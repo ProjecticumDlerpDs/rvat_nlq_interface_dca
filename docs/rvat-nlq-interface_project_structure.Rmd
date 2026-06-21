@@ -87,7 +87,7 @@ rvat-nlq-interface/
     │
     ├── app/
     │   ├── rvat_nlq_app.R               # entry point (Shiny wrapper)
-    │   └── greeting.md                  # UI onboarding content /exteded greeting/ instructions
+    │   └── rvat_greeting.md             # UI onboarding content /exteded greeting/ instructions
     │
     ├── scripts/
     │   ├── 00_renv_setup.R                # install/load dependencies
@@ -117,7 +117,15 @@ rvat-nlq-interface/
     |       └── evaluation_accuracy.png
     │
     ├── tests/
-    │   └── 100_checks_db_connection.R        #
+    |   ├── 100_checks_db_connection.R        #
+    │   ├── 200_check_ollama_config.R
+    |   ├── 300_check_query_execution.R
+    │   ├── 400_check_logging_pipeline.R
+    |   ├── 500_check_shiny_ui.R
+    │   └── 600_check_shiny_server.R
+    |   
+    │   
+    |   
     │
     ├── docs/
     │   ├── methodology.md
