@@ -27,5 +27,3 @@ if (length(missing) > 0) {
 } else {
   message("Environment successfully restored ✅")
 }
-``
-
