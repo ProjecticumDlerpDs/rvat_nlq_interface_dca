@@ -33,6 +33,28 @@ test_connection("http://localhost:11434")
 # LIST AVAILABLE MODELS
 # ------------------------------------------------------------
 
+# NOTE:
+# -----
+# `ollamar::list_models()` returns locally installed Ollama models.
+# This is only meaningful if multiple models have been installed.
+#
+# In the standard setup, users are instructed to install a single
+# recommended model (e.g. qwen3:8b), so this will typically return
+# a single entry.
+#
+# For model comparison or triage workflows, multiple models must
+# be installed manually via:
+#   ollama pull <model_name>
+#
+# Example:
+#   ollama pull qwen3:8b
+#   ollama pull llama3
+#
+# Use this function mainly for:
+# - model benchmarking
+# - triage workflows
+# - exploratory comparisons
+
 models <- ollamar::list_models()
 
 model_list <- models$model
