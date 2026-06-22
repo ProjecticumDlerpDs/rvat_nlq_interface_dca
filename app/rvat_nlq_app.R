@@ -3,7 +3,7 @@
 #
 # PURPOSE
 # -------
-# Entry point forIBILITIES:# Entry point for the RVAT NL → SQL Shiny application
+# Entry point for the RVAT NL → SQL Shiny application
 # -----------------
 # - Load all pipeline components
 # - Initialize application environment
