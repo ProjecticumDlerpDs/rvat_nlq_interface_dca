@@ -2,50 +2,97 @@
 # renv setup script (for collaborators)
 # ----------------------------------------
 
-message("Starting project setup...\n")
+message("========================================")
+message("RVAT NLQ Project - Environment Setup")
+message("========================================\n")
 
-# Install renv if not available
+# ------------------------------------------------------------
+# Check renv installation
+# ------------------------------------------------------------
+
 message("Checking 'renv' installation...")
 
 if (!requireNamespace("renv", quietly = TRUE)) {
   message("→ 'renv' not found. Installing now...")
   install.packages("renv")
-  message("'renv' successfully installed ✅\n")
+  message("→ 'renv' installed successfully ✅\n")
 } else {
   message("→ 'renv' already available ✅\n")
 }
 
-# Restore project environment
-message("Restoring project environment (this may take a few minutes)...\n")
+# ------------------------------------------------------------
+# Ensure Bioconductor support (required for some packages)
+# ------------------------------------------------------------
+
+message("Checking 'BiocManager' (Bioconductor support)...")
+
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  message("→ 'BiocManager' not found. Installing now...")
+  install.packages("BiocManager")
+  message("→ 'BiocManager' installed ✅\n")
+} else {
+  message("→ 'BiocManager' already available ✅\n")
+}
+
+# Set Bioconductor version (adjust if needed)
+options(renv.bioconductor.version = "3.22")
+
+# Prevent interactive prompts during restore
+options(renv.consent = TRUE)
+
+# ------------------------------------------------------------
+# Restore environment
+# ------------------------------------------------------------
+
+message("Restoring project environment (this may take several minutes)...")
+message("Installing required R and Bioconductor packages...\n")
+
+message("During this process, you may see:")
+message("- Package download and installation logs")
+message("- A message about GitHub credentials (this can be ignored ✅)")
+message("- Compilation messages (this is normal)\n")
+
+message("Please wait until the process completes...\n")
 
 renv::restore()
 
-message("\nEnvironment restore complete ✅")
 
-# Optional: verify key packages load
+# ------------------------------------------------------------
+# Post-restore checks
+# ------------------------------------------------------------
+
+message("\nVerifying required packages...\n")
+
 required_pkgs <- c(
   "shiny", "dplyr", "DBI", "RSQLite", "querychat"
 )
 
-missing <- required_pkgs[!sapply(required_pkgs, requireNamespace, quietly = TRUE)]
+missing <- required_pkgs[
+  !sapply(required_pkgs, requireNamespace, quietly = TRUE)
+]
 
 if (length(missing) > 0) {
-  warning("Some packages failed to install: ", paste(missing, collapse = ", "))
+  warning("⚠ Some packages failed to install: ",
+          paste(missing, collapse = ", "))
 } else {
   message("All required packages are available ✅")
 }
 
-# Notes:
-# - Installs all required packages with exact versions based on renv.lock
-# - No manual installation required
-#
-# - You may see warnings like:
-#     "packages out of sync [lockfile != library]"
-#   for packages such as 'mgcv' or 'lattice'.
-#
-#   These are base/recommended R packages that can vary slightly
-#   depending on your R version and operating system.
-#   ✅ This is expected and NOT a problem if the application runs correctly.
+# ------------------------------------------------------------
+# Notes for users
+# ------------------------------------------------------------
 
-message("\nEnvironment setup complete ✅")
-message("Next step: run source('app/rvat_nlq_app.R') to start the application 🚀")
+message("\nNotes:")
+message("- Minor warnings about package versions (e.g. 'mgcv', 'lattice') are normal")
+message("- These depend on your R version and are usually safe to ignore")
+message("- If critical packages fail to install, please check system requirements\n")
+
+# ------------------------------------------------------------
+# Completion
+# ------------------------------------------------------------
+
+message("========================================")
+message("Environment setup complete ✅")
+message("Next step:")
+message("→ Run source('app/rvat_nlq_app.R') to start the application 🚀")
+message("========================================")
