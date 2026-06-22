@@ -47,4 +47,5 @@ if (length(missing) > 0) {
 #   depending on your R version and operating system.
 #   ✅ This is expected and NOT a problem if the application runs correctly.
 
-message("\nSetup complete. You're ready to go 🚀")
+message("\nEnvironment setup complete ✅")
+message("Next step: run source('app/rvat_nlq_app.R') to start the application 🚀")
