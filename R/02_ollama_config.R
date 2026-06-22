@@ -8,8 +8,7 @@
 # - Model selection
 # - Prompt building
 # - SQL generation
-# - Model metadata extraction (parameters, capability, temperature)
-#
+# - Model metadata extraction
 # ------------------------------------------------------------
 
 library(ollamar)
@@ -45,24 +44,33 @@ test_connection("http://localhost:11434")
 # For model comparison or triage workflows, multiple models must
 # be installed manually via:
 #   ollama pull <model_name>
-#
-# Example:
-#   ollama pull qwen3:8b
-#   ollama pull llama3
-#
-# Use this function mainly for:
-# - model benchmarking
-# - triage workflows
-# - exploratory comparisons
 
 models <- ollamar::list_models()
 
 model_list <- models$model
 if (is.null(model_list)) model_list <- models$name
 
+# ------------------------------------------------------------
+# VALIDATE MODELS EXIST
+# ------------------------------------------------------------
+
 if (length(model_list) == 0) {
   stop("No Ollama models found. Run: ollama pull <model>")
 }
+
+# ------------------------------------------------------------
+# PRODUCTION vs MULTI-MODEL MODE
+# ------------------------------------------------------------
+
+if (length(model_list) <= 1) {
+  message("ℹ️ Only one model available — running in production mode")
+} else {
+  message("🔬 Multiple models detected — triage / evaluation mode enabled")
+}
+
+# ------------------------------------------------------------
+# DISPLAY MODELS
+# ------------------------------------------------------------
 
 cat("\nAvailable models:\n")
 print(model_list)
