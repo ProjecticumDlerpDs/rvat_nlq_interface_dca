@@ -21,15 +21,28 @@
 # ------------------------------------------------------------
 
 library(DBI)
+library(here)
 
 # ------------------------------------------------------------
 # LOAD PIPELINE COMPONENTS
 # ------------------------------------------------------------
 
-source("R/01_db_connection.R")
-source("R/02_ollama_config.R")
-source("R/03_query_execution.R")
-source("R/04_logging_pipeline.R")
+source(here("R", "01_db_connection.R"))
+source(here("R", "02_ollama_config.R"))
+source(here("R", "03_query_execution.R"))
+source(here("R", "04_logging_pipeline.R"))
+
+# ------------------------------------------------------------
+# VALIDATE DATABASE CONNECTION
+# ------------------------------------------------------------
+
+if (!exists("con")) {
+  stop("Database connection object 'con' was not created.")
+}
+
+if (!DBI::dbIsValid(con)) {
+  stop("Database connection exists but is not valid.")
+}
 
 cat("
 =====================================

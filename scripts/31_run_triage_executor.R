@@ -17,6 +17,7 @@
 # ------------------------------------------------------------
 
 library(DBI)
+library(here)
 
 
 # ------------------------------------------------------------
@@ -29,9 +30,9 @@ library(DBI)
 # LOAD DEPENDENCIES
 # ------------------------------------------------------------
 
-source("R/01_db_connection.R")
-source("R/02_ollama_config.R")
-source("scripts/30_stage_triage_llm.R")
+source(here("R", "01_db_connection.R"))
+source(here("R", "02_ollama_config.R"))
+source(here("scripts", "30_stage_triage_llm.R"))
 
 
 # ------------------------------------------------------------
@@ -54,7 +55,7 @@ MAX_TIME <- 180  # seconds
 
 ctx <- get_active_context()
 
-dir.create("data/triage", recursive = TRUE, showWarnings = FALSE)
+dir.create(here("data", "triage"), recursive = TRUE, showWarnings = FALSE)
 
 date_tag <- format(Sys.Date(), "%Y%m%d")
 
@@ -135,7 +136,7 @@ raw_df$status <- as.factor(raw_df$status)
 
 write.csv(
   raw_df,
-  "data/triage/triage_raw_metrics.csv",
+  here("data", "triage", "triage_raw_metrics.csv"),
   row.names = FALSE
 )
 
@@ -165,7 +166,7 @@ decision_matrix$explanation <- paste(
 
 write.csv(
   decision_matrix,
-  "data/triage/triage_decision_matrix.csv",
+  here("data", "triage", "triage_decision_matrix.csv"),
   row.names = FALSE
 )
 
@@ -181,12 +182,10 @@ for (m in names(split_models)) {
   
   model_safe <- gsub(":", "_", m)
   
-  file_path <- paste0(
-    "data/triage/log_",
-    model_safe,
-    "_",
-    date_tag,
-    ".rds"
+  file_path <- here(
+    "data",
+    "triage",
+    paste0("log_", model_safe, "_", date_tag, ".rds")
   )
   
   saveRDS(split_models[[m]], file = file_path)

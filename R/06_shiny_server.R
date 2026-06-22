@@ -24,6 +24,7 @@
 library(shiny)
 library(DT)
 library(later)
+library(here)
 
 # ------------------------------------------------------------
 # SERVER LOGIC
@@ -150,12 +151,12 @@ server <- function(input, output, session) {
       return(NULL)
     }
     
-    dir.create("data/raw", recursive = TRUE, showWarnings = FALSE)
+    dir.create(here("data", "raw"), recursive = TRUE, showWarnings = FALSE)
     
-    filename <- paste0(
-      "data/raw/query_log_",
-      format(Sys.time(), "%Y%m%d_%H%M%S"),
-      ".rds"
+    filename <- here::here(
+      "data",
+      "raw",
+      paste0("query_log_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".rds")
     )
     
     saveRDS(df, filename)

@@ -23,6 +23,7 @@
 library(shiny)
 library(bslib)
 library(DT)
+library(here)
 
 # ------------------------------------------------------------
 # UI DEFINITION
@@ -75,7 +76,7 @@ ui <- page_sidebar(
     # --------------------------------------------------------
     card(
       card_header("About this tool"),
-      includeMarkdown("app/rvat_greeting.md")
+      includeMarkdown(here("app", "rvat_greeting.md"))
     ),
     
     # --------------------------------------------------------

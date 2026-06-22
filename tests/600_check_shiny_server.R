@@ -17,6 +17,7 @@
 
 library(shiny)
 library(DT)
+library(here)
 
 cat("
 =====================================
@@ -31,11 +32,24 @@ Starting validation...
 
 cat("\n[1] Loading full pipeline...\n")
 
-source("R/01_db_connection.R")
-source("R/02_ollama_config.R")
-source("R/03_query_execution.R")
-source("R/04_logging_pipeline.R")
-source("R/06_shiny_server.R")
+source(here("R", "01_db_connection.R"))
+source(here("R", "02_ollama_config.R"))
+source(here("R", "03_query_execution.R"))
+source(here("R", "04_logging_pipeline.R"))
+source(here("R", "06_shiny_server.R"))
+
+
+# ------------------------------------------------------------
+# VALIDATE DATABASE CONNECTION
+# ------------------------------------------------------------
+
+if (!exists("con")) {
+  stop("Database connection object 'con' was not created.")
+}
+
+if (!DBI::dbIsValid(con)) {
+  stop("Database connection exists but is not valid.")
+}
 
 cat("✅ Pipeline loaded\n")
 
@@ -106,14 +120,14 @@ cat("✅ Logging working\n")
 
 cat("\n[6] Testing save functionality...\n")
 
-output_dir <- "data/raw"
+output_dir <- here("data", "raw")
+
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
-filename <- paste0(
-  output_dir,
-  "/test_log_",
-  format(Sys.time(), "%Y%m%d_%H%M%S"),
-  ".rds"
+filename <- here(
+  "data",
+  "raw",
+  paste0("test_log_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".rds")
 )
 
 saveRDS(log_df, filename)

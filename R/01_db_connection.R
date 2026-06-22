@@ -17,6 +17,7 @@ library(DBI)
 library(RSQLite)
 library(rvat)
 library(rvatData)
+library(here)
 
 # ------------------------------------------------------------
 # USER CONFIGURATION
@@ -86,7 +87,7 @@ if (!dbIsValid(con)) stop("Invalid connection")
 # ------------------------------------------------------------
 
 # ✅ This loads the preparation logic
-source("scripts/10_data_preparation.R")
+source(here("scripts", "10_data_preparation.R"))
 
 # ✅ This ensures the chosen mode is ready
 # If DB_MODE = "synthetic":

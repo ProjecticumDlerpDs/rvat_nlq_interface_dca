@@ -22,6 +22,7 @@
 # ------------------------------------------------------------
 
 library(shiny)
+library(here)
 
 
 # ------------------------------------------------------------
@@ -35,12 +36,14 @@ message("Starting RVAT NLQ application...")
 # LOAD PIPELINE COMPONENTS
 # ------------------------------------------------------------
 
-source("R/01_db_connection.R")
-source("R/02_ollama_config.R")
-source("R/03_query_execution.R")
-source("R/04_logging_pipeline.R")
-source("R/05_shiny_ui.R")
-source("R/06_shiny_server.R")
+
+source(here("R", "01_db_connection.R"))
+source(here("R", "02_ollama_config.R"))
+source(here("R", "03_query_execution.R"))
+source(here("R", "04_logging_pipeline.R"))
+source(here("R", "05_shiny_ui.R"))
+source(here("R", "06_shiny_server.R"))
+
 
 # ------------------------------------------------------------
 # LAUNCH APPLICATION

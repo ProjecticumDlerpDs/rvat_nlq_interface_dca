@@ -4,7 +4,15 @@
 # 100_check_db_connection.R
 # ------------------------------------------------------------
 
-source("R/01_db_connection.R")
+library(here)
+
+source(here("R", "01_db_connection.R"))
+
+
+if (!exists("con") || !DBI::dbIsValid(con)) {
+  stop("Database connection is not valid.")
+}
+
 
 cat("
 =====================================
@@ -29,8 +37,8 @@ print(DBI::dbListTables(con))
 # ------------------------------------------------------------
 # 3. Check active table
 # ------------------------------------------------------------
-active_table <- get_active_table()
-cat("\nActive table:", active_table, "\n")
+ctx <- get_active_context()
+active_table <- if (!is.null(ctx$table)) ctx$table else "varInfo"
 
 # ------------------------------------------------------------
 # 4. Inspect schema

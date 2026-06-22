@@ -21,6 +21,7 @@
 library(shiny)
 library(bslib)
 library(DT)
+library(here)
 
 cat("
 =====================================
@@ -36,7 +37,7 @@ Starting validation...
 
 cat("\n[1] Loading UI script...\n")
 
-source("R/05_shiny_ui.R")
+source(here("R", "05_shiny_ui.R"))
 
 if (!exists("ui")) {
   stop("❌ UI object not found after sourcing script")
@@ -150,7 +151,7 @@ cat("✅ All output components present\n")
 
 cat("\n[6] Checking greeting markdown file...\n")
 
-greeting_path <- "app/rvat_greeting.md"
+greeting_path <- here("app", "rvat_greeting.md")
 
 if (!file.exists(greeting_path)) {
   stop("❌ Greeting file not found at: ", greeting_path)
