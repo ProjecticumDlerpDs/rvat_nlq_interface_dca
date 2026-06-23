@@ -128,7 +128,7 @@ get_temperature <- function(model) {
 # MODEL CONFIGURATION (USER EDITABLE)
 # ------------------------------------------------------------
 
-model_name <- "qwen3:8b"
+model_name <- "qwen2.5-coder:latest"
 
 cat("\n✅ Selected model:", model_name, "\n")
 cat("👉 To change model, edit 'model_name' in this script\n")

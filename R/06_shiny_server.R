@@ -40,6 +40,7 @@ server <- function(input, output, session) {
   result_sql  <- reactiveVal(NULL)
   status_msg  <- reactiveVal("Ready")
   
+  
   # ----------------------------------------------------------
   # STATUS OUTPUT
   # ----------------------------------------------------------
@@ -63,32 +64,28 @@ server <- function(input, output, session) {
     )
   })
   
+  
   # ----------------------------------------------------------
-  # RUN QUERY (FIXED VERSION)
+  # RUN QUERY
   # ----------------------------------------------------------
   
   observeEvent(input$run_query, {
     
     req(input$user_query)
     
-    # ✅ Update status immediately
     status_msg("Running...")
     
-    # ✅ Capture reactive value BEFORE async call
     query <- input$user_query
     
-    # ✅ Async execution (non-blocking UI)
     later::later(function() {
       
       tryCatch({
         
         res <- log_query_execution(query, con, verbose = FALSE)
         
-        # ✅ Update results
         result_data(res$data)
         result_sql(res$sql)
         
-        # ✅ Update status
         if (is.null(res$error)) {
           status_msg("Completed")
         } else {
@@ -98,7 +95,6 @@ server <- function(input, output, session) {
         
       }, error = function(e) {
         
-        # ✅ Catch unexpected failures
         status_msg("Error occurred")
         
         showNotification(
@@ -110,6 +106,7 @@ server <- function(input, output, session) {
     }, delay = 0.1)
     
   })
+  
   
   # ----------------------------------------------------------
   # DISPLAY TABLE
@@ -128,42 +125,64 @@ server <- function(input, output, session) {
     )
   })
   
+  
   # ----------------------------------------------------------
   # DISPLAY SQL
   # ----------------------------------------------------------
   
   output$sql <- renderText({
-    
     result_sql() %||% "No query executed yet"
-    
   })
   
+  
   # ----------------------------------------------------------
-  # SAVE LOGS
+  # SAVE LOGS (ENHANCED)
   # ----------------------------------------------------------
   
   observeEvent(input$save_chat, {
     
-    df <- get_query_log()
+    df_new <- get_query_log()
     
-    if (is.null(df)) {
+    if (is.null(df_new)) {
       showNotification("No logs to save.", type = "warning")
       return(NULL)
     }
     
     dir.create(here("data", "raw"), recursive = TRUE, showWarnings = FALSE)
     
-    filename <- here::here(
-      "data",
-      "raw",
-      paste0("query_log_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".rds")
+    model_name_safe <- gsub("[:/]", "_", unique(df_new$model)[1])
+    ts <- format(Sys.time(), "%Y%m%d_%H%M%S")
+    
+    # Snapshot
+    snapshot_file <- here::here(
+      "data", "raw",
+      paste0("query_log_", model_name_safe, "_", ts, ".rds")
+    )
+    saveRDS(df_new, snapshot_file)
+    
+    # Cumulative
+    cumulative_file <- here::here(
+      "data", "raw",
+      paste0("query_log_", model_name_safe, "_ALL.rds")
     )
     
-    saveRDS(df, filename)
+    if (file.exists(cumulative_file)) {
+      df_existing <- readRDS(cumulative_file)
+      df_combined <- rbind(df_existing, df_new)
+    } else {
+      df_combined <- df_new
+    }
+    
+    saveRDS(df_combined, cumulative_file)
+    
+    # ✅ Clear memory
+    clear_query_log()
     
     showNotification(
-      paste("Log saved:", basename(filename)),
+      paste("Saved snapshot + updated cumulative:",
+            basename(snapshot_file)),
       type = "message"
     )
   })
-}
+  
+}  # ✅ ONLY ONE closing bracket for server
