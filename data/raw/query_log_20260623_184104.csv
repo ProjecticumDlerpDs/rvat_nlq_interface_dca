@@ -1,0 +1,2 @@
+"timestamp","user_query","sql_query","rows_returned","result_preview","status","error_message","model","model_parameters","model_capability","model_temperature","time_total_sec"
+"2026-06-23 18:39:11.191734","Count variants per chromosome","SELECT CHROM, COUNT(*) AS variant_count FROM varInfo_synthetic GROUP BY CHROM;",10,"  CHROM variant_count | 1  chr1           616 | 2 chr10           121 | 3 chr12           124","PASS",NA,"qwen3:8b","8B","High (general reasoning)",0.6,50.2282130718231
