@@ -11,7 +11,7 @@
 
 <meta name="author" content="Diógenes Cruz de Arcelino" />
 
-<meta name="date" content="2026-06-20" />
+<meta name="date" content="2026-06-23" />
 
 <title>RVAT NLQ Interface Project Structure</title>
 
@@ -341,7 +341,7 @@ display: none;
 
 <h1 class="title toc-ignore">RVAT NLQ Interface Project Structure</h1>
 <h4 class="author">Diógenes Cruz de Arcelino</h4>
-<h4 class="date">2026-06-20</h4>
+<h4 class="date">2026-06-23</h4>
 
 </div>
 
@@ -401,57 +401,64 @@ analysis.</p>
 rvat-nlq-interface/
 └── rvat-nlq-interface/
     │
-    ├── README.md
-    ├── LICENSE
-    ├── .gitignore
-    ├── renv.lock                        # reproducibility
-    ├── .Rprofile                        # auto-load renv
+    ├── README.md                        #onboarding, quick start, usage
+    ├── LICENSE                          #project license
+    ├── .gitignore                       # git exclusion rules
+    ├── renv.lock                        # reproducible dependency snapshot
+    ├── .Rprofile                        # auto-initializes renv environment
     │
     ├── R/
-    │   ├── 01_db_connection.R           # database connection
-    │   ├── 02_ollama_config.R           # Ollama + system prompt
-    │   ├── 03_sql_pipeline.R            # NL → SQL → DB → result
-    │   ├── 04_logging.R                 # logging + timing (VES)
-    │   ├── 05_shiny_ui.R                # Shiny UI
-    │   └── 06_shiny_server.R            # Shiny server
+    │   ├── 01_db_connection.R           # initializes SQLite connection (data access layer)
+    │   ├── 02_ollama_config.R           # configures LLM (model, prompts, SQL generation)
+    │   ├── 03_query_execution.R         # executes NL → SQL → DB query pipeline
+    │   ├── 04_logging_pipeline.R        # wraps execution with logging, timing, and error capture
+    │   ├── 05_shiny_ui.R                # defines UI layout (inputs, outputs, panels)
+    │   └── 06_shiny_server.R            # handles reactivity, execution trigger, and UI updates
     │
     ├── app/
-    │   ├── rvat_nlq_app.R               # entry point (Shiny wrapper)
-    │   └── greeting.md                  # UI onboarding content /exteded greeting/ instructions
+    │   ├── rvat_nlq_app.R               # application entry point (loads pipeline + launches Shiny app)
+    │   └── rvat_greeting.md             # UI content (instructions, examples, user guidance)
     │
     ├── scripts/
-    │   ├── 00_renv_setup.R                # install/load dependencies
-    |   ├── 10_data_preparation.R          # sets full rvat-db or varInfo_synthetic 
-    |   ├── 20_select_model_interactive.R  #
-    |   ├── 30_run_triage_llm.R            # script that loops and dumps the files into data/triage/
-    │   ├── 31_run_triage_executor.R
-    |   ├── 40_run_app.R                   # developer convenience script
-    │   ├── 50_process_logs.R              # clean + transform logs
-    │   └── 60_evaluate.R                  # EM / EX / VES evaluation
+    │   ├── 00_renv_setup.R                # initialises project environment (renv setup/install)
+    |   ├── 10_data_preparation.R          # prepares RVAT database (full or synthetic dataset) 
+    |   ├── 20_select_model_guide.R        # guidance for selecting LLM models for evaluation/production
+    |   ├── 30_run_triage_llm.R            # runs multi-model inference (NL → SQL generation)
+    │   ├── 31_run_triage_executor.R       # executes generated SQL and collects performance metrics
+    │   ├── 50_process_logs.R              # cleans and transforms raw logs into analysis-ready format
+    │   └── 60_evaluate.R                  # computes evaluation metrics (EM / EX / VES)
     │
     ├── data/
-    │   ├── triage/                            # Stored raw/processed triage runs here
-    │   |    ├── triage_raw_metrics.csv        # the direct data table with eval_count, durations, etc.
-    │   |    └── triage_decision_matrix.csv    # Simple 2-column table: [model_name, status (PASS/FAIL)]
-    |   ├── raw/                               # log_&lt;model&gt;_&lt;date&gt;.rds
-    │   ├── processed/                         # converted to .csv for data/evaluation and analysis/ 
+    │   ├── triage/                            # outputs from model comparison experiments
+    │   |    ├── triage_raw_metrics.csv        # raw performance metrics (latency, tokens, etc.)
+    │   |    └── triage_decision_matrix.csv    # model-level pass/fail selection results
+    |   ├── raw/                               # raw execution logs (.rds)
+    │   ├── processed/                         # cleaned and transformed datasets (.csv) 
     │   └── evaluation/                 
-    │       └── golden_dataset.csv             # Benchmark NLQ/SQL queries/answers to compare with LLM&#39;s output 
+    │       └── golden_dataset.csv             # benchmark NL/SQL pairs for evaluation 
     │
     ├── analysis/
-    │   ├── 00_triage_filter.Rmd               #Generates the pass/fail triage chapter &amp; charts
-    |   ├── 01_exploratory.Rmd
-    │   ├── 02_evaluation.Rmd
+    │   ├── 00_triage_filter.Rmd               # triage filtering + model selection reporting
+    |   ├── 01_exploratory.Rmd                 # exploratory analysis of logs/results
+    │   ├── 02_evaluation.Rmd                  # evaluation analysis (EM, EX, VES)
     │   └── figures/
-    |       ├── triage_latency_comparison.png  #Visual distribution of tokens/sec vs duration
-    |       └── evaluation_accuracy.png
+    |       ├── triage_latency_comparison.png  # performance visualisation (speed vs throughput)
+    |       └── evaluation_accuracy.png        # model accuracy comparison
     │
     ├── tests/
-    │   └── 100_checks_db_connection.R        #
+    |   ├── 100_checks_db_connection.R        # validates DB connectivity and schema access
+    │   ├── 200_check_ollama_config.R         # validates Ollama connection and model availability
+    |   ├── 300_check_query_execution.R       # validates NL → SQL → DB execution pipeline
+    │   ├── 400_check_logging_pipeline.R      # validates logging, timing, and output structure
+    |   ├── 500_check_shiny_ui.R              # validates UI structure and components
+    │   └── 600_check_shiny_server.R          # validates server logic and pipeline integration
+    |   
+    │   
+    |   
     │
     ├── docs/
-    │   ├── methodology.md
-    │   └── architecture.md
+    │   ├── methodology.md                   # full methodological description (pipeline + evaluation)
+    │   └── architecture.md                  #system design and architecture overview
 </pre>
 </div>
 </div>
