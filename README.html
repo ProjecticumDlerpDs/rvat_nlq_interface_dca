@@ -354,11 +354,52 @@ display: none;
 
 <div id="rvat-nlq-interface" class="section level1">
 <h1>RVAT NLQ Interface</h1>
+<p>Version: 0.3 Date: 2026.09.04</p>
 <p>A Natural Language Query (NLQ) interface for exploring RVAT genetic
-variant data using locally hosted Large Language Models (LLMs) via
-Ollama.</p>
-<p>Version: 0.2 Date: 2026.06.25</p>
+variant data using locally hosted Large Language Models (LLMs).</p>
 <p>================</p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<div id="rvat-natural-language-querey-nlq-interface" class="section level2">
+<h2>RVAT Natural Language Querey (NLQ) Interface</h2>
+<div id="project-objective" class="section level3">
+<h3>Project Objective</h3>
+<p>This project evaluates whether Large Language Models (LLMs) can
+effectively translate natural language questions into executable SQL
+queries for scientific analysis and research of datasets against the
+RVAT database.</p>
+<p><strong>RVAT</strong> (Rare Variant Association Toolkit) was
+developed by <a href="https://kennalab.github.io/rvat/articles/basics.html">Kevin Kenna
+and Paul Hop</a> and is an R package and command-line toolkit designed
+for large-scale genetic association testing using rare genomic
+variants.</p>
+<p>The RVAT NLQ Interface allows users to interact with a database using
+natural language rather than writing SQL manually.</p>
+<p>A user’s question is translated into SQL by an Ollama-hosted LLM,
+executed against the target database, and the results are returned
+through a Shiny-based web interface.</p>
+</div>
+<div id="research-question" class="section level3">
+<h3>Research Question</h3>
+<p>The primary objective is to assess:</p>
+<p>To what extent can a locally hosted Large Language Model (LLM),
+integrated within an R environment, translate natural language queries
+into accurate SQL queries and use them to retrieve relevant data from an
+ALS-specific RVAT database, as evaluated using predefined benchmark
+questions?</p>
+<p>The project establishes three core technical objectives:</p>
+<p>• be used as an evaluation framework for Natural Language → SQL
+generation;<br />
+• serve as a reference implementation of a local, privacy-preserving
+LLM-driven query interface;<br />
+• demonstrate reproducible R/Shiny application that can be deployed in
+research or server environments.<br />
+</p>
+<hr />
+<p>================</p>
+</div>
+</div>
 </div>
 <div id="rvat-nl-sql-query-interface" class="section level1">
 <h1>🧬 RVAT NL → SQL Query Interface</h1>
