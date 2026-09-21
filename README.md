@@ -1,13 +1,7 @@
----
-output:
-  html_document: default
-  word_document: default
-  pdf_document: default
----
 RVAT NLQ Interface
 ================
 Version: 0.3.1 \
-Date:    2026.09.04
+Date:    2026.09.21
 
 
 A Natural Language Query (NLQ) interface for exploring RVAT genetic
@@ -75,6 +69,7 @@ These components are orchestrated through:
 
 This is the **only script that end users need to run **.
 All other scripts are loaded automatically.
+
 ------------------------------------------------------------------------
 
 
@@ -167,7 +162,7 @@ For **Local Laptop Environment**, see above.
 ## Configure LLM (optional) 
 If using another LLM than default (=qwen2.5-coder:latest), configure chosen LLM.
 
-5. Open "/R/02_ollama_config.R"and change the following line of code:
+5. Open "/R/02_ollama_config.R"and change the following line of code: \
 model_name <- "qwen2.5-coder:latest" (line 131, under MODEL CONFIGURATION (USER EDITABLE))
 
 
