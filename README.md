@@ -5,7 +5,7 @@ Date:    2026.09.21
 
 
 A Natural Language Query (NLQ) interface for exploring RVAT genetic
-variant data using locally hosted Large Language Models (LLMs).
+variant data using locally hosted Large Language Models (LLM's).
 
 
 ================
