@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 RVAT NLQ Interface
 ================
 Version: 0.3 \
@@ -49,7 +55,6 @@ The project establishes three core technical objectives:
 
 ------------------------------------------------------------------------
 
-================
 
 # Architecture Overview
 
@@ -73,10 +78,9 @@ All other scripts are loaded automatically.
 ------------------------------------------------------------------------
 
 
-================
 
 # System Requirements
-##Reference Environment 
+## Reference Environment 
 The application was developed and validated in the following server environment:
 - Operating system  : Linux(x86_64)
 - R Version         : 4.5.0 (2025-04-11)
@@ -84,23 +88,27 @@ The application was developed and validated in the following server environment:
 - Memory            : 64GB RAM
 - Available memory  : ~ 49GB 
 
-##Recommended Hardware
+## Hardware and Software Specifications
+
 **Server Environment (Recommended)**
 
 For full reproducibility:
 
-• Linux
-• 32 CPU cores
-• 64 GB RAM
-• Ollama installed
-• One or more supported LLMs
+• Linux Server (x86_64)       \
+• 32 CPU cores                \
+• 64 GB RAM                   \
+• RStudio 4.5.0 (2025-04-11)  \
+• Ollama installed (0.21.0)   \
+• Ollamar installed (1.2.2)   \
+• One or more supported LLM's \
 
 This configuration was used throughout development and validation.
 
-**Local/Laptop Environment**
+**Local Laptop Environment**
+Experimental trial:
+Local execution is supported although very experimental at this stage and much dependent on available hardware.
 
-Local execution is supported but depends on available hardware.
-
+Please 
 Smaller models generally perform well:
 
 mistral:latest
@@ -119,18 +127,32 @@ Depending on available CPU and RAM these models may:
 
 This behaviour is related to hardware constraints rather than application logic.
 
-Reference laptop:
+Laptop Reference Specifications:
 • Dell Latitude 5220
 • Windows 11 Pro (x64)
 • CPU: 4 cores
 • 8GB RAM
-• Disk space to download Ollama/LLM;s locally (re: 20GB)
+• Disk space to download Ollama/LLM's locally
+
+
+** Windows & Bioconductor Note **
+RStudio and R do not natively require Bioconductor on Windows. However, core genomic dependencies used in this project (such as `SummarizedExperiment`, required upstream by `rvat`) frequently fail to resolve automatically on Windows via standard `install.packages()`. 
+
+While macOS and Linux typically handle these upstream Bioconductor dependencies dynamically, Windows environments require explicit initialization of `BiocManager` to register the necessary repositories and build binary packages smoothly.
+
+** Setup Script for Laptop Users **
+To streamline setup and resolve cross-platform dependency issues (especially on Windows), an automated setup script is included in the project root: `/scripts/00_renv_setup.R`.
+
+This script automatically:
+* Verifies and installs `renv` and `BiocManager` (ensuring correct Bioconductor repository mapping).
+* Restores the exact project dependencies via `renv::restore()`.
+* Conducts post-installation checks to ensure core packages (`shiny`, `dplyr`, `DBI`, `RSQLite`, `rvat`) are ready.
+
 
 ---
+# Getting Started
 
-# ✅ Requirements
-
-Before starting, ensure the following are available on your system:
+Before starting, ensure to review 'Hardware and Software Specifications' above to your chosen system:
 
 ## System Requirements
 
