@@ -134,7 +134,7 @@ cat("\n✅ Selected model:", model_name, "\n")
 cat("👉 To change model, edit 'model_name' in this script\n")
 
 # ------------------------------------------------------------
-# MODEL INFO (ACTUAL VALUES)
+# MODEL INFO (ACTUAL VALUES -- INFO)
 # ------------------------------------------------------------
 
 model_params <- extract_params(model_name)
