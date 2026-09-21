@@ -354,7 +354,8 @@ display: none;
 
 <div id="rvat-nlq-interface" class="section level1">
 <h1>RVAT NLQ Interface</h1>
-<p>Version: 0.3 Date: 2026.09.04</p>
+<p>Version: 0.3<br />
+Date: 2026.09.04</p>
 <p>A Natural Language Query (NLQ) interface for exploring RVAT genetic
 variant data using locally hosted Large Language Models (LLMs).</p>
 <p>================</p>
@@ -401,40 +402,111 @@ research or server environments.<br />
 </div>
 </div>
 </div>
-<div id="rvat-nl-sql-query-interface" class="section level1">
-<h1>🧬 RVAT NL → SQL Query Interface</h1>
-<p>The project investigates whether natural language can be reliably
-translated into SQL while maintaining transparency, reproducibility, and
-observability. Users can ask questions in plain language, inspect the
-generated SQL, execute queries against a SQLite database, and review
-results through a Shiny web interface.</p>
-<hr />
+<div id="architecture-overview" class="section level1">
+<h1>Architecture Overview</h1>
+<p>The application consists of six main components:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Script</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>01_db_connection.R</code></td>
+<td>Database connection management</td>
+</tr>
+<tr class="even">
+<td><code>02_ollama_config.R</code></td>
+<td>Ollama and LLM configuration</td>
+</tr>
+<tr class="odd">
+<td><code>03_query_execution.R</code></td>
+<td>Natural language → SQL execution logic</td>
+</tr>
+<tr class="even">
+<td><code>04_logging_pipeline.R</code></td>
+<td>Query logging and metadata capture</td>
+</tr>
+<tr class="odd">
+<td><code>05_shiny_ui.R</code></td>
+<td>User interface</td>
+</tr>
+<tr class="even">
+<td><code>06_shiny_server.R</code></td>
+<td>Application server logic</td>
+</tr>
+</tbody>
+</table>
+<p>These components are orchestrated through: rvat_nlq_app.R</p>
+<p>This is the <strong>only script that end users need to run</strong>.
+All other scripts are loaded automatically. ————————————————————————</p>
+<p>================</p>
 </div>
-<div id="overview" class="section level1">
-<h1>📘 Overview</h1>
-<p>This repository contains the <strong>RVAT Natural Language Query
-(NLQ) Interface</strong>, enabling users to translate natural language
-queries into SQL and retrieve results from the RVAT database via a Shiny
-application.</p>
-<p>This version focuses on:</p>
+<div id="system-requirements" class="section level1">
+<h1>System Requirements</h1>
+<div id="reference-environment" class="section level2">
+<h2>Reference Environment</h2>
+<p>The application was developed and validated in the following server
+environment: - Operating system : Linux(x86_64) - R Version : 4.5.0
+(2025-04-11) - CPU : 32 cores - Memory : 64GB RAM - Available memory : ~
+49GB</p>
+</div>
+<div id="hardware-and-software-specifications" class="section level2">
+<h2>Hardware and Software Specifications</h2>
+<p><strong>Server Environment (Recommended)</strong></p>
+<p>For full reproducibility:</p>
+<p>• Linux Server (x86_64) • 32 CPU cores • 64 GB RAM • RStudio 4.5.0
+(2025-04-11) • Ollama installed (0.21.0) • Ollamar installed (1.2.2) •
+One or more supported LLM’s</p>
+<p>This configuration was used throughout development and
+validation.</p>
+<p><strong>Local/Laptop Environment</strong> Experimental trial: Local
+execution is supported but depends on available hardware.</p>
+<p>Smaller models generally perform well:</p>
+<p>mistral:latest qwen2.5-coder:latest</p>
+<p>Large models may experience reduced performance or even freeze:</p>
+<p>qwen3:8b sqlcoder:latest</p>
+<p>Depending on available CPU and RAM these models may:</p>
 <ul>
-<li>✅ Reproducible environment using <code>{renv}</code><br />
-</li>
-<li>✅ Production-ready application pipeline (migrated from demo
-workflow)<br />
-</li>
-<li>✅ Clear developer onboarding<br />
-</li>
-<li>⚠️ Separation of application and analysis workflows (analysis
-excluded)</li>
+<li>require several minutes to respond</li>
+<li>consume substantial resources</li>
+<li>produce unstable behaviour during long-running requests</li>
 </ul>
+<p>This behaviour is related to hardware constraints rather than
+application logic.</p>
+<p>Laptop Reference Specifications: • Dell Latitude 5220 • Windows 11
+Pro (x64) • CPU: 4 cores • 8GB RAM • Disk space to download Ollama/LLM’s
+locally</p>
+<p>** Windows &amp; Bioconductor Note ** RStudio and R do not natively
+require Bioconductor on Windows. However, core genomic dependencies used
+in this project (such as <code>SummarizedExperiment</code>, required
+upstream by <code>rvat</code>) frequently fail to resolve automatically
+on Windows via standard <code>install.packages()</code>.</p>
+<p>While macOS and Linux typically handle these upstream Bioconductor
+dependencies dynamically, Windows environments require explicit
+initialization of <code>BiocManager</code> to register the necessary
+repositories and build binary packages smoothly.</p>
+<p>** Setup Script for Laptop Users ** To streamline setup and resolve
+cross-platform dependency issues (especially on Windows), an automated
+setup script is included in the project root:
+<code>/scripts/00_renv_setup.R</code>.</p>
+<p>This script automatically: * Verifies and installs <code>renv</code>
+and <code>BiocManager</code> (ensuring correct Bioconductor repository
+mapping). * Restores the exact project dependencies via
+<code>renv::restore()</code>. * Conducts post-installation checks to
+ensure core packages (<code>shiny</code>, <code>dplyr</code>,
+<code>DBI</code>, <code>RSQLite</code>, <code>rvat</code>) are
+ready.</p>
 <hr />
 </div>
-<div id="requirements" class="section level1">
-<h1>✅ Requirements</h1>
-<p>Before starting, ensure the following are available on your
-system:</p>
-<div id="system-requirements" class="section level2">
+</div>
+<div id="getting-started" class="section level1">
+<h1>Getting Started</h1>
+<p>Before starting, ensure to review ‘Hardware and Software
+Specifications’ above to your chosen system:</p>
+<div id="system-requirements-1" class="section level2">
 <h2>System Requirements</h2>
 <ul>
 <li>R (≥ 4.x recommended)</li>
