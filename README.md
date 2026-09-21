@@ -6,7 +6,7 @@ output:
 ---
 RVAT NLQ Interface
 ================
-Version: 0.3 \
+Version: 0.3.1 \
 Date:    2026.09.04
 
 
@@ -71,9 +71,9 @@ The application consists of six main components:
 
 
 These components are orchestrated through:
-rvat_nlq_app.R
+"/aap/rvat_nlq_app.R""
 
-This is the **only script that end users need to run**.
+This is the **only script that end users need to run **.
 All other scripts are loaded automatically.
 ------------------------------------------------------------------------
 
@@ -94,7 +94,7 @@ For full reproducibility:
 • RStudio 2025.05.0 Build 496.pro5, Posit Software  \
 • Ollama installed (version 0.21.0)                 \
 👉 https://ollama.com/                              \
-• One or more LLM's (default: qwen2.5-coder:latest)             \
+• One or more LLM's (default: qwen2.5-coder:latest)             
 
 This configuration was used throughout development and validation.
 
@@ -107,12 +107,12 @@ Please
 Smaller models generally perform well:
 
 mistral:latest    \
-qwen2.5-coder:latest    \
+qwen2.5-coder:latest    
 
 Large models may experience reduced performance or even freeze:
 
 qwen3:8b    \
-sqlcoder:latest   \
+sqlcoder:latest   
 
 Depending on available CPU and RAM these models may:
 
@@ -127,7 +127,7 @@ Laptop Reference Specifications:\
 • Windows 11 Pro (x64)                                  \
 • CPU: 4 cores                                          \
 • 8GB RAM (available memory 7.5GB)                      \
-• Disk space to download Ollama/LLM's locally           \
+• Disk space to download Ollama/LLM's locally           
 
 
 **Windows & Bioconductor Note**
@@ -141,7 +141,7 @@ To streamline setup and resolve cross-platform dependency issues (especially on 
 This script automatically:
 * Verifies and installs `renv` and `BiocManager` (ensuring correct Bioconductor repository mapping).
 * Restores the exact project dependencies via `renv::restore()`.
-* Conducts post-installation checks to ensure core packages (`shiny`, `dplyr`, `DBI`, `RSQLite`, `rvat`) are ready.
+* Conducts post-installation checks to ensure core packages (`shiny`, `dplyr`, `DBI`, `RSQLite`, `rvat`, `ollamar`) are ready.
 
 
 ---
@@ -162,18 +162,18 @@ For **Local Laptop Environment**, see above.
 
 ## Verify package dependencies (optional)
 
-4. Run [renv_setup](source(here("scripts", "00_renv_setup.R")) to verify the restored environment
+4. Run "/scripts/00_renv_setup.R" to verify the restored environment
 
 ## Configure LLM (optional) 
 If using another LLM than default (=qwen2.5-coder:latest), configure chosen LLM.
 
-5. Open [02 Ollama OCnfig](source(here("R", "02_ollama_config.R")) and change the following line of code:
+5. Open "/R/02_ollama_config.R"and change the following line of code:
 model_name <- "qwen2.5-coder:latest" (line 131, under MODEL CONFIGURATION (USER EDITABLE))
 
 
 ## Run the application
 
-6. Run the application [rvat_nlq_app](source(here("R", "02_ollama_config.R")))
+6. Run "/app/rvat_nlq_app.R"
 
 
 # Utilities and Trobleshooting
