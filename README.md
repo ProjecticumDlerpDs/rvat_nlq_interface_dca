@@ -1,6 +1,6 @@
 RVAT NLQ Interface
 ================
-Version: 0.4 \
+Version: 0.4.1 \
 Date:    2026.09.21
 
 
@@ -117,7 +117,7 @@ Depending on available CPU and RAM these models may:
 
 This behaviour is related to hardware constraints rather than application logic.
 
-Laptop Reference Specifications:\
+**Laptop Reference Specifications:**\
 • Dell Latitude 5220                                    \
 • Windows 11 Pro (x64)                                  \
 • CPU: 4 cores                                          \
@@ -138,6 +138,51 @@ This script automatically:
 * Restores the exact project dependencies via `renv::restore()`.
 * Conducts post-installation checks to ensure core packages (`shiny`, `dplyr`, `DBI`, `RSQLite`, `rvat`, `ollamar`) are ready.
 
+### To Getting Started on Windows Laptop
+
+1. Ensure at least:
+• Windows 11 Pro (x64)                                  \
+• CPU: 4 cores                                          \
+• 8GB RAM (available memory 7.5GB)                      \
+• Disk space to download Ollama/LLM's locally           \
+👉 Individual LLM's may require up to tens of GB's of disk space!
+
+2. Install:
+• R version 4.5.0 (2025-04-11)                      \ 
+• RStudio 2025.05.0 Build 496.pro5, Posit Software  \
+• Ollama installed (version 0.21.0)                 \
+👉 https://ollama.com/                              \
+• One or more LLM's (default: qwen2.5-coder:latest) \
+
+
+3. Create a Copy of this Project
+•	Clone the Github repository                       \
+•	Make a corresponding R project in Rstudio(Posit)  \
+•	Run renv::restore() in console                    \
+
+4. Verify Package Dependencies (including Bioconductor Windows dependency)
+
+• Run `/scripts/00_renv_setup.R` to verify the restored environment
+
+5. Configure LLM (optional) 
+If using another LLM than default (= qwen2.5-coder:latest), configure chosen LLM as follows before running app:
+
+• Open `/R/02_ollama_config.R` and edit the following line of code accordingly: \
+model_name <- "qwen2.5-coder:latest" (line 131, under [MODEL CONFIGURATION (USER EDITABLE)])
+
+6. Database Usage Mode (optional, default is advisable for laptop usage)
+By default, database mode is set to "synthetic" as defined in `R/01_db_connection.R`, which uses an augmented, subset of the database
+based on the `varInfo` table. To use all the full RVAT geodatabase schema (e.g. varInfo, var, pheno, anno, meta, dosage, etc.),
+switch to `full_gdb` before running the application by:
+
+• Open `/R/01_db_connection.R`, follow the instructions and edit lines 44-48 under 
+[DEFAULT MODE (CHANGE FOR PRODUCTION)] by commenting / un-commenting desired setting.
+
+7. Run the Application
+• Run "/app/rvat_nlq_app.R"
+
+For troubleshooting, see **Utilities and Troubleshooting** below.
+
 
 ---
 # Getting Started
@@ -148,7 +193,7 @@ This Getting Started instructions are meant for **Server Environment (Recommende
 For **Local Laptop Environment**, see above.   
 
 
-### Creating a Copy of this Project 
+### Create a Copy of this Project 
 
 1.	Clone the Github repository
 2.	Make a corresponding R project in Rstudio(Posit)
@@ -178,7 +223,7 @@ switch to `full_gdb` before running the application by:
 7. Run "/app/rvat_nlq_app.R"
 
 
-## Utilities and Trobleshooting
+## Utilities and Troubleshooting
 The `/utils/` directory contains standalone validation and troubleshooting scripts for testing individual layers of the application. 
 The scripts follow the application pipeline sequentially and are intended for development and troubleshooting, not production use.
 
