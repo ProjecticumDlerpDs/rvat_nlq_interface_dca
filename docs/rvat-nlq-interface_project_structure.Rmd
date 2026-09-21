@@ -115,7 +115,7 @@ rvat-nlq-interface/
     |       ├── triage_latency_comparison.png  # performance visualisation (speed vs throughput)
     |       └── evaluation_accuracy.png        # model accuracy comparison
     │
-    ├── tests/
+    ├── utils/
     |   ├── 100_checks_db_connection.R        # validates DB connectivity and schema access
     │   ├── 200_check_ollama_config.R         # validates Ollama connection and model availability
     |   ├── 300_check_query_execution.R       # validates NL → SQL → DB execution pipeline
