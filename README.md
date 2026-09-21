@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 RVAT NLQ Interface
@@ -80,13 +80,6 @@ All other scripts are loaded automatically.
 
 
 # System Requirements
-## Reference Environment 
-The application was developed and validated in the following server environment:
-- Operating system  : Linux(x86_64)
-- R Version         : 4.5.0 (2025-04-11)
-- CPU               : 32 cores
-- Memory            : 64GB RAM
-- Available memory  : ~ 49GB 
 
 ## Hardware and Software Specifications
 
@@ -94,30 +87,32 @@ The application was developed and validated in the following server environment:
 
 For full reproducibility:
 
-• Linux Server (x86_64)       \
-• 32 CPU cores                \
-• 64 GB RAM                   \
-• RStudio 4.5.0 (2025-04-11)  \
-• Ollama installed (0.21.0)   \
-• Ollamar installed (1.2.2)   \
-• One or more supported LLM's \
+• Linux Server (x86_64-pc-linux-gnu)                \
+• 32 CPU cores                                      \
+• 64 GB RAM (~49GB memory available)                \
+• R version 4.5.0 (2025-04-11)                      \ 
+• RStudio 2025.05.0 Build 496.pro5, Posit Software  \
+• Ollama installed (version 0.21.0)                 \
+👉 https://ollama.com/                              \
+• One or more LLM's (default: qwen2.5-coder:latest)             \
 
 This configuration was used throughout development and validation.
 
-**Local Laptop Environment**
-Experimental trial:
+
+**Local Laptop Environment**\
+Experimental trial:\
 Local execution is supported although very experimental at this stage and much dependent on available hardware.
 
 Please 
 Smaller models generally perform well:
 
-mistral:latest
-qwen2.5-coder:latest
+mistral:latest    \
+qwen2.5-coder:latest    \
 
 Large models may experience reduced performance or even freeze:
 
-qwen3:8b
-sqlcoder:latest
+qwen3:8b    \
+sqlcoder:latest   \
 
 Depending on available CPU and RAM these models may:
 
@@ -127,20 +122,20 @@ Depending on available CPU and RAM these models may:
 
 This behaviour is related to hardware constraints rather than application logic.
 
-Laptop Reference Specifications:
-• Dell Latitude 5220
-• Windows 11 Pro (x64)
-• CPU: 4 cores
-• 8GB RAM
-• Disk space to download Ollama/LLM's locally
+Laptop Reference Specifications:\
+• Dell Latitude 5220                                    \
+• Windows 11 Pro (x64)                                  \
+• CPU: 4 cores                                          \
+• 8GB RAM (available memory 7.5GB)                      \
+• Disk space to download Ollama/LLM's locally           \
 
 
-** Windows & Bioconductor Note **
+**Windows & Bioconductor Note**
 RStudio and R do not natively require Bioconductor on Windows. However, core genomic dependencies used in this project (such as `SummarizedExperiment`, required upstream by `rvat`) frequently fail to resolve automatically on Windows via standard `install.packages()`. 
 
 While macOS and Linux typically handle these upstream Bioconductor dependencies dynamically, Windows environments require explicit initialization of `BiocManager` to register the necessary repositories and build binary packages smoothly.
 
-** Setup Script for Laptop Users **
+**Setup Script for Laptop Users**
 To streamline setup and resolve cross-platform dependency issues (especially on Windows), an automated setup script is included in the project root: `/scripts/00_renv_setup.R`.
 
 This script automatically:
@@ -152,22 +147,34 @@ This script automatically:
 ---
 # Getting Started
 
-Before starting, ensure to review 'Hardware and Software Specifications' above to your chosen system:
+Before starting, ensure you have met the (minimum) 'Hardware and Software Specifications' described above.
+This Getting Started instructions are meant for **Server Environment (Recommended)**. 
 
-## System Requirements
+For **Local Laptop Environment**, see above.   
 
-- R (≥ 4.x recommended)
-- RStudio / Posit
-- Git
-- Internet connection (for package and model download)
 
-## Required Tools
+## Creating a Copy of this Project 
 
-- **Ollama (mandatory)**  
-  👉 https://ollama.com/
+1.	Clone the Github repository
+2.	Make a corresponding R project in Rstudio(Posit)
+3.	Run renv::restore() in console
 
-- At least one LLM model with tool support  
-  Recommended:
 
-```bash
-ollama pull qwen3:8b
+## Verify package dependencies (optional)
+
+4. Run [renv_setup](source(here("scripts", "00_renv_setup.R")) to verify the restored environment
+
+## Configure LLM (optional) 
+If using another LLM than default (=qwen2.5-coder:latest), configure chosen LLM.
+
+5. Open [02 Ollama OCnfig](source(here("R", "02_ollama_config.R")) and change the following line of code:
+model_name <- "qwen2.5-coder:latest" (line 131, under MODEL CONFIGURATION (USER EDITABLE))
+
+
+## Run the application
+
+6. Run the application [rvat_nlq_app](source(here("R", "02_ollama_config.R")))
+
+
+# Utilities and Trobleshooting
+(coming soon)
