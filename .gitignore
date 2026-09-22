@@ -49,6 +49,10 @@ docs/renv_changes.preview.html
 # pkgdown site - manual entry
 demo/demo_next_and_archive
 
+# files in root - manual entry
+README.html
+README.log
+
 # translation temp files
 po/*~
 
