@@ -47,8 +47,7 @@ docs/renv_changes_files/
 docs/renv_changes.preview.html
 
 # pkgdown site - manual entry
-demo/
-data/demo_next_and_archive
+demo/demo_next_and_archive
 
 # translation temp files
 po/*~
