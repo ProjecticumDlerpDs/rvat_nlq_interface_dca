@@ -42,10 +42,10 @@ library(here)
 # ------------------------------------------------------------
 
 # Development default:
-DB_MODE_DEFAULT <- "synthetic"
+# DB_MODE_DEFAULT <- "synthetic"
 
 # 👉 For production, switch to:
-# DB_MODE_DEFAULT <- "full_gdb"
+DB_MODE_DEFAULT <- "full_gdb"
 
 # ------------------------------------------------------------
 # RESOLVE DB MODE

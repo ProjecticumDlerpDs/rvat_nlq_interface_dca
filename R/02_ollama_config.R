@@ -162,37 +162,137 @@ cat("- Recommended for SQL tasks: 0.0 – 0.2\n")
 
 build_prompt <- function(user_query, con, ctx) {
   
+  # ----------------------------------------------------------
+  # SYNTHETIC MODE
+  # ----------------------------------------------------------
+  
   if (ctx$restriction) {
     
-    cols <- DBI::dbGetQuery(
-      con, paste0("PRAGMA table_info(", ctx$table, ")")
-    )$name
-    
-    paste(
-      "You are a SQLite expert.",
-      paste0("Use table: ", ctx$table),
-      paste("Columns:", paste(cols, collapse = ", ")),
-      "Return ONLY a valid SQLite SELECT statement.",
-      "Avoid explanations or markdown.",
-      "",
-      "Task:",
-      user_query
+    cols <- DBI::dbListFields(
+      con,
+      ctx$table
     )
     
-  } else {
-    
-    paste(
-      "You are a SQLite expert.",
-      "full_gdb mode → full schema available",
-      "Use valid joins where needed.",
-      "Return ONLY a valid SQLite SELECT statement.",
-      "Avoid explanations or markdown.",
-      "",
-      "Task:",
-      user_query
+    return(
+      paste(
+        "You are a SQLite SQL generator.",
+        paste0("Use table: ", ctx$table),
+        paste(
+          "Columns:",
+          paste(cols, collapse = ", ")
+        ),
+        "Generate a SQLite query using ONLY the table and columns defined above.",
+        "Return ONLY a valid SQLite SELECT statement.",
+        "Do not return explanations or markdown.",
+        "",
+        "User question:",
+        user_query
+      )
     )
   }
-}
+  
+  # ----------------------------------------------------------
+  # FULL_GDB MODE
+  # ----------------------------------------------------------
+  
+  available_tables <- DBI::dbListTables(con)
+  
+  # Expose the real full-GDB tables to the NL -> SQL model.
+  # varInfo_synthetic is intentionally excluded because it is
+  # an application-generated development table, not part of the
+  # production full-GDB schema.
+  full_gdb_tables <- c(
+    "varInfo",
+    "var",
+    "dosage",
+    "pheno",
+    "SM",
+    "anno",
+    "cohort",
+    "meta",
+    "var_ranges"
+  )
+  
+  full_gdb_tables <- full_gdb_tables[
+    full_gdb_tables %in% available_tables
+  ]
+  
+  if (length(full_gdb_tables) == 0) {
+    stop("No expected full_gdb tables were found.")
+  }
+  
+  
+  # ----------------------------------------------------------
+  # BUILD TABLE SCHEMA
+  # ----------------------------------------------------------
+  
+  schema_parts <- lapply(
+    full_gdb_tables,
+    function(tbl) {
+      
+      cols <- DBI::dbListFields(
+        con,
+        tbl
+      )
+      
+      paste0(
+        "Table: ",
+        tbl,
+        "\nColumns: ",
+        paste(cols, collapse = ", ")
+      )
+    }
+  )
+  
+  schema_text <- paste(
+    unlist(schema_parts),
+    collapse = "\n\n"
+  )
+  
+  
+  # ----------------------------------------------------------
+  # KNOWN DATABASE RELATIONSHIPS
+  # ----------------------------------------------------------
+  
+  relationship_text <- paste(
+    "Known relationships:",
+    "varInfo.VAR_id = var.VAR_id",
+    "varInfo.VAR_id = dosage.VAR_id",
+    "var.VAR_id = dosage.VAR_id",
+    "SM.IID = pheno.IID",
+    sep = "\n"
+  )
+  
+  
+  # ----------------------------------------------------------
+  # BUILD FULL_GDB PROMPT
+  # ----------------------------------------------------------
+  
+  return(
+    paste(
+      "You are a SQLite SQL generator.",
+      "",
+      "The database contains the following tables and columns:",
+      "",
+      schema_text,
+      "",
+      relationship_text,
+      "",
+      "Rules:",
+      "Use only tables and columns defined above.",
+      "Use only the explicitly stated relationships when joining tables.",
+      "Do not infer joins merely because columns have similar names.",
+      "Do not join phenotype/sample data to dosage or variant data unless an explicit relationship is provided.",
+      "The GT column in dosage is a BLOB and must not be interpreted as a conventional relational column.",
+      "Prefer the smallest number of tables necessary to answer the question.",
+      "For gene and variant annotation questions, prefer varInfo when it contains all required information.",
+      "Return ONLY a valid SQLite SELECT statement.",
+      "Do not return explanations or markdown.",
+      "",
+      "User question:",
+      user_query
+    )
+  )
 
 # ------------------------------------------------------------
 # SQL GENERATOR
@@ -204,18 +304,42 @@ generate_sql_ollama <- function(user_query, con, ctx) {
   
   resp <- ollamar::chat(
     model = model_name,
-    messages = list(list(role = "user", content = prompt))
+    messages = list(
+      list(
+        role = "user",
+        content = prompt
+      )
+    )
   )
   
   parsed <- resp |> httr2::resp_body_json()
   sql <- parsed$message$content
   
-  sql <- gsub("```sql", "", sql, ignore.case = TRUE)
-  sql <- gsub("```", "", sql)
-  sql <- sub(".*?(SELECT)", "\\1", sql, ignore.case = TRUE)
+  sql <- gsub(
+    "```sql",
+    "",
+    sql,
+    ignore.case = TRUE
+  )
+  
+  sql <- gsub(
+    "```",
+    "",
+    sql
+  )
+  
+  sql <- sub(
+    ".*?(SELECT)",
+    "\\1",
+    sql,
+    ignore.case = TRUE
+  )
+  
   sql <- trimws(sql)
   
-  if (nchar(sql) == 0) stop("No SQL returned from model")
+  if (nchar(sql) == 0) {
+    stop("No SQL returned from model")
+  }
   
   return(sql)
-}
+}}
