@@ -3,19 +3,21 @@
 #
 # PURPOSE
 # -------
-# Validate Shiny UI structure for 05_shiny_ui.R
+# Validate the static Shiny UI defined in 05_shiny_ui.R.
 #
-# This script checks:
-# 1. UI loads without errors
-# 2. UI object structure is valid
+# Checks:
+# 1. UI loads successfully
+# 2. UI structure is valid
 # 3. Required input IDs exist
 # 4. Required output IDs exist
-# 5. Markdown greeting file is accessible
+# 5. Greeting markdown is available
+# 6. UI can be rendered
 #
-# NOTE:
-# -----
-# - Static validation only (no server logic)
-# - Uses structural traversal (robust)
+# NOTE
+# ----
+# - Independent of database mode
+# - Static UI validation only
+# - Server behavior is tested in 600_check_shiny_server.R
 # ------------------------------------------------------------
 
 library(shiny)
@@ -23,91 +25,103 @@ library(bslib)
 library(DT)
 library(here)
 
+
 cat("
 =====================================
- SHINY UI CHECK
+SHINY UI CHECK
 =====================================
-Starting validation...
 ")
 
 
 # ------------------------------------------------------------
-# 1. LOAD UI SCRIPT
+# 1. LOAD UI
 # ------------------------------------------------------------
 
-cat("\n[1] Loading UI script...\n")
+cat("\n[1] Loading UI\n")
 
 source(here("R", "05_shiny_ui.R"))
 
 if (!exists("ui")) {
-  stop("❌ UI object not found after sourcing script")
+  stop(
+    "UI object was not created by 05_shiny_ui.R."
+  )
 }
 
-cat("✅ UI object loaded\n")
-
-
-# ------------------------------------------------------------
-# 2. VALIDATE UI STRUCTURE
-# ------------------------------------------------------------
-
-cat("\n[2] Checking UI structure...\n")
-
-ui_class <- class(ui)
-print(ui_class)
-
-if (!inherits(ui, "shiny.tag") && !inherits(ui, "shiny.tag.list")) {
-  warning("⚠ UI is not a standard shiny.tag / shiny.tag.list object")
+if (
+  !inherits(ui, "shiny.tag") &&
+  !inherits(ui, "shiny.tag.list")
+) {
+  stop(
+    "UI is not a valid shiny.tag or shiny.tag.list object."
+  )
 }
 
-cat("✅ UI structure appears valid\n")
+cat(
+  "UI loaded:",
+  paste(class(ui), collapse = ", "),
+  "\n"
+)
 
 
 # ------------------------------------------------------------
-# 3. HELPER: RECURSIVE ID EXTRACTION
+# 2. EXTRACT UI IDS
 # ------------------------------------------------------------
 
-cat("\n[3] Extracting UI element IDs...\n")
+cat("\n[2] Extracting UI element IDs\n")
 
 find_ids <- function(x) {
+  
   ids <- character()
   
-  # Case 1: shiny tag
   if (inherits(x, "shiny.tag")) {
     
     if (!is.null(x$attribs$id)) {
-      ids <- c(ids, x$attribs$id)
+      ids <- c(
+        ids,
+        x$attribs$id
+      )
     }
     
     if (!is.null(x$children)) {
+      
       for (child in x$children) {
-        ids <- c(ids, find_ids(child))
+        ids <- c(
+          ids,
+          find_ids(child)
+        )
       }
     }
   }
   
-  # Case 2: list (compound UI objects)
   if (is.list(x)) {
+    
     for (item in x) {
-      ids <- c(ids, find_ids(item))
+      ids <- c(
+        ids,
+        find_ids(item)
+      )
     }
   }
   
-  return(ids)
+  unique(ids)
 }
 
-ui_ids <- unique(find_ids(ui))
+ui_ids <- unique(
+  find_ids(ui)
+)
 
-cat("Detected UI IDs:\n")
+if (length(ui_ids) == 0) {
+  stop("No UI element IDs were detected.")
+}
+
 print(ui_ids)
 
-cat("✅ ID extraction complete\n")
-
 
 # ------------------------------------------------------------
-# 4. VALIDATE REQUIRED INPUT IDs
+# 3. REQUIRED INPUTS
 # ------------------------------------------------------------
 
-cat("\n[4] Checking required input components...\n")
+cat("\n[3] Checking required inputs\n")
 
 required_inputs <- c(
   "user_query",
@@ -115,20 +129,33 @@ required_inputs <- c(
   "save_chat"
 )
 
-missing_inputs <- setdiff(required_inputs, ui_ids)
+missing_inputs <- setdiff(
+  required_inputs,
+  ui_ids
+)
 
 if (length(missing_inputs) > 0) {
-  stop("❌ Missing input IDs: ", paste(missing_inputs, collapse = ", "))
+  stop(
+    "Missing required input ID(s): ",
+    paste(
+      missing_inputs,
+      collapse = ", "
+    )
+  )
 }
 
-cat("✅ All input components present\n")
+cat(
+  "Required inputs:",
+  paste(required_inputs, collapse = ", "),
+  "\n"
+)
 
 
 # ------------------------------------------------------------
-# 5. VALIDATE REQUIRED OUTPUT IDs
+# 4. REQUIRED OUTPUTS
 # ------------------------------------------------------------
 
-cat("\n[5] Checking required output components...\n")
+cat("\n[4] Checking required outputs\n")
 
 required_outputs <- c(
   "sql",
@@ -136,53 +163,106 @@ required_outputs <- c(
   "status"
 )
 
-missing_outputs <- setdiff(required_outputs, ui_ids)
+missing_outputs <- setdiff(
+  required_outputs,
+  ui_ids
+)
 
 if (length(missing_outputs) > 0) {
-  stop("❌ Missing output IDs: ", paste(missing_outputs, collapse = ", "))
+  stop(
+    "Missing required output ID(s): ",
+    paste(
+      missing_outputs,
+      collapse = ", "
+    )
+  )
 }
 
-cat("✅ All output components present\n")
+cat(
+  "Required outputs:",
+  paste(required_outputs, collapse = ", "),
+  "\n"
+)
 
 
 # ------------------------------------------------------------
-# 6. CHECK GREETING MARKDOWN FILE
+# 5. GREETING MARKDOWN
 # ------------------------------------------------------------
 
-cat("\n[6] Checking greeting markdown file...\n")
+cat("\n[5] Checking greeting markdown\n")
 
-greeting_path <- here("app", "rvat_greeting.md")
+greeting_path <- here(
+  "app",
+  "rvat_greeting.md"
+)
 
 if (!file.exists(greeting_path)) {
-  stop("❌ Greeting file not found at: ", greeting_path)
+  stop(
+    "Greeting file not found: ",
+    greeting_path
+  )
 }
 
-cat("\nPreview of greeting (first 5 lines):\n")
-cat("-------------------------------------\n")
-cat(readLines(greeting_path, n = 5), sep = "\n")
-cat("\n-------------------------------------\n")
+greeting_info <- file.info(
+  greeting_path
+)
 
-cat("✅ Greeting file accessible\n")
+if (
+  is.na(greeting_info$size) ||
+  greeting_info$size == 0
+) {
+  stop(
+    "Greeting file exists but is empty."
+  )
+}
+
+cat(
+  "Greeting file:",
+  greeting_path,
+  "\n"
+)
 
 
 # ------------------------------------------------------------
-# 7. STATIC UI RENDER CHECK
+# 6. STATIC RENDER CHECK
 # ------------------------------------------------------------
 
-cat("\n[7] Testing UI render (static)...\n")
+cat("\n[6] Testing static UI rendering\n")
 
-# Simply accessing/printing UI ensures no runtime construction errors
-print(ui)
+rendered_ui <- htmltools::renderTags(
+  ui
+)
 
-cat("✅ UI rendered without errors\n")
+if (
+  is.null(rendered_ui$html) ||
+  !nzchar(rendered_ui$html)
+) {
+  stop(
+    "UI rendering produced no HTML."
+  )
+}
+
+cat("UI rendered successfully\n")
 
 
 # ------------------------------------------------------------
-# FINAL STATUS
+# 7. FINAL STATUS
 # ------------------------------------------------------------
 
 cat("
 =====================================
- ✅ ALL CHECKS COMPLETED
+SHINY UI CHECK PASSED
 =====================================
 ")
+
+cat(
+  "Inputs validated:",
+  length(required_inputs),
+  "\n"
+)
+
+cat(
+  "Outputs validated:",
+  length(required_outputs),
+  "\n"
+)

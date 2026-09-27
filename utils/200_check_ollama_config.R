@@ -3,206 +3,342 @@
 #
 # PURPOSE
 # -------
-# Validate Ollama configuration and NL → SQL generation
+# Validate Ollama and NL -> SQL generation for:
+# - synthetic
+# - full_gdb
 #
-# This script checks:
+# Checks:
 # 1. Ollama availability
-# 2. Installed models
-# 3. Selected model functionality
-# 4. Prompt construction
+# 2. Installed and selected model
+# 3. Database context
+# 4. Mode-specific prompt content
 # 5. SQL generation
-# 6. (Optional) SQL execution against DB
-#
-# NOTE:
-# -----
-# - Troubleshooting / validation script
-# - NOT used in production pipeline
+# 6. SQL execution
+# 7. Generation timing
 # ------------------------------------------------------------
 
 library(DBI)
 library(ollamar)
-library(httr2)
 library(here)
-
-# ------------------------------------------------------------
-# LOAD CORE COMPONENTS
-# ------------------------------------------------------------
 
 source(here("R", "01_db_connection.R"))
 source(here("R", "02_ollama_config.R"))
 
 
-# ------------------------------------------------------------
-# VALIDATE DATABASE CONNECTION
-# ------------------------------------------------------------
-
-if (!exists("con")) {
-  stop("Database connection object 'con' was not created.")
-}
-
-if (!DBI::dbIsValid(con)) {
-  stop("Database connection exists but is not valid.")
-}
-
-
 cat("
 =====================================
- OLLAMA CONFIG CHECK
+OLLAMA CONFIG CHECK
 =====================================
-Starting validation...
 ")
 
-# ------------------------------------------------------------
-# 1. CHECK OLLAMA CONNECTION
-# ------------------------------------------------------------
-cat("\n[1] Checking Ollama connection...\n")
-
-tryCatch({
-  test_connection("http://localhost:11434")
-  cat("✅ Ollama connection successful\n")
-}, error = function(e) {
-  stop("❌ Ollama connection failed: ", e$message)
-})
-
 
 # ------------------------------------------------------------
-# 2. LIST AVAILABLE MODELS
+# 1. OLLAMA AND DATABASE CONNECTION
 # ------------------------------------------------------------
-cat("\n[2] Listing available models...\n")
+
+cat("\n[1] Checking connections\n")
+
+if (!exists("con") || !DBI::dbIsValid(con)) {
+  stop("Database connection is not valid.")
+}
+
+test_connection("http://localhost:11434")
+
+cat("Database connection valid\n")
+cat("Ollama connection valid\n")
+cat("DB_MODE:", DB_MODE, "\n")
+
+
+# ------------------------------------------------------------
+# 2. AVAILABLE AND SELECTED MODEL
+# ------------------------------------------------------------
+
+cat("\n[2] Checking models\n")
 
 models <- ollamar::list_models()
 
 model_list <- models$model
-if (is.null(model_list)) model_list <- models$name
+
+if (is.null(model_list)) {
+  model_list <- models$name
+}
+
+if (length(model_list) == 0) {
+  stop("No Ollama models are installed.")
+}
 
 print(model_list)
 
-if (length(model_list) == 0) {
-  stop("❌ No Ollama models found. Run: ollama pull <model>")
+if (!model_name %in% model_list) {
+  stop(
+    "Selected model is not installed: ",
+    model_name
+  )
 }
 
-cat("✅ Models detected\n")
+cat("Selected model:", model_name, "\n")
 
 
 # ------------------------------------------------------------
-# 3. VALIDATE SELECTED MODEL
+# 3. DATABASE CONTEXT
 # ------------------------------------------------------------
-cat("\n[3] Checking selected model...\n")
 
-if (!(model_name %in% model_list)) {
-  warning("⚠ Selected model not found in local Ollama registry")
-} else {
-  cat("✅ Selected model is available:", model_name, "\n")
-}
-
-
-# ------------------------------------------------------------
-# 4. CONTEXT CHECK
-# ------------------------------------------------------------
-cat("\n[4] Checking database context...\n")
+cat("\n[3] Checking database context\n")
 
 ctx <- get_active_context()
 
-print(ctx)
+str(ctx)
 
-cat("✅ Context successfully retrieved\n")
+if (DB_MODE == "synthetic") {
+  
+  if (
+    is.null(ctx$table) ||
+    ctx$table != "varInfo_synthetic"
+  ) {
+    stop(
+      "Synthetic mode returned an unexpected context."
+    )
+  }
+  
+} else if (DB_MODE == "full_gdb") {
+  
+  if (
+    is.null(ctx$tables) ||
+    length(ctx$tables) == 0
+  ) {
+    stop(
+      "full_gdb mode returned no database tables."
+    )
+  }
+  
+} else {
+  
+  stop("Unsupported DB_MODE: ", DB_MODE)
+}
+
+cat("Context valid for:", DB_MODE, "\n")
 
 
 # ------------------------------------------------------------
-# 5. PROMPT GENERATION TEST
+# 4. MODE-SPECIFIC PROMPT CHECK
 # ------------------------------------------------------------
-cat("\n[5] Testing prompt generation...\n")
+
+cat("\n[4] Testing prompt construction\n")
 
 test_query <- "show first 5 rows"
 
-prompt <- build_prompt(test_query, con, ctx)
+prompt <- build_prompt(
+  test_query,
+  con,
+  ctx
+)
 
-cat("\nGenerated prompt:\n")
-cat("-------------------------------------\n")
-cat(prompt)
-cat("\n-------------------------------------\n")
 
-cat("✅ Prompt generation successful\n")
+# ----------------------------------------------------------
+# SYNTHETIC PROMPT
+# ----------------------------------------------------------
+
+if (DB_MODE == "synthetic") {
+  
+  required_terms <- c(
+    "varInfo_synthetic",
+    "VAR_id",
+    "gene_name"
+  )
+  
+  missing_terms <- required_terms[
+    !vapply(
+      required_terms,
+      function(x) {
+        grepl(x, prompt, fixed = TRUE)
+      },
+      logical(1)
+    )
+  ]
+  
+  if (length(missing_terms) > 0) {
+    stop(
+      "Synthetic prompt is missing expected content: ",
+      paste(missing_terms, collapse = ", ")
+    )
+  }
+  
+  cat("Synthetic schema context validated\n")
+}
+
+
+# ----------------------------------------------------------
+# FULL_GDB PROMPT
+# ----------------------------------------------------------
+
+if (DB_MODE == "full_gdb") {
+  
+  required_schema_terms <- c(
+    "Table: varInfo",
+    "Table: var",
+    "Table: dosage",
+    "Table: pheno",
+    "Table: SM",
+    "Table: anno",
+    "Table: cohort",
+    "Table: meta",
+    "Table: var_ranges"
+  )
+  
+  missing_schema_terms <- required_schema_terms[
+    !vapply(
+      required_schema_terms,
+      function(x) {
+        grepl(x, prompt, fixed = TRUE)
+      },
+      logical(1)
+    )
+  ]
+  
+  if (length(missing_schema_terms) > 0) {
+    stop(
+      "Full-GDB prompt is missing table schema: ",
+      paste(missing_schema_terms, collapse = ", ")
+    )
+  }
+  
+  required_relationships <- c(
+    "varInfo.VAR_id = var.VAR_id",
+    "varInfo.VAR_id = dosage.VAR_id",
+    "var.VAR_id = dosage.VAR_id",
+    "SM.IID = pheno.IID"
+  )
+  
+  missing_relationships <- required_relationships[
+    !vapply(
+      required_relationships,
+      function(x) {
+        grepl(x, prompt, fixed = TRUE)
+      },
+      logical(1)
+    )
+  ]
+  
+  if (length(missing_relationships) > 0) {
+    stop(
+      "Full-GDB prompt is missing relationship context: ",
+      paste(missing_relationships, collapse = ", ")
+    )
+  }
+  
+  # varInfo_synthetic must not be advertised in full_gdb.
+  if (grepl(
+    "Table: varInfo_synthetic",
+    prompt,
+    fixed = TRUE
+  )) {
+    stop(
+      "Full-GDB prompt incorrectly exposes varInfo_synthetic."
+    )
+  }
+  
+  cat("Full-GDB schema and relationships validated\n")
+}
 
 
 # ------------------------------------------------------------
-# 6. SQL GENERATION TEST
+# 5. SQL GENERATION
 # ------------------------------------------------------------
-cat("\n[6] Testing NL → SQL generation...\n")
 
-sql <- tryCatch({
-  generate_sql_ollama(test_query, con, ctx)
-}, error = function(e) {
-  stop("❌ SQL generation failed: ", e$message)
-})
+cat("\n[5] Testing NL -> SQL generation\n")
+
+sql <- generate_sql_ollama(
+  test_query,
+  con,
+  ctx
+)
+
+if (
+  length(sql) != 1 ||
+  is.na(sql) ||
+  !nzchar(sql)
+) {
+  stop("SQL generation returned no usable SQL.")
+}
+
+if (!grepl(
+  "^SELECT\\b",
+  trimws(sql),
+  ignore.case = TRUE
+)) {
+  stop(
+    "Generated SQL is not a SELECT statement: ",
+    sql
+  )
+}
 
 cat("\nGenerated SQL:\n")
 cat("-------------------------------------\n")
-cat(sql)
-cat("\n-------------------------------------\n")
+cat(sql, "\n")
+cat("-------------------------------------\n")
 
-cat("✅ SQL generation successful\n")
+cat("SQL generation successful\n")
 
 
 # ------------------------------------------------------------
-# 7. SQL EXECUTION TEST (OPTIONAL BUT RECOMMENDED)
+# 6. SQL EXECUTION
 # ------------------------------------------------------------
-cat("\n[7] Testing SQL execution...\n")
 
-result <- tryCatch({
-  DBI::dbGetQuery(con, sql)
-}, error = function(e) {
-  cat("⚠ SQL execution produced error (acceptable in some cases):\n")
-  cat(e$message, "\n")
-  return(NULL)
-})
+cat("\n[6] Testing SQL execution\n")
+
+result <- DBI::dbGetQuery(
+  con,
+  sql
+)
 
 print(result)
 
-cat("✅ SQL execution test completed\n")
+cat(
+  "Rows returned:",
+  nrow(result),
+  "\n"
+)
+
+cat("SQL execution successful\n")
 
 
 # ------------------------------------------------------------
-# 8. PERFORMANCE CHECK
+# 7. GENERATION PERFORMANCE
 # ------------------------------------------------------------
-cat("\n[8] Measuring response time...\n")
 
-time <- system.time({
-  generate_sql_ollama("count rows", con, ctx)
+cat("\n[7] Measuring NL -> SQL generation time\n")
+
+elapsed <- system.time({
+  
+  generate_sql_ollama(
+    "count rows",
+    con,
+    ctx
+  )
+  
 })
 
-elapsed_sec <- as.numeric(time["elapsed"])
-
-cat("\n=====================================\n")
-cat(" PERFORMANCE MEASUREMENT\n")
-cat("=====================================\n")
-
-cat("End-to-end latency:", round(elapsed_sec, 2), "seconds\n")
-cat("Meaning: end-to-end NL → SQL pipeline time\n")
-cat("Includes: prompt construction, Ollama API call, LLM inference, and response parsing\n")
-
-cat("\nSystem time breakdown:\n")
-
 cat(
-  "User CPU time:",
-  round(time["user.self"], 2),
+  "Elapsed:",
+  round(
+    as.numeric(elapsed["elapsed"]),
+    2
+  ),
   "seconds\n"
 )
 
-cat(
-  "System CPU time:",
-  round(time["sys.self"], 2),
-  "seconds\n"
-)
-
-cat("✅ Performance check completed\n")
 
 # ------------------------------------------------------------
-# FINAL STATUS
+# 8. FINAL STATUS AND CLEANUP
 # ------------------------------------------------------------
 
 cat("
 =====================================
- ✅ ALL CHECKS COMPLETED
+OLLAMA CONFIG CHECK PASSED
 =====================================
 ")
+
+cat("Mode:", DB_MODE, "\n")
+cat("Model:", model_name, "\n")
+
+close_connection()

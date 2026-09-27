@@ -3,112 +3,162 @@
 #
 # PURPOSE
 # -------
-# Validate NL → SQL execution + logging pipeline
+# Validate execution and in-memory logging for:
+# - synthetic
+# - full_gdb
 #
-# This script checks:
-# 1. Full execution using log_query_execution()
-# 2. Correct return structure (data, SQL, error)
-# 3. Log storage (in-memory)
-# 4. Log structure and fields
-# 5. Model metadata capture
-# 6. Timing (end-to-end latency)
+# Checks:
+# 1. Logging environment
+# 2. Mode-specific query execution
+# 3. Return structure
+# 4. Log creation and structure
+# 5. Status and model metadata
+# 6. Execution timing
+# 7. Multiple log entries
+# 8. Log clearing
 #
-# NOTE:
-# -----
-# - Troubleshooting / validation script
-# - NOT part of production pipeline
-# - Assumes execution layer is already validated (see 300_check_query_execution.R)
+# Query execution itself is validated separately in
+# 300_check_query_execution.R.
 # ------------------------------------------------------------
 
 library(DBI)
 library(here)
-
-# ------------------------------------------------------------
-# LOAD PIPELINE COMPONENTS
-# ------------------------------------------------------------
 
 source(here("R", "01_db_connection.R"))
 source(here("R", "02_ollama_config.R"))
 source(here("R", "03_query_execution.R"))
 source(here("R", "04_logging_pipeline.R"))
 
-# ------------------------------------------------------------
-# VALIDATE DATABASE CONNECTION
-# ------------------------------------------------------------
-
-if (!exists("con")) {
-  stop("Database connection object 'con' was not created.")
-}
-
-if (!DBI::dbIsValid(con)) {
-  stop("Database connection exists but is not valid.")
-}
 
 cat("
 =====================================
- LOGGING PIPELINE CHECK
+LOGGING PIPELINE CHECK
 =====================================
-Starting validation...
 ")
 
-# ------------------------------------------------------------
-# 1. INITIAL STATE CHECK
-# ------------------------------------------------------------
-cat("\n[1] Checking initial log state...\n")
-
-print(get_query_log())
-
-cat("✅ Initial log (expected NULL or empty)\n")
 
 # ------------------------------------------------------------
-# 2. RUN TEST QUERY
+# 1. MODE, CONNECTION AND INITIAL LOG
 # ------------------------------------------------------------
-cat("\n[2] Running test query...\n")
 
-test_query <- "show first 5 rows"
+cat("\n[1] Checking logging environment\n")
 
-res <- log_query_execution(test_query, con)
+if (!DB_MODE %in% c("synthetic", "full_gdb")) {
+  stop("Unsupported DB_MODE: ", DB_MODE)
+}
 
-cat("\nReturned SQL:\n")
+if (!exists("con") || !DBI::dbIsValid(con)) {
+  stop("Database connection is not valid.")
+}
+
+clear_query_log()
+
+if (!is.null(get_query_log())) {
+  stop("Log was not empty after initialisation.")
+}
+
+cat("DB_MODE:", DB_MODE, "\n")
+cat("Connection valid: TRUE\n")
+cat("Initial log empty\n")
+
+
+# ------------------------------------------------------------
+# 2. MODE-SPECIFIC QUERY AND LOG
+# ------------------------------------------------------------
+
+cat("\n[2] Running logged query\n")
+
+test_query <- "Select number of variants in NEK1"
+
+if (DB_MODE == "synthetic") {
+  
+  expected_table <- "varInfo_synthetic"
+  
+} else {
+  
+  expected_table <- "varInfo"
+}
+
+res <- log_query_execution(
+  test_query,
+  con,
+  verbose = FALSE
+)
+
+if (!is.null(res$error)) {
+  stop(
+    "Logged query failed: ",
+    res$error
+  )
+}
+
+cat("Generated SQL:\n")
 print(res$sql)
 
-cat("\nReturned data preview:\n")
-print(head(res$data))
+cat("\nReturned data:\n")
+print(res$data)
 
-cat("\nReturned error (if any):\n")
-print(res$error)
-
-cat("✅ Query execution completed\n")
 
 # ------------------------------------------------------------
-# 3. VALIDATE RETURN STRUCTURE
+# 3. RETURN STRUCTURE
 # ------------------------------------------------------------
-cat("\n[3] Validating return structure...\n")
 
-stopifnot(is.list(res))
-stopifnot(all(c("data", "sql", "error") %in% names(res)))
+cat("\n[3] Validating return structure\n")
 
-cat("✅ Return structure valid\n")
+if (
+  !is.list(res) ||
+  !all(c("data", "sql", "error") %in% names(res))
+) {
+  stop(
+    "log_query_execution() returned an unexpected structure."
+  )
+}
+
+if (
+  is.null(res$sql) ||
+  length(res$sql) != 1 ||
+  is.na(res$sql) ||
+  !nzchar(res$sql)
+) {
+  stop("No usable SQL was returned.")
+}
+
+if (!grepl(
+  expected_table,
+  res$sql,
+  fixed = TRUE
+)) {
+  stop(
+    "Logged SQL does not reference expected table: ",
+    expected_table
+  )
+}
+
+cat(
+  "Expected table:",
+  expected_table,
+  "\n"
+)
+
+cat("Return structure valid\n")
+
 
 # ------------------------------------------------------------
-# 4. CHECK LOG STORAGE
+# 4. LOG CREATION AND STRUCTURE
 # ------------------------------------------------------------
-cat("\n[4] Checking in-memory log...\n")
+
+cat("\n[4] Checking log entry\n")
 
 log_df <- get_query_log()
 
-print(log_df)
-
-if (is.null(log_df)) {
-  stop("❌ Log is NULL — expected at least one entry")
+if (
+  is.null(log_df) ||
+  nrow(log_df) != 1
+) {
+  stop(
+    "Expected exactly one log entry."
+  )
 }
-
-cat("✅ Log entry stored\n")
-
-# ------------------------------------------------------------
-# 5. VALIDATE LOG STRUCTURE
-# ------------------------------------------------------------
-cat("\n[5] Validating log structure...\n")
 
 expected_cols <- c(
   "timestamp",
@@ -125,49 +175,82 @@ expected_cols <- c(
   "time_total_sec"
 )
 
-missing_cols <- setdiff(expected_cols, colnames(log_df))
+missing_cols <- setdiff(
+  expected_cols,
+  colnames(log_df)
+)
 
 if (length(missing_cols) > 0) {
-  stop("❌ Missing columns: ", paste(missing_cols, collapse = ", "))
+  stop(
+    "Missing log column(s): ",
+    paste(missing_cols, collapse = ", ")
+  )
 }
 
-cat("✅ Log structure valid\n")
+cat("Log structure valid\n")
+
 
 # ------------------------------------------------------------
-# 6. VALIDATE METADATA
+# 5. STATUS AND MODEL METADATA
 # ------------------------------------------------------------
-cat("\n[6] Checking model metadata...\n")
 
-print(log_df[, c(
-  "model",
-  "model_parameters",
-  "model_capability",
-  "model_temperature"
-)])
+cat("\n[5] Checking status and model metadata\n")
 
-cat("✅ Metadata present\n")
-
-# ------------------------------------------------------------
-# 7. VALIDATE TIMING
-# ------------------------------------------------------------
-cat("\n[7] Checking execution time...\n")
-
-print(log_df$time_total_sec)
-
-if (any(is.na(log_df$time_total_sec))) {
-  stop("❌ Missing timing values")
+if (log_df$status[1] != "PASS") {
+  stop(
+    "Expected PASS log status, received: ",
+    log_df$status[1]
+  )
 }
 
-if (any(log_df$time_total_sec <= 0)) {
-  warning("⚠ Non-positive timing detected")
+if (log_df$user_query[1] != test_query) {
+  stop("Logged user query does not match input.")
 }
 
-cat("✅ Timing values valid\n")
+if (log_df$sql_query[1] != res$sql) {
+  stop("Logged SQL does not match returned SQL.")
+}
+
+if (
+  is.na(log_df$model[1]) ||
+  log_df$model[1] != model_name
+) {
+  stop(
+    "Logged model does not match configured model."
+  )
+}
+
+cat("Status: PASS\n")
+cat("Model:", log_df$model[1], "\n")
+cat("Model capability:", log_df$model_capability[1], "\n")
+cat("Model temperature:", log_df$model_temperature[1], "\n")
+
 
 # ------------------------------------------------------------
-# 8. MULTIPLE QUERY TEST
+# 6. EXECUTION TIMING
 # ------------------------------------------------------------
-cat("\n[8] Running multiple queries...\n")
+
+cat("\n[6] Checking execution timing\n")
+
+if (
+  is.na(log_df$time_total_sec[1]) ||
+  log_df$time_total_sec[1] <= 0
+) {
+  stop("Invalid execution timing in log.")
+}
+
+cat(
+  "Execution time:",
+  round(log_df$time_total_sec[1], 2),
+  "seconds\n"
+)
+
+
+# ------------------------------------------------------------
+# 7. MULTIPLE LOG ENTRIES
+# ------------------------------------------------------------
+
+cat("\n[7] Testing multiple log entries\n")
 
 queries <- c(
   "count rows",
@@ -176,34 +259,79 @@ queries <- c(
 )
 
 for (q in queries) {
-  log_query_execution(q, con, verbose = FALSE)
+  
+  tmp <- log_query_execution(
+    q,
+    con,
+    verbose = FALSE
+  )
+  
+  if (!is.null(tmp$error)) {
+    stop(
+      "Logged query failed: ",
+      q,
+      " | ",
+      tmp$error
+    )
+  }
 }
 
 log_df_multi <- get_query_log()
 
-cat("\nLog after multiple queries:\n")
-print(log_df_multi)
+expected_entries <- 1 + length(queries)
 
-cat("✅ Multiple entries recorded\n")
+if (
+  is.null(log_df_multi) ||
+  nrow(log_df_multi) != expected_entries
+) {
+  stop(
+    "Expected ",
+    expected_entries,
+    " log entries."
+  )
+}
+
+if (any(log_df_multi$status != "PASS")) {
+  stop(
+    "One or more logged queries did not have PASS status."
+  )
+}
+
+cat(
+  "Log entries:",
+  nrow(log_df_multi),
+  "\n"
+)
+
+cat("Multiple-entry logging validated\n")
+
 
 # ------------------------------------------------------------
-# 9. CLEAR LOG TEST
+# 8. CLEAR LOG
 # ------------------------------------------------------------
-cat("\n[9] Testing log clearing...\n")
+
+cat("\n[8] Testing log clearing\n")
 
 clear_query_log()
 
-log_after_clear <- get_query_log()
-print(log_after_clear)
+if (!is.null(get_query_log())) {
+  stop("Log was not cleared successfully.")
+}
 
-cat("✅ Log cleared successfully\n")
+cat("Log cleared successfully\n")
+
 
 # ------------------------------------------------------------
-# FINAL STATUS
+# 9. FINAL STATUS AND CLEANUP
 # ------------------------------------------------------------
 
 cat("
 =====================================
- ✅ ALL CHECKS COMPLETED
+LOGGING PIPELINE CHECK PASSED
 =====================================
 ")
+
+cat("Mode:", DB_MODE, "\n")
+cat("Model:", model_name, "\n")
+
+close_connection()

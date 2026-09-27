@@ -3,148 +3,233 @@
 #
 # PURPOSE
 # -------
-# Validate NL → SQL → DB execution layer
+# Validate the NL -> SQL -> database execution layer for:
+# - synthetic
+# - full_gdb
 #
-# This script checks:
-# 1. SQL generation via execute_query()
-# 2. SQL execution on database
-# 3. Returned data structure
-# 4. Error handling
+# Checks:
+# 1. execute_query() availability
+# 2. Mode-specific query execution
+# 3. Return structure
+# 4. Generated SQL
+# 5. Returned data
+# 6. Database error handling
+# 7. Multiple NL queries
+# 8. Execution timing
 #
-# NOTE:
-# -----
-# - Troubleshooting / validation script
-# - Tests execution engine ONLY (no logging layer)
+# Logging is tested separately in 400_check_logging_pipeline.R.
 # ------------------------------------------------------------
 
 library(DBI)
 library(here)
 
-# ------------------------------------------------------------
-# LOAD COMPONENTS
-# ------------------------------------------------------------
-
 source(here("R", "01_db_connection.R"))
 source(here("R", "02_ollama_config.R"))
 source(here("R", "03_query_execution.R"))
 
-# ------------------------------------------------------------
-# VALIDATE DATABASE CONNECTION
-# ------------------------------------------------------------
-
-if (!exists("con")) {
-  stop("Database connection object 'con' was not created.")
-}
-
-if (!DBI::dbIsValid(con)) {
-  stop("Database connection exists but is not valid.")
-}
-
 
 cat("
 =====================================
- QUERY EXECUTION CHECK
+QUERY EXECUTION CHECK
 =====================================
-Starting validation...
 ")
 
-# ------------------------------------------------------------
-# 1. FUNCTION AVAILABILITY
-# ------------------------------------------------------------
-cat("\n[1] Checking function availability...\n")
 
-print(exists("execute_query"))
+# ------------------------------------------------------------
+# 1. MODE, CONNECTION AND FUNCTION
+# ------------------------------------------------------------
 
-if (!exists("execute_query")) {
-  stop("❌ execute_query() not found")
+cat("\n[1] Checking execution environment\n")
+
+if (!DB_MODE %in% c("synthetic", "full_gdb")) {
+  stop("Unsupported DB_MODE: ", DB_MODE)
 }
 
-cat("✅ Function available\n")
+if (!exists("con") || !DBI::dbIsValid(con)) {
+  stop("Database connection is not valid.")
+}
+
+if (!exists("execute_query") || !is.function(execute_query)) {
+  stop("execute_query() is not available.")
+}
+
+cat("DB_MODE:", DB_MODE, "\n")
+cat("Connection valid: TRUE\n")
+cat("execute_query() available\n")
 
 
 # ------------------------------------------------------------
-# 2. RUN VALID TEST QUERY
+# 2. MODE-SPECIFIC VALID QUERY
 # ------------------------------------------------------------
-cat("\n[2] Running valid test query...\n")
 
-test_query <- "show first 5 rows"
+cat("\n[2] Running valid NL query\n")
 
-res <- execute_query(test_query, con)
+if (DB_MODE == "synthetic") {
+  
+  test_query <- "Select number of variants in NEK1"
+  expected_table <- "varInfo_synthetic"
+  
+} else {
+  
+  test_query <- "Select number of variants in NEK1"
+  expected_table <- "varInfo"
+}
 
-cat("\nGenerated SQL:\n")
+res <- execute_query(
+  test_query,
+  con,
+  verbose = FALSE
+)
+
+if (!is.null(res$error)) {
+  stop(
+    "Query execution failed: ",
+    res$error
+  )
+}
+
+cat("Generated SQL:\n")
 print(res$sql)
 
-cat("\nReturned data preview:\n")
-print(head(res$data))
-
-cat("\nError (if any):\n")
-print(res$error)
-
-cat("✅ Query executed\n")
+cat("\nReturned data:\n")
+print(res$data)
 
 
 # ------------------------------------------------------------
-# 3. VALIDATE OUTPUT STRUCTURE
+# 3. RETURN STRUCTURE
 # ------------------------------------------------------------
-cat("\n[3] Validating return structure...\n")
 
-stopifnot(is.list(res))
-stopifnot(all(c("data", "sql", "error") %in% names(res)))
+cat("\n[3] Validating return structure\n")
 
-cat("✅ Structure valid\n")
-
-
-# ------------------------------------------------------------
-# 4. VALIDATE SQL
-# ------------------------------------------------------------
-cat("\n[4] Checking SQL output...\n")
-
-if (is.na(res$sql)) {
-  stop("❌ SQL is NA")
+if (
+  !is.list(res) ||
+  !all(c("data", "sql", "error") %in% names(res))
+) {
+  stop(
+    "execute_query() returned an unexpected structure."
+  )
 }
 
-if (!grepl("^SELECT", res$sql, ignore.case = TRUE)) {
-  warning("⚠ SQL may not be a SELECT statement")
+cat("Return structure valid\n")
+
+
+# ------------------------------------------------------------
+# 4. SQL VALIDATION
+# ------------------------------------------------------------
+
+cat("\n[4] Validating generated SQL\n")
+
+if (
+  length(res$sql) != 1 ||
+  is.na(res$sql) ||
+  !nzchar(res$sql)
+) {
+  stop("No usable SQL was returned.")
 }
 
-cat("✅ SQL looks valid\n")
-
-
-# ------------------------------------------------------------
-# 5. VALIDATE DATA OUTPUT
-# ------------------------------------------------------------
-cat("\n[5] Checking data output...\n")
-
-if (!is.null(res$data)) {
-  print(nrow(res$data))
-  cat("✅ Data returned\n")
-} else {
-  warning("⚠ No data returned")
+if (!grepl(
+  "^SELECT\\b",
+  trimws(res$sql),
+  ignore.case = TRUE
+)) {
+  stop(
+    "Generated SQL is not a SELECT statement: ",
+    res$sql
+  )
 }
 
-
-# ------------------------------------------------------------
-# 6. ERROR HANDLING TEST
-# ------------------------------------------------------------
-cat("\n[6] Testing error handling...\n")
-
-bad_query <- "this is not a valid query"
-
-res_bad <- execute_query(bad_query, con)
-
-print(res_bad$error)
-
-if (is.null(res_bad$error)) {
-  warning("⚠ Expected an error but none occurred")
-} else {
-  cat("✅ Error correctly handled\n")
+if (!grepl(
+  expected_table,
+  res$sql,
+  fixed = TRUE
+)) {
+  stop(
+    "Generated SQL does not reference expected table: ",
+    expected_table
+  )
 }
 
+cat(
+  "Expected table:",
+  expected_table,
+  "\n"
+)
+
+cat("SQL validation passed\n")
+
 
 # ------------------------------------------------------------
-# 7. MULTIPLE QUICK RUNS
+# 5. DATA VALIDATION
 # ------------------------------------------------------------
-cat("\n[7] Running multiple quick tests...\n")
+
+cat("\n[5] Validating returned data\n")
+
+if (is.null(res$data)) {
+  stop("Query returned NULL data.")
+}
+
+if (!is.data.frame(res$data)) {
+  stop("Query result is not a data.frame.")
+}
+
+if (nrow(res$data) == 0) {
+  stop("Query returned no rows.")
+}
+
+cat(
+  "Rows returned:",
+  nrow(res$data),
+  "\n"
+)
+
+cat("Data validation passed\n")
+
+
+# ------------------------------------------------------------
+# 6. DETERMINISTIC DATABASE ERROR TEST
+# ------------------------------------------------------------
+
+cat("\n[6] Testing database error handling\n")
+
+bad_sql <- "SELECT * FROM table_that_does_not_exist"
+
+error_captured <- tryCatch(
+  {
+    
+    DBI::dbGetQuery(
+      con,
+      bad_sql
+    )
+    
+    FALSE
+    
+  },
+  error = function(e) {
+    
+    cat(
+      "Expected database error captured:",
+      e$message,
+      "\n"
+    )
+    
+    TRUE
+  }
+)
+
+if (!error_captured) {
+  stop(
+    "Database error-handling test unexpectedly succeeded."
+  )
+}
+
+cat("Database error handling validated\n")
+
+
+# ------------------------------------------------------------
+# 7. MULTIPLE NL QUERY TEST
+# ------------------------------------------------------------
+
+cat("\n[7] Running multiple NL queries\n")
 
 queries <- c(
   "count rows",
@@ -153,34 +238,97 @@ queries <- c(
 )
 
 for (q in queries) {
-  tmp <- execute_query(q, con, verbose = FALSE)
-  cat("\nQuery:", q, "\n")
-  cat("Rows:", ifelse(is.null(tmp$data), NA, nrow(tmp$data)), "\n")
+  
+  tmp <- execute_query(
+    q,
+    con,
+    verbose = FALSE
+  )
+  
+  if (!is.null(tmp$error)) {
+    stop(
+      "Query failed: ",
+      q,
+      " | ",
+      tmp$error
+    )
+  }
+  
+  if (
+    is.null(tmp$sql) ||
+    is.na(tmp$sql) ||
+    !grepl(
+      "^SELECT\\b",
+      trimws(tmp$sql),
+      ignore.case = TRUE
+    )
+  ) {
+    stop(
+      "Invalid SQL generated for query: ",
+      q
+    )
+  }
+  
+  cat(
+    "Query:",
+    q,
+    "| Rows:",
+    ifelse(
+      is.null(tmp$data),
+      NA,
+      nrow(tmp$data)
+    ),
+    "\n"
+  )
 }
 
-cat("✅ Multiple queries executed\n")
+cat("Multiple query test passed\n")
 
 
 # ------------------------------------------------------------
 # 8. PERFORMANCE CHECK
 # ------------------------------------------------------------
-cat("\n[8] Measuring execution time...\n")
 
-time <- system.time({
-  execute_query("count rows", con, verbose = FALSE)
+cat("\n[8] Measuring execution time\n")
+
+elapsed <- system.time({
+  
+  perf_result <- execute_query(
+    "count rows",
+    con,
+    verbose = FALSE
+  )
+  
 })
 
-cat("Elapsed time:", round(time["elapsed"], 2), "seconds\n")
+if (!is.null(perf_result$error)) {
+  stop(
+    "Performance query failed: ",
+    perf_result$error
+  )
+}
 
-cat("✅ Performance check completed\n")
+cat(
+  "Elapsed:",
+  round(
+    as.numeric(elapsed["elapsed"]),
+    2
+  ),
+  "seconds\n"
+)
 
 
 # ------------------------------------------------------------
-# FINAL STATUS
+# 9. FINAL STATUS AND CLEANUP
 # ------------------------------------------------------------
 
 cat("
 =====================================
- ✅ ALL CHECKS COMPLETED
+QUERY EXECUTION CHECK PASSED
 =====================================
 ")
+
+cat("Mode:", DB_MODE, "\n")
+cat("Model:", model_name, "\n")
+
+close_connection()
