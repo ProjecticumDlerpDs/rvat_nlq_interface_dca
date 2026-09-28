@@ -57,19 +57,19 @@ execute_query <- function(user_query, con, verbose = TRUE) {
   
   ctx <- get_active_context()
   
-  sql <- NA
+  sql <- NA_character_
   data <- NULL
   error_msg <- NULL
   
-  # ----------------------------------------------------------
-  # GENERATE SQL
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# GENERATE SQL
+# ----------------------------------------------------------
   
   sql <- tryCatch({
     generate_sql_ollama(user_query, con, ctx)
   }, error = function(e) {
     error_msg <<- paste("SQL generation failed:", e$message)
-    return(NA)
+    return(NA_character_)
   })
   
   if (!is.na(sql) && verbose) {
@@ -79,27 +79,27 @@ execute_query <- function(user_query, con, verbose = TRUE) {
     cat("-------------------------------------\n")
   }
   
-  # ----------------------------------------------------------
-  # EXECUTE SQL (only if SQL exists)
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# EXECUTE SQL (only if SQL exists)
+# ----------------------------------------------------------
   
-  if (!is.na(sql) && is.null(error_msg)) {
+if (!is.na(sql) && is.null(error_msg)) {
     
-    data <- tryCatch({
-      DBI::dbGetQuery(con, sql)
-    }, error = function(e) {
-      error_msg <<- paste("SQL execution failed:", e$message)
-      return(NULL)
-    })
-  }
+  data <- tryCatch({
+    DBI::dbGetQuery(con, sql)
+  }, error = function(e) {
+    error_msg <<- paste("SQL execution failed:", e$message)
+    return(NULL)
+  })
+}
   
-  # ----------------------------------------------------------
-  # FINAL RETURN (ALWAYS CONSISTENT)
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# FINAL RETURN (ALWAYS CONSISTENT)
+# ----------------------------------------------------------
   
-  return(list(
-    data  = data,
-    sql   = sql,
-    error = error_msg
-  ))
+return(list(
+  data  = data,
+  sql   = sql,
+  error = error_msg
+ ))
 }
