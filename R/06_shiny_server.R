@@ -3,45 +3,54 @@
 #
 # PURPOSE
 # -------
-# Shiny server logic for the production NL -> SQL pipeline.
+# Implement Shiny server behaviour for the RVAT NL -> SQL
+# application.
 #
-# FEATURES:
-# ---------
-# - Executes queries through the logging pipeline
-# - Displays generated SQL and query results
-# - Tracks query execution status
-# - Handles successful and failed query executions
-# - Displays user-facing notifications for execution errors
-# - Saves in-memory query logs to RDS files
-# - Defers query execution through later()
+# RESPONSIBILITIES:
+# -----------------
+# - Receive natural-language queries from the UI
+# - Execute queries through the logging pipeline
+# - Display generated SQL and query results
+# - Track query execution status
+# - Display query and application errors to the user
+# - Save in-memory query history to RDS files
+# - Clear in-memory history after successful saving
 #
-# ERROR HANDLING:
-# ---------------
-# - LLM/SQL execution failures are treated as query outcomes
-# - Failed SQL is not corrected or retried automatically
-# - Errors returned by the execution pipeline are displayed
-# without modifying the original generated SQL
-# - Shiny notifications explicitly use the active session
-# - Query failures must return the UI to a usable state
-#
-# RESEARCH CONSIDERATION:
-# -----------------------
-# - Application error handling must not alter LLM output
-# - Executable SQL does not imply semantically correct SQL
-# - SQL correctness is evaluated separately from execution status
-#
-# DEPENDENCIES:
+# QUERY STATES:
 # -------------
-# - 04_logging_pipeline.R
-# - 03_query_execution.R
-# - 02_ollama_config.R
-# - 01_db_connection.R
+# Ready
+# - no query is currently running
+#
+# Running...
+# - query execution has started
+#
+# Completed
+# - query execution completed without an execution error
+#
+# Error occurred
+# - the query pipeline returned an error or an unexpected
+# application error occurred
+#
+# DESIGN:
+# -------
+# - Executes queries through 04_logging_pipeline.R
+# - Does not generate SQL directly
+# - Does not execute SQL directly against the database
+# - Does not modify generated SQL
+# - Defers query execution through later()
+# - Uses the active Shiny session for user notifications
+#
+# USED BY:
+# --------
+# - rvat_nlq_app.R
 # ------------------------------------------------------------
+
 
 library(shiny)
 library(DT)
 library(later)
 library(here)
+
 
 # ------------------------------------------------------------
 # SERVER LOGIC
@@ -54,8 +63,8 @@ server <- function(input, output, session) {
   # ----------------------------------------------------------
   
   result_data <- reactiveVal(NULL)
-  result_sql  <- reactiveVal(NULL)
-  status_msg  <- reactiveVal("Ready")
+  result_sql <- reactiveVal(NULL)
+  status_msg <- reactiveVal("Ready")
   
   
   # ----------------------------------------------------------
@@ -68,16 +77,23 @@ server <- function(input, output, session) {
     
     color <- switch(
       msg,
-      "Running..."      = "orange",
-      "Completed"       = "green",
-      "Error occurred"  = "red",
-      "Ready"           = "gray",
+      "Running..." = "orange",
+      "Completed" = "green",
+      "Error occurred" = "red",
+      "Ready" = "gray",
       "gray"
     )
     
     tags$div(
-      style = paste0("font-weight: bold; color:", color, ";"),
-      paste("Status:", msg)
+      style = paste0(
+        "font-weight: bold; color:",
+        color,
+        ";"
+      ),
+      paste(
+        "Status:",
+        msg
+      )
     )
   })
   
@@ -96,49 +112,57 @@ server <- function(input, output, session) {
     
     query <- input$user_query
     
-    later::later(function() {
-      
-      tryCatch({
+    later::later(
+      function() {
         
-        res <- log_query_execution(
-          query,
-          con,
-          verbose = FALSE
+        tryCatch(
+          {
+            
+            res <- log_query_execution(
+              query,
+              con,
+              verbose = FALSE
+            )
+            
+            result_data(res$data)
+            result_sql(res$sql)
+            
+            if (is.null(res$error)) {
+              
+              status_msg("Completed")
+              
+            } else {
+              
+              status_msg("Error occurred")
+              
+              shiny::showNotification(
+                res$error,
+                type = "error",
+                session = session
+              )
+            }
+            
+          },
+          error = function(e) {
+            
+            status_msg("Error occurred")
+            
+            shiny::showNotification(
+              paste(
+                "Unexpected error:",
+                e$message
+              ),
+              type = "error",
+              session = session
+            )
+          }
         )
         
-        result_data(res$data)
-        result_sql(res$sql)
-        
-        if (is.null(res$error)) {
-          
-          status_msg("Completed")
-          
-        } else {
-          
-          status_msg("Error occurred")
-          
-          shiny::showNotification(
-            res$error,
-            type = "error",
-            session = session
-          )
-        }
-        
-      }, error = function(e) {
-        
-        status_msg("Error occurred")
-        
-        shiny::showNotification(
-          paste("Unexpected error:", e$message),
-          type = "error",
-          session = session
-        )
-        
-      })
-      
-    }, delay = 0.1)
-    
+      },
+      delay = 0.1
+    )
   })
+  
   
   # ----------------------------------------------------------
   # DISPLAY TABLE
@@ -163,12 +187,14 @@ server <- function(input, output, session) {
   # ----------------------------------------------------------
   
   output$sql <- renderText({
-    result_sql() %||% "No query executed yet"
+    
+    result_sql() %||%
+      "No query executed yet"
   })
   
   
   # ----------------------------------------------------------
-  # SAVE LOGS (ENHANCED)
+  # SAVE QUERY HISTORY
   # ----------------------------------------------------------
   
   observeEvent(input$save_chat, {
@@ -176,50 +202,120 @@ server <- function(input, output, session) {
     df_new <- get_query_log()
     
     if (is.null(df_new)) {
-      showNotification(
-        paste(
-          "Saved snapshot + updated cumulative:",
-          basename(snapshot_file)
-        ),
-        type = "message"
+      
+      shiny::showNotification(
+        "No logs to save.",
+        type = "warning",
+        session = session
       )
+      
+      return(NULL)
     }
     
-    dir.create(here("data", "raw"), recursive = TRUE, showWarnings = FALSE)
     
-    model_name_safe <- gsub("[:/]", "_", unique(df_new$model)[1])
-    ts <- format(Sys.time(), "%Y%m%d_%H%M%S")
+    # --------------------------------------------------------
+    # OUTPUT DIRECTORY
+    # --------------------------------------------------------
     
-    # Snapshot
-    snapshot_file <- here::here(
-      "data", "raw",
-      paste0("query_log_", model_name_safe, "_", ts, ".rds")
+    dir.create(
+      here("data", "raw"),
+      recursive = TRUE,
+      showWarnings = FALSE
     )
-    saveRDS(df_new, snapshot_file)
     
-    # Cumulative
+    
+    # --------------------------------------------------------
+    # FILE IDENTIFIERS
+    # --------------------------------------------------------
+    
+    model_name_safe <- gsub(
+      "[:/]",
+      "_",
+      unique(df_new$model)[1]
+    )
+    
+    ts <- format(
+      Sys.time(),
+      "%Y%m%d_%H%M%S"
+    )
+    
+    
+    # --------------------------------------------------------
+    # SNAPSHOT
+    # --------------------------------------------------------
+    
+    snapshot_file <- here::here(
+      "data",
+      "raw",
+      paste0(
+        "query_log_",
+        model_name_safe,
+        "_",
+        ts,
+        ".rds"
+      )
+    )
+    
+    saveRDS(
+      df_new,
+      snapshot_file
+    )
+    
+    
+    # --------------------------------------------------------
+    # CUMULATIVE HISTORY
+    # --------------------------------------------------------
+    
     cumulative_file <- here::here(
-      "data", "raw",
-      paste0("query_log_", model_name_safe, "_ALL.rds")
+      "data",
+      "raw",
+      paste0(
+        "query_log_",
+        model_name_safe,
+        "_ALL.rds"
+      )
     )
     
     if (file.exists(cumulative_file)) {
-      df_existing <- readRDS(cumulative_file)
-      df_combined <- rbind(df_existing, df_new)
+      
+      df_existing <- readRDS(
+        cumulative_file
+      )
+      
+      df_combined <- rbind(
+        df_existing,
+        df_new
+      )
+      
     } else {
+      
       df_combined <- df_new
     }
     
-    saveRDS(df_combined, cumulative_file)
+    saveRDS(
+      df_combined,
+      cumulative_file
+    )
     
-    # ✅ Clear memory
+    
+    # --------------------------------------------------------
+    # CLEAR IN-MEMORY LOG
+    # --------------------------------------------------------
+    
     clear_query_log()
     
-    showNotification(
-      paste("Saved snapshot + updated cumulative:",
-            basename(snapshot_file)),
-      type = "message"
+    
+    # --------------------------------------------------------
+    # USER NOTIFICATION
+    # --------------------------------------------------------
+    
+    shiny::showNotification(
+      paste(
+        "Saved snapshot + updated cumulative:",
+        basename(snapshot_file)
+      ),
+      type = "message",
+      session = session
     )
   })
-  
-}  # ✅ ONLY ONE closing bracket for server.  
+}
