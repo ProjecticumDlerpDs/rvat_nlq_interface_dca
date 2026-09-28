@@ -3,21 +3,29 @@
 #
 # PURPOSE
 # -------
-# Shiny UI for NL → SQL query interface
+# Define the user interface for the RVAT NL -> SQL application.
 #
 # FEATURES:
 # ---------
-# - Natural language query input
-# - SQL transparency
-# - Result table display
-# - Context/guidance panel
-# - Save query history
-# - Execution status indicator
+# - Natural-language query input
+# - Run Query action
+# - Save History action
+# - Execution status display
+# - Generated SQL display
+# - Query-result table
+# - Application information panel
 #
-# NOTES:
-# ------
-# - Uses rvat_greeting.md for context
-# - Server logic handled in 06_shiny_server.R
+# DESIGN:
+# -------
+# - Defines UI elements and output containers only
+# - Does not execute queries
+# - Does not generate SQL
+# - Does not implement logging or file storage
+# - Server behaviour is defined in 06_shiny_server.R
+#
+# USED BY:
+# --------
+# - rvat_nlq_app.R
 # ------------------------------------------------------------
 
 library(shiny)
