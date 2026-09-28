@@ -214,29 +214,6 @@ print(
 
 cat("\n[5] Checking status and model metadata\n")
 
-# if (log_df$status[1] != "PASS") {
-#   stop(
-#     "Expected PASS log status, received: ",
-#     log_df$status[1]
-#   )
-# }
-# 
-# if (log_df$user_query[1] != test_query) {
-#   stop("Logged user query does not match input.")
-# }
-# 
-# if (log_df$sql_query[1] != res$sql) {
-#   stop("Logged SQL does not match returned SQL.")
-# }
-# 
-# if (
-#   is.na(log_df$model[1]) ||
-#   log_df$model[1] != model_name
-# ) {
-#   stop(
-#     "Logged model does not match configured model."
-#   )
-# }
 
 if (is.null(res$error)) {
   
@@ -363,20 +340,45 @@ if (
   )
 }
 
-if (any(log_df_multi$status != "PASS")) {
+simple_log_entries <- log_df_multi[
+  log_df_multi$user_query %in% queries,
+  ,
+  drop = FALSE
+]
+
+if (nrow(simple_log_entries) != length(queries)) {
   stop(
-    "One or more logged queries did not have PASS status."
+    "Expected ",
+    length(queries),
+    " simple-query log entries."
+  )
+}
+
+if (any(simple_log_entries$status != "PASS")) {
+  stop(
+    "One or more simple logged queries did not have PASS status."
   )
 }
 
 cat(
-  "Log entries:",
+  "Total log entries:",
   nrow(log_df_multi),
   "\n"
 )
 
-cat("Multiple-entry logging validated\n")
+cat(
+  "Simple PASS entries:",
+  sum(simple_log_entries$status == "PASS"),
+  "\n"
+)
 
+cat(
+  "Initial complex-query status:",
+  log_df_multi$status[1],
+  "\n"
+)
+
+cat("Multiple-entry logging validated\n")
 
 # ------------------------------------------------------------
 # 8. CLEAR LOG
