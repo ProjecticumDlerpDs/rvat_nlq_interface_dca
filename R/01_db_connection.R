@@ -3,14 +3,61 @@
 #
 # PURPOSE
 # -------
-# This script:
-# 1. Connects to the RVAT SQLite database (included via rvatData)
-# 2. Optionally prepares a synthetic working dataset
-# 3. Defines how the database is used in the app
+# Configure database access for the RVAT NL -> SQL pipeline.
 #
-# ✅ End users DO NOT need to manually download a database
-# ✅ Everything is handled automatically
+# RESPONSIBILITIES:
+# -----------------
+# - Resolve the active database mode:
+# * synthetic
+# * full_gdb
+# - Connect to the RVAT SQLite database supplied by rvatData
+# - Invoke mode-specific preparation through
+# scripts/10_data_preparation.R
+# - Provide the active database context used by downstream
+# pipeline components
+# - Provide controlled database connection cleanup
 #
+# DATABASE MODES:
+# ---------------
+# synthetic
+# - prepares/uses varInfo_synthetic
+# - restricts the active context to that table
+# - intended for smaller, controlled NL -> SQL queries
+#
+# full_gdb
+# - uses the full RVAT database connection
+# - does not create or restrict the full database context
+# - exposes available tables through get_active_context()
+# - table/relationship restrictions presented to the LLM are
+# defined separately in 02_ollama_config.R
+#
+# CONFIGURATION:
+# --------------
+# - DB_MODE_DEFAULT defines the repository default
+# - RVAT_DB_MODE can override the default at runtime
+#
+# DESIGN:
+# -------
+# - Database connection and context only
+# - No LLM logic
+# - No SQL-generation logic
+# - No query-execution logic
+# - No logging logic
+# - No Shiny/UI logic
+#
+# USED BY:
+# --------
+# - 02_ollama_config.R
+# - 03_query_execution.R
+# - production Shiny application
+# - diagnostic /utils scripts
+#
+# DEPENDENCIES:
+# -------------
+# - rvat
+# - rvatData
+# - DBI / RSQLite
+# - scripts/10_data_preparation.R
 # ------------------------------------------------------------
 
 library(DBI)
@@ -25,16 +72,15 @@ library(here)
 
 # ✅ Choose how the database is used:
 #
-# "synthetic" (DEFAULT)
-#   - creates/uses a smaller, augmented dataset
-#   - faster and more stable for NL→SQL queries
+# "synthetic"
+# - Creates 'varInfo_synthetic' if it does not exist
+# - Based on reproducible R-based augmentation of 'varInfo'
+# - Uses a fixed random seed during synthetic data generation
 # 
 #
 # "full_gdb"
-#   - uses the full RVAT geodatabase schema
-#   - includes all tables available in the database (e.g. varInfo, var, pheno, anno, meta, dosage, etc.)
-#   - allows complex queries and joins across multiple tables
-#   - LLM prompting focuses on core tables (varInfo, var, pheno) but is not restricted to them
+# - Uses the full database as-is
+# - Performs no schema or data modifications
 #
 #
 # ------------------------------------------------------------
@@ -51,19 +97,27 @@ DB_MODE_DEFAULT <- "full_gdb"
 # RESOLVE DB MODE
 # ------------------------------------------------------------
 
-# 1. Start with default
+# 1. Start with repository default
 DB_MODE <- DB_MODE_DEFAULT
 
-# 2. Override via environment variable (if set)
-env_mode <- Sys.getenv("RVAT_DB_MODE", unset = NA)
+# 2. Override via environment variable if explicitly set
+env_mode <- Sys.getenv("RVAT_DB_MODE", unset = NA_character_)
 
 if (!is.na(env_mode) && nzchar(env_mode)) {
   DB_MODE <- tolower(env_mode)
 }
 
-# 3. LOG RESOLVED MODE
-cat("✅ DB_MODE resolved to:", DB_MODE, "\n")
+# 3. Validate resolved mode
+if (!DB_MODE %in% c("synthetic", "full_gdb")) {
+  stop(
+    "Invalid DB_MODE: ",
+    DB_MODE,
+    ". Use 'synthetic' or 'full_gdb'."
+  )
+}
 
+# 4. Log resolved mode
+cat("✅ DB_MODE resolved to:", DB_MODE, "\n")
 
 # ------------------------------------------------------------
 # CONNECT TO DATABASE
@@ -78,9 +132,14 @@ if (!file.exists(gdbpath)) {
   stop("Database not found: ", gdbpath)
 }
 
-con <- DBI::dbConnect(SQLite(), gdbpath)
+con <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  gdbpath
+)
 
-if (!dbIsValid(con)) stop("Invalid connection")
+if (!DBI::dbIsValid(con)) {
+  stop("Invalid database connection.")
+}
 
 # ------------------------------------------------------------
 # PREPARE DATABASE (IMPORTANT STEP)
@@ -117,43 +176,48 @@ get_active_context <- function() {
   stop("Invalid DB_MODE. Use 'synthetic' or 'full_gdb'")
 }
 
-# ------------------------------------------------------------
-# OPTIONAL: VIEW FOR SIMPLER QUERIES
-# ------------------------------------------------------------
-
-# ✅ This creates a stable table name for the app / LLM
-# Only used in synthetic mode
-create_active_view <- function() {
-  
-  ctx <- get_active_context()
-  
-  if (ctx$restriction) {
-    
-    DBI::dbExecute(con, "DROP VIEW IF EXISTS active_varInfo")
-    
-    DBI::dbExecute(con, paste0("
-      CREATE TEMP VIEW active_varInfo AS
-      SELECT * FROM ", ctx$table
-    ))
-    
-  } else {
-    message("full_gdb mode: using full database schema")
-  }
-}
-
-# ------------------------------------------------------------
-# CLEANUP (IMPORTANT)
-# ------------------------------------------------------------
-# This function safely closes the database connection.
+# OPTIONAL SYNTHETIC-MODE HELPER
 #
-# ✅ Not executed automatically
-# ✅ Should be called:
-#    - at the end of scripts
-#    - when stopping Shiny app
+# Creates a temporary active_varInfo view when explicitly called.
+# The current production pipeline does not require this function.
+# Retained as an optional helper for compatible downstream usage.
 #
-# Prevents:
-#   - locked database files
-#   - memory leaks
+#
+# create_active_view <- function() {
+#   
+#   ctx <- get_active_context()
+#   
+#   if (ctx$restriction) {
+#     
+#     DBI::dbExecute(con, "DROP VIEW IF EXISTS active_varInfo")
+#     
+#     DBI::dbExecute(con, paste0("
+#       CREATE TEMP VIEW active_varInfo AS
+#       SELECT * FROM ", ctx$table
+#     ))
+#     
+#   } else {
+#     message("full_gdb mode: using full database schema")
+#   }
+# }
+
+# ------------------------------------------------------------
+# CONNECTION CLEANUP
+# ------------------------------------------------------------
+#
+# Safely closes the active database connection.
+#
+# - Not executed automatically
+# - Utility/diagnostic scripts should call this function when
+# database access is complete
+# - The current Shiny application manages a connection created
+# during application initialization; session-level connection
+# cleanup is not implemented here
+#
+# NOTE:
+# Do not attach per-session cleanup without first reviewing
+# connection scope, because 'con' is created at application
+# initialization rather than inside individual Shiny sessions.
 # ------------------------------------------------------------
 
 close_connection <- function() {
@@ -162,23 +226,3 @@ close_connection <- function() {
     message("✅ Database connection closed.")
   }
 }
-
-
-# ------------------------------------------------------------
-# DEBUG / TROUBLESHOOTING (Optional)
-# ------------------------------------------------------------
-# These lines can be uncommented if something is not working
-# as expected (e.g., missing tables, empty results).
-#
-# Not executed during normal app usage.
-
-# Example 1: Check available tables
-# DBI::dbListTables(con)
-
-# Example 2: Preview active dataset
-# ctx <- get_active_context()
-# if (!is.null(ctx$table)) {
-#   DBI::dbGetQuery(con, paste0(
-#     "SELECT * FROM ", ctx$table, " LIMIT 5"
-#   ))
-# }
