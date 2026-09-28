@@ -3,21 +3,37 @@
 #
 # PURPOSE
 # -------
-# Core NL → SQL → DB → Result pipeline
+# Execute the core NL -> SQL -> database query pipeline.
+#
+# RESPONSIBILITIES:
+# -----------------
+# - Validate the natural-language query input
+# - Obtain the active database context
+# - Generate SQL through generate_sql_ollama()
+# - Execute generated SQL against the active database
+# - Capture SQL-generation and SQL-execution errors
+# - Return query data, generated SQL, and error information
 #
 # INPUT:
-#   - user_query (string)
+# ------
+# - user_query: non-empty natural-language question
+# - con: active database connection
 #
 # OUTPUT:
-#   - list:
-#       $data  → query result (data.frame)
-#       $sql   → generated SQL
-#       $error → error message (if any)
+# -------
+# - list containing:
+# * data - query result as a data.frame, or NULL
+# * sql - generated SQL, or NA if generation failed
+# * error - error message, or NULL when execution succeeds
 #
 # DESIGN:
 # -------
-# - Pure execution layer
-# - No sourcing of dependencies
+# - Uses the database context defined by 01_db_connection.R
+# - Uses SQL generation defined by 02_ollama_config.R
+# - Does not source dependencies
+# - Does not build prompts
+# - Does not implement logging
+# - Does not contain Shiny/UI logic
 # - Assumes:
 #     * 'con' exists
 #     * 'generate_sql_ollama()' exists
