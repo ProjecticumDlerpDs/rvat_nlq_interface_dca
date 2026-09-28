@@ -3,24 +3,26 @@
 #
 # PURPOSE
 # -------
-# Validate the schema and known relationships required by
+# Validate the schema and relationship definitions used by
 # full_gdb production mode.
 #
-# Checks:
+# CHECKS:
+# -------
 # 1. full_gdb mode and database connection
 # 2. Required production tables
 # 3. Table schemas and primary keys
 # 4. Declared foreign keys and indexes
-# 5. Required join columns
-# 6. Known production relationships
+# 5. Required relationship columns
+# 6. Production relationship definitions
 # 7. Table row counts
+# 8. Absence of a direct dosage/pheno relational key
 #
-# NOTE
-# ----
+# SCOPE:
+# ------
 # - full_gdb only
 # - Read-only
 # - Does not call Ollama
-# - Does not modify the database
+# - Does not modify database schema or data
 # ------------------------------------------------------------
 
 library(DBI)
@@ -257,7 +259,7 @@ for (tbl in names(required_columns)) {
 # 6. KNOWN PRODUCTION RELATIONSHIPS
 # ------------------------------------------------------------
 
-cat("\n[6] Validating known relationships\n")
+cat("\n[6] Checking production relationship columns\n")
 
 relationships <- data.frame(
   left_table = c(
@@ -384,31 +386,31 @@ pheno_fields <- DBI::dbListFields(
   "pheno"
 )
 
-direct_dosage_pheno_keys <- intersect(
+shared_dosage_pheno_columns <- intersect(
   dosage_fields,
   pheno_fields
 )
 
-if (length(direct_dosage_pheno_keys) == 0) {
+if (length(shared_dosage_pheno_columns) == 0) {
   
   cat(
-    "No direct relational key exists between dosage ",
+    "No shared column name exists between dosage ",
     "and pheno.\n",
     sep = ""
   )
   
   cat(
-    "Production must not infer a dosage <-> pheno ",
-    "SQL join.\n",
+    "No direct dosage <-> pheno relationship is defined ",
+    "in the production relationship context.\n",
     sep = ""
   )
   
 } else {
   
   cat(
-    "WARNING: dosage and pheno now share column(s): ",
+    "WARNING: dosage and pheno share column(s): ",
     paste(
-      direct_dosage_pheno_keys,
+      shared_dosage_pheno_columns,
       collapse = ", "
     ),
     "\n"
@@ -427,6 +429,10 @@ FULL_GDB RELATIONSHIP CHECK PASSED
 ")
 
 cat("Tables validated:", length(required_tables), "\n")
-cat("Known relationships validated:", nrow(relationships), "\n")
+cat(
+  "Relationship definitions checked:",
+  nrow(relationships),
+  "\n"
+)
 
 close_connection()
