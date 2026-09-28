@@ -68,7 +68,10 @@ cat("Initial log empty\n")
 
 cat("\n[2] Running logged query\n")
 
-test_query <- "Select number of variants in NEK1"
+test_query <- paste(
+  "Which high-impact variants have at least one ALS patient",
+  "that is homozygous for this variant?"
+)
 
 if (DB_MODE == "synthetic") {
   
@@ -85,15 +88,13 @@ res <- log_query_execution(
   verbose = FALSE
 )
 
-if (!is.null(res$error)) {
-  stop(
-    "Logged query failed: ",
-    res$error
-  )
-}
-
-cat("Generated SQL:\n")
+cat("\nGenerated SQL:\n")
+cat("-------------------------------------\n")
 print(res$sql)
+cat("-------------------------------------\n")
+
+cat("\nReturned error:\n")
+print(res$error)
 
 cat("\nReturned data:\n")
 print(res$data)
@@ -142,6 +143,11 @@ cat(
 
 cat("Return structure valid\n")
 
+if (is.null(res$error)) {
+  cat("Execution outcome: SUCCESS\n")
+} else {
+  cat("Execution outcome: CONTROLLED FAILURE\n")
+}
 
 # ------------------------------------------------------------
 # 4. LOG CREATION AND STRUCTURE
@@ -189,6 +195,18 @@ if (length(missing_cols) > 0) {
 
 cat("Log structure valid\n")
 
+print(
+  log_df[
+    1,
+    c(
+      "user_query",
+      "sql_query",
+      "status",
+      "error_message",
+      "time_total_sec"
+    )
+  ]
+)
 
 # ------------------------------------------------------------
 # 5. STATUS AND MODEL METADATA
@@ -196,12 +214,67 @@ cat("Log structure valid\n")
 
 cat("\n[5] Checking status and model metadata\n")
 
-if (log_df$status[1] != "PASS") {
-  stop(
-    "Expected PASS log status, received: ",
-    log_df$status[1]
-  )
+# if (log_df$status[1] != "PASS") {
+#   stop(
+#     "Expected PASS log status, received: ",
+#     log_df$status[1]
+#   )
+# }
+# 
+# if (log_df$user_query[1] != test_query) {
+#   stop("Logged user query does not match input.")
+# }
+# 
+# if (log_df$sql_query[1] != res$sql) {
+#   stop("Logged SQL does not match returned SQL.")
+# }
+# 
+# if (
+#   is.na(log_df$model[1]) ||
+#   log_df$model[1] != model_name
+# ) {
+#   stop(
+#     "Logged model does not match configured model."
+#   )
+# }
+
+if (is.null(res$error)) {
+  
+  if (log_df$status[1] != "PASS") {
+    stop(
+      "Successful execution was not logged as PASS."
+    )
+  }
+  
+  if (!is.na(log_df$error_message[1])) {
+    stop(
+      "Successful execution unexpectedly contains an error message."
+    )
+  }
+  
+} else {
+  
+  if (log_df$status[1] != "FAIL") {
+    stop(
+      "Failed execution was not logged as FAIL."
+    )
+  }
+  
+  if (
+    is.na(log_df$error_message[1]) ||
+    !nzchar(log_df$error_message[1])
+  ) {
+    stop(
+      "Failed execution did not retain its error message."
+    )
+  }
 }
+
+
+cat("Model:", log_df$model[1], "\n")
+cat("Model capability:", log_df$model_capability[1], "\n")
+cat("Model temperature:", log_df$model_temperature[1], "\n")
+
 
 if (log_df$user_query[1] != test_query) {
   stop("Logged user query does not match input.")
@@ -220,10 +293,9 @@ if (
   )
 }
 
-cat("Status: PASS\n")
+cat("Status:", log_df$status[1], "\n")
+cat("Error:", log_df$error_message[1], "\n")
 cat("Model:", log_df$model[1], "\n")
-cat("Model capability:", log_df$model_capability[1], "\n")
-cat("Model temperature:", log_df$model_temperature[1], "\n")
 
 
 # ------------------------------------------------------------

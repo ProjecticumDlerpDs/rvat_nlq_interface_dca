@@ -3,15 +3,32 @@
 #
 # PURPOSE
 # -------
-# Shiny server logic for NL → SQL pipeline
+# Shiny server logic for the production NL -> SQL pipeline.
 #
 # FEATURES:
 # ---------
-# - Executes queries via logging pipeline
-# - Displays SQL and results
-# - Tracks execution status
-# - Saves query logs to file
-# - Handles async execution safely
+# - Executes queries through the logging pipeline
+# - Displays generated SQL and query results
+# - Tracks query execution status
+# - Handles successful and failed query executions
+# - Displays user-facing notifications for execution errors
+# - Saves in-memory query logs to RDS files
+# - Defers query execution through later()
+#
+# ERROR HANDLING:
+# ---------------
+# - LLM/SQL execution failures are treated as query outcomes
+# - Failed SQL is not corrected or retried automatically
+# - Errors returned by the execution pipeline are displayed
+# without modifying the original generated SQL
+# - Shiny notifications explicitly use the active session
+# - Query failures must return the UI to a usable state
+#
+# RESEARCH CONSIDERATION:
+# -----------------------
+# - Application error handling must not alter LLM output
+# - Executable SQL does not imply semantically correct SQL
+# - SQL correctness is evaluated separately from execution status
 #
 # DEPENDENCIES:
 # -------------
@@ -74,6 +91,8 @@ server <- function(input, output, session) {
     req(input$user_query)
     
     status_msg("Running...")
+    result_data(NULL)
+    result_sql(NULL)
     
     query <- input$user_query
     
@@ -81,32 +100,45 @@ server <- function(input, output, session) {
       
       tryCatch({
         
-        res <- log_query_execution(query, con, verbose = FALSE)
+        res <- log_query_execution(
+          query,
+          con,
+          verbose = FALSE
+        )
         
         result_data(res$data)
         result_sql(res$sql)
         
         if (is.null(res$error)) {
+          
           status_msg("Completed")
+          
         } else {
+          
           status_msg("Error occurred")
-          showNotification(res$error, type = "error")
+          
+          shiny::showNotification(
+            res$error,
+            type = "error",
+            session = session
+          )
         }
         
       }, error = function(e) {
         
         status_msg("Error occurred")
         
-        showNotification(
+        shiny::showNotification(
           paste("Unexpected error:", e$message),
-          type = "error"
+          type = "error",
+          session = session
         )
+        
       })
       
     }, delay = 0.1)
     
   })
-  
   
   # ----------------------------------------------------------
   # DISPLAY TABLE
@@ -144,8 +176,13 @@ server <- function(input, output, session) {
     df_new <- get_query_log()
     
     if (is.null(df_new)) {
-      showNotification("No logs to save.", type = "warning")
-      return(NULL)
+      showNotification(
+        paste(
+          "Saved snapshot + updated cumulative:",
+          basename(snapshot_file)
+        ),
+        type = "message"
+      )
     }
     
     dir.create(here("data", "raw"), recursive = TRUE, showWarnings = FALSE)
