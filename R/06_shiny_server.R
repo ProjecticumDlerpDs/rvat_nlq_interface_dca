@@ -223,4 +223,3 @@ server <- function(input, output, session) {
   })
   
 }  # ✅ ONLY ONE closing bracket for server.  
-#Remove remark after tripple checked!
