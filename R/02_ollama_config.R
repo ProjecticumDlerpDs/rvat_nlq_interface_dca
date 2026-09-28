@@ -293,7 +293,7 @@ build_prompt <- function(user_query, con, ctx) {
       user_query
     )
   )
-
+}
 # ------------------------------------------------------------
 # SQL GENERATOR
 # ------------------------------------------------------------
@@ -342,4 +342,4 @@ generate_sql_ollama <- function(user_query, con, ctx) {
   }
   
   return(sql)
-}}
+}
