@@ -29,7 +29,7 @@
 
 
 # ------------------------------------------------------------
-# INTERNAL STORAGE (SESSION-LEVEL)
+# INTERNAL IN-MEMORY STORAGE
 # ------------------------------------------------------------
 
 .query_log_env <- new.env(parent = emptyenv())
@@ -51,7 +51,7 @@ log_query_execution <- function(user_query, con, verbose = TRUE) {
   }
   
   # ----------------------------------------------------------
-  # START TIMING (USER CLICK → RESULT READY)
+  # START QUERY-PIPELINE TIMING
   # ----------------------------------------------------------
   
   start_time <- Sys.time()
