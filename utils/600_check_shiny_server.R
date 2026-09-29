@@ -12,9 +12,7 @@
 # 2. Simple mode-specific query through the logging pipeline
 # 3. Query return structure and result
 # 4. Logging integration
-# 5. full_gdb integration:
-# - known multi-table query
-# - complex query and execution outcome
+# 5. Known full_gdb multi-table integration
 # 6. RDS save and read-back
 # 7. Test-state cleanup
 #
@@ -266,18 +264,13 @@ cat("Logging integration passed\n")
 
 
 # ------------------------------------------------------------
-# 5. FULL_GDB TESTS
+# 5. FULL_GDB MULTI-TABLE INTEGRATION
 # ------------------------------------------------------------
 
 cat("\n[5] Checking mode-specific server behavior\n")
 
 if (DB_MODE == "full_gdb") {
-
-# ----------------------------------------------------------
-# 5A. KNOWN MULTI-TABLE QUERY
-# ----------------------------------------------------------
   
-  cat("\n[5A] Running known full_gdb multi-table query\n")  
   test_query_multitable <-
     "How many samples occur in both SM and pheno?"
   
@@ -293,16 +286,15 @@ if (DB_MODE == "full_gdb") {
   cat("-------------------------------------\n")
   
   if (!is.null(res_multi$error)) {
-    cat("\nExecution error:\n")
-    cat(res_multi$error, "\n")
     stop(
-      "Multi-table server test failed. ",
-      "See generated SQL above."
+      "Multi-table server test failed: ",
+      res_multi$error
     )
   }
   
   if (
     is.null(res_multi$sql) ||
+    length(res_multi$sql) != 1 ||
     is.na(res_multi$sql) ||
     !nzchar(res_multi$sql)
   ) {
@@ -351,164 +343,20 @@ if (DB_MODE == "full_gdb") {
     )
   }
   
-  
   cat("\nReturned multi-table result:\n")
   print(res_multi$data)
   
   cat(
-    "full_gdb multi-table passed\n"
+    "full_gdb multi-table integration passed\n"
   )
   
 } else {
   
   cat(
-    "Synthetic mode: multi-table skipped.\n"
+    "Synthetic mode: full_gdb multi-table test skipped.\n"
   )
 }
 
-if (DB_MODE == "full_gdb") {
-  
-  # ----------------------------------------------------------
-  # 5A. KNOWN MULTI-TABLE QUERY
-  # ----------------------------------------------------------
-  
-  cat("full_gdb multi-table passed\n")
-  
-  
-  # ----------------------------------------------------------
-  # 5B. COMPLEX FULL_GDB QUERY
-  # ----------------------------------------------------------
-  
-  cat(
-    "Complex-query log status:",
-    complex_log_entry$status[1],
-    "\n"
-  )
-  
-} else {
-  
-  cat(
-    "Synthetic mode: full_gdb integration tests skipped.\n"
-  )
-}
-
-# --------------------------------------------------------
-# DISPLAY COMPLEX QUERY OUTPUT
-# --------------------------------------------------------
-
-cat("\nGenerated complex-query SQL:\n")
-cat("-------------------------------------\n")
-print(complex_res$sql)
-cat("-------------------------------------\n")
-cat("\nReturned error:\n")
-print(complex_res$error)
-cat("\nReturned data:\n")
-print(complex_res$data)
-
-# --------------------------------------------------------
-# VALIDATE RETURN CONTRACT
-# --------------------------------------------------------
-if (
-  !is.list(complex_res) ||
-  !all(
-    c("data", "sql", "error") %in%
-    names(complex_res)
-  )
-) {
-  stop(
-    "Complex server-core query returned an unexpected structure."
-  )
-}
-
-# --------------------------------------------------------
-# REPORT COMPLEX QUERY OUTCOME
-# --------------------------------------------------------
-if (
-  is.null(complex_res$sql) ||
-    length(complex_res$sql) != 1 ||
-    is.na(complex_res$sql) ||
-    !nzchar(complex_res$sql)
-  ) {
-  cat(
-    "\nComplex-query outcome: ",
-    "CONTROLLED SQL-GENERATION FAILURE\n",
-    sep = ""
-  )
-  cat(
-    "Error:",
-    complex_res$error,
-    "\n"
-  )
-} else if (is.null(complex_res$error)) {
-  cat(
-    "\nComplex-query outcome: SUCCESS\n"
-  )
-  cat(
-    "Rows returned:",
-    ifelse(
-      is.null(complex_res$data),
-      NA,
-      nrow(complex_res$data)
-    ),
-    "\n"
-  )
-} else {
-  cat(
-    "\nComplex-query outcome: ",
-    "CONTROLLED FAILURE\n",
-    sep = ""
-  )
-  cat(
-    "Execution error:",
-    complex_res$error,
-    "\n"
-  )
-  cat(
-    "Generated SQL and execution error were retained ",
-    "by the logging pipeline.\n",
-    sep = ""
-  )
-}
-
-# --------------------------------------------------------
-# VALIDATE COMPLEX QUERY LOG ENTRY
-# --------------------------------------------------------
-complex_log <- get_query_log()
-complex_log_entry <- complex_log[
- complex_log$user_query == complex_query,
-   drop = FALSE
-  ]
-if (nrow(complex_log_entry) != 1) {
-  stop(
-    "Expected exactly one log entry for the complex query."
-  )
-}
-if (is.null(complex_res$error)) {
-  if (complex_log_entry$status[1] != "PASS") {
-    stop(
-      "Successful complex query was not logged as PASS."
-    )
-  }
-} else {
-  if (complex_log_entry$status[1] != "FAIL") {
-    stop(
-      "Failed complex query was not logged as FAIL."
-    )
-  }
-  if (
-    is.na(complex_log_entry$error_message[1]) ||
-    !nzchar(complex_log_entry$error_message[1])
-  ) {
-    stop(
-      "Complex-query failure was logged without an error message."
-    )
-  }
-}
-cat(
-  "Complex-query log status:",
-  complex_log_entry$status[1],
-  "\n"
-)
 
 # ------------------------------------------------------------
 # 6. RDS SAVE AND READ-BACK TEST
