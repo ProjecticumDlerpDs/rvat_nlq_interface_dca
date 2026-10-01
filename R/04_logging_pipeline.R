@@ -40,143 +40,153 @@
 # MAIN FUNCTION
 # ------------------------------------------------------------
 
-log_query_execution <- function(user_query, con, verbose = TRUE) {
+log_query_execution <- function(
+    user_query,
+    con,
+    verbose = TRUE,
+    on_sql_generated = NULL
+) {
   
-  # ----------------------------------------------------------
-  # VALIDATION
-  # ----------------------------------------------------------
+
   
-  if (missing(user_query) || nchar(user_query) == 0) {
-    stop("❌ 'user_query' must be a non-empty string")
-  }
+# ----------------------------------------------------------
+# VALIDATION
+# ----------------------------------------------------------
   
-  # ----------------------------------------------------------
-  # START QUERY-PIPELINE TIMING
-  # ----------------------------------------------------------
+if (missing(user_query) || nchar(user_query) == 0) {
+  stop("❌ 'user_query' must be a non-empty string")
+}
   
-  start_time <- Sys.time()
+
+# ----------------------------------------------------------
+# START QUERY-PIPELINE TIMING
+# ----------------------------------------------------------
   
-  # ----------------------------------------------------------
-  # EXECUTE QUERY PIPELINE
-  # ----------------------------------------------------------
+start_time <- Sys.time()
   
-  result <- tryCatch({
+
+  
+# ----------------------------------------------------------
+# EXECUTE QUERY PIPELINE
+# ----------------------------------------------------------
+  
+result <- tryCatch({
     
-    execute_query(user_query, con, verbose = verbose)
-    
-  }, error = function(e) {
-    
-    list(
-      data  = NULL,
-      sql   = NA,
-      error = e$message
-    )
-  })
-  
-  # ----------------------------------------------------------
-  # END TIMING
-  # ----------------------------------------------------------
-  
-  end_time <- Sys.time()
-  
-  time_total_sec <- as.numeric(
-    difftime(end_time, start_time, units = "secs")
+  execute_query(
+    user_query,
+    con,
+    verbose = verbose,
+    on_sql_generated = on_sql_generated
   )
-  
-  # ----------------------------------------------------------
-  # RESULT PROCESSING
-  # ----------------------------------------------------------
-  
-  status <- ifelse(is.null(result$error), "PASS", "FAIL")
-  
-  rows_returned <- ifelse(
-    is.null(result$data),
-    NA,
-    nrow(result$data)
+    
+}, error = function(e) {
+    
+  list(
+    data  = NULL,
+    sql   = NA,
+    error = e$message
   )
+})
   
-  # Optional lightweight preview (safe for logs)
-  result_preview <- if (!is.null(result$data)) {
-    paste(capture.output(utils::head(result$data, 3)), collapse = " | ")
-  } else {
-    NA
-  }
+
+# ----------------------------------------------------------
+# END TIMING
+# ----------------------------------------------------------
   
-  # ----------------------------------------------------------
-  # MODEL METADATA (FROM CONFIG)
-  # ----------------------------------------------------------
+end_time <- Sys.time()
   
-  model_used <- tryCatch(model_name, error = function(e) NA)
+time_total_sec <- as.numeric(
+  difftime(end_time, start_time, units = "secs")
+)
   
-  model_parameters <- tryCatch(
-    extract_params(model_name),
-    error = function(e) NA
-  )
+# ----------------------------------------------------------
+# RESULT PROCESSING
+# ----------------------------------------------------------
   
-  model_capability <- tryCatch(
-    infer_capability(model_name),
-    error = function(e) NA
-  )
+status <- ifelse(is.null(result$error), "PASS", "FAIL")
   
-  model_temperature <- tryCatch(
-    get_temperature(model_name),
-    error = function(e) NA
-  )
+rows_returned <- ifelse(
+  is.null(result$data),
+  NA,
+  nrow(result$data)
+)
   
-  # ----------------------------------------------------------
-  # LOG ENTRY (STRUCTURED)
-  # ----------------------------------------------------------
+# Optional lightweight preview (safe for logs)
+result_preview <- if (!is.null(result$data)) {
+  paste(capture.output(utils::head(result$data, 3)), collapse = " | ")
+} else {
+  NA
+}
   
-  log_entry <- data.frame(
-    timestamp          = as.character(start_time),
-    
-    user_query         = user_query,
-    sql_query          = ifelse(is.null(result$sql), NA, result$sql),
-    
-    rows_returned      = rows_returned,
-    result_preview     = result_preview,
-    
-    status             = status,
-    error_message      = ifelse(is.null(result$error), NA, result$error),
-    
-    model              = model_used,
-    model_parameters   = ifelse(is.na(model_parameters), "Unknown", model_parameters),
-    model_capability   = ifelse(is.na(model_capability), "Unknown", model_capability),
-    model_temperature  = ifelse(is.na(model_temperature), "Not defined", model_temperature),
-    
-    time_total_sec     = time_total_sec,
-    
-    stringsAsFactors = FALSE
-  )
+# ----------------------------------------------------------
+# MODEL METADATA (FROM CONFIG)
+# ----------------------------------------------------------
+  
+model_used <- tryCatch(model_name, error = function(e) NA)
+  
+model_parameters <- tryCatch(
+  extract_params(model_name),
+  error = function(e) NA
+)
+  
+model_capability <- tryCatch(
+  infer_capability(model_name),
+  error = function(e) NA
+)
+  
+model_temperature <- tryCatch(
+  get_temperature(model_name),
+  error = function(e) NA
+)
+  
+# ----------------------------------------------------------
+# LOG ENTRY (STRUCTURED)
+# ----------------------------------------------------------
+  
+log_entry <- data.frame(
+  timestamp          = as.character(start_time),
+  user_query         = user_query,
+  sql_query          = ifelse(is.null(result$sql), NA, result$sql),
+  rows_returned      = rows_returned,
+  result_preview     = result_preview,
+  status             = status,
+  error_message      = ifelse(is.null(result$error), NA, result$error),
+  model              = model_used,
+  model_parameters   = ifelse(is.na(model_parameters), "Unknown", model_parameters),
+  model_capability   = ifelse(is.na(model_capability), "Unknown", model_capability),
+  model_temperature  = ifelse(is.na(model_temperature), "Not defined", model_temperature),
+  time_total_sec     = time_total_sec,
+      stringsAsFactors = FALSE
+)
   
   
-  # ----------------------------------------------------------
-  # STORE LOG IN MEMORY (SESSION)
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# STORE LOG IN MEMORY (SESSION)
+# ----------------------------------------------------------
   
-  .query_log_env$log[[length(.query_log_env$log) + 1]] <- log_entry
+.query_log_env$log[[length(.query_log_env$log) + 1]] <- log_entry
   
   
-  # ----------------------------------------------------------
-  # OPTIONAL CONSOLE OUTPUT
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# OPTIONAL CONSOLE OUTPUT
+# ----------------------------------------------------------
   
-  if (verbose) {
-    cat("\n✅ Query logged\n")
-    cat("Status:", status, "\n")
-    cat("Rows returned:", rows_returned, "\n")
-    cat("Total time:", round(time_total_sec, 2), "seconds\n")
-  }
+if (verbose) {
+  cat("\n✅ Query logged\n")
+  cat("Status:", status, "\n")
+  cat("Rows returned:", rows_returned, "\n")
+  cat("Total time:", round(time_total_sec, 2), "seconds\n")
+}
   
-  # ----------------------------------------------------------
-  # RETURN RESULT (FOR UI OR DOWNSTREAM USE)
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# RETURN RESULT (FOR UI OR DOWNSTREAM USE)
+# ----------------------------------------------------------
   
-  return(list(
-    data  = result$data,
-    sql   = result$sql,
-    error = result$error
-  ))
+return(list(
+  data  = result$data,
+  sql   = result$sql,
+  error = result$error
+))
 }
 
 

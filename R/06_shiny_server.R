@@ -121,7 +121,10 @@ observeEvent(input$run_query, {
           res <- log_query_execution(
             query,
             con,
-            verbose = FALSE
+            verbose = FALSE,
+            on_sql_generated = function(sql) {
+              result_sql(sql)
+            }
           )
             
           result_data(res$data)
