@@ -18,6 +18,9 @@
 # ------
 # - user_query: non-empty natural-language question
 # - con: active database connection
+# - verbose: controls console display of generated SQL
+# - on_sql_generated: optional function called when generated SQL
+# becomes available, before database execution
 #
 # OUTPUT:
 # -------
@@ -49,7 +52,12 @@
 # MAIN EXECUTION FUNCTION
 # ------------------------------------------------------------
 
-execute_query <- function(user_query, con, verbose = TRUE) {
+execute_query <- function(
+    user_query,
+    con,
+    verbose = TRUE,
+    on_sql_generated = NULL
+) {
   
   if (missing(user_query) || nchar(user_query) == 0) {
     stop("❌ 'user_query' must be a non-empty string")
@@ -60,7 +68,8 @@ execute_query <- function(user_query, con, verbose = TRUE) {
   sql <- NA_character_
   data <- NULL
   error_msg <- NULL
-  
+
+    
 # ----------------------------------------------------------
 # GENERATE SQL
 # ----------------------------------------------------------
@@ -72,13 +81,20 @@ execute_query <- function(user_query, con, verbose = TRUE) {
     return(NA_character_)
   })
   
+  if (
+    !is.na(sql) &&
+    is.function(on_sql_generated)
+  ) {
+    on_sql_generated(sql)
+  }
+  
   if (!is.na(sql) && verbose) {
     cat("\nGenerated SQL:\n")
     cat("-------------------------------------\n")
     cat(sql, "\n")
     cat("-------------------------------------\n")
   }
-  
+
 # ----------------------------------------------------------
 # EXECUTE SQL (only if SQL exists)
 # ----------------------------------------------------------
