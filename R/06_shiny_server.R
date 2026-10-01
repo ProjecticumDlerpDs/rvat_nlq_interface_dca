@@ -278,18 +278,37 @@ cumulative_file <- here::here(
 )
   
 if (file.exists(cumulative_file)) {
-    
   df_existing <- readRDS(
     cumulative_file
   )
-    
+  # Align historical and current log schemas before combining.
+  # New fields are added as NA to older records so that existing
+  # raw observations remain unchanged.
+  all_columns <- union(
+    names(df_existing),
+    names(df_new)
+  )
+  missing_existing <- setdiff(
+    all_columns,
+    names(df_existing)
+  )
+  missing_new <- setdiff(
+    all_columns,
+    names(df_new)
+  )
+  for (col in missing_existing) {
+    df_existing[[col]] <- NA
+  }
+  for (col in missing_new) {
+    df_new[[col]] <- NA
+  }
+  df_existing <- df_existing[, all_columns, drop = FALSE]
+  df_new <- df_new[, all_columns, drop = FALSE]
   df_combined <- rbind(
     df_existing,
     df_new
   )
-      
 } else {
-      
   df_combined <- df_new
 }
     

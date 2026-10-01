@@ -485,6 +485,9 @@ generate_sql_ollama <- function(user_query, con, ctx) {
   parsed <- resp |> httr2::resp_body_json()
   sql <- parsed$message$content
   
+  prompt_tokens <- parsed$prompt_eval_count
+  generated_tokens <- parsed$eval_count
+  
   sql <- gsub(
     "```sql",
     "",
@@ -510,6 +513,18 @@ generate_sql_ollama <- function(user_query, con, ctx) {
   if (nchar(sql) == 0) {
     stop("No SQL returned from model")
   }
+  
+  attr(sql, "prompt_tokens") <- if (is.null(prompt_tokens)) {
+    NA_integer_
+  } else {
+    as.integer(prompt_tokens)
+  }
+  
+  attr(sql, "generated_tokens") <- if (is.null(generated_tokens)) {
+    NA_integer_
+  } else {
+    as.integer(generated_tokens)
+  }  
   
   return(sql)
 }

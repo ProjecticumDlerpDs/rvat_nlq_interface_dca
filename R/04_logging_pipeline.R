@@ -76,9 +76,11 @@ result <- tryCatch({
 }, error = function(e) {
     
   list(
-    data  = NULL,
-    sql   = NA,
-    error = e$message
+    data = NULL,
+    sql = NA,
+    error = e$message,
+    prompt_tokens = NA_integer_,
+    generated_tokens = NA_integer_
   )
 })
   
@@ -138,19 +140,21 @@ model_temperature <- tryCatch(
 # ----------------------------------------------------------
   
 log_entry <- data.frame(
-  timestamp          = as.character(start_time),
-  user_query         = user_query,
-  sql_query          = ifelse(is.null(result$sql), NA, result$sql),
-  rows_returned      = rows_returned,
-  result_preview     = result_preview,
-  status             = status,
-  error_message      = ifelse(is.null(result$error), NA, result$error),
-  model              = model_used,
-  model_parameters   = ifelse(is.na(model_parameters), "Unknown", model_parameters),
-  model_capability   = ifelse(is.na(model_capability), "Unknown", model_capability),
-  model_temperature  = ifelse(is.na(model_temperature), "Not defined", model_temperature),
-  time_total_sec     = time_total_sec,
-      stringsAsFactors = FALSE
+  timestamp = as.character(start_time),
+  user_query = user_query,
+  sql_query = ifelse(is.null(result$sql), NA, result$sql),
+  prompt_tokens = result$prompt_tokens,
+  generated_tokens = result$generated_tokens,
+  rows_returned = rows_returned,
+  result_preview = result_preview,
+  status = status,
+  error_message = ifelse(is.null(result$error), NA, result$error),
+  model = model_used,
+  model_parameters = ifelse(is.na(model_parameters), "Unknown", model_parameters),
+  model_capability = ifelse(is.na(model_capability), "Unknown", model_capability),
+  model_temperature = ifelse(is.na(model_temperature), "Not defined", model_temperature),
+  time_total_sec = time_total_sec,
+  stringsAsFactors = FALSE
 )
   
   
