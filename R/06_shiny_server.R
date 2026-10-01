@@ -58,264 +58,264 @@ library(here)
 
 server <- function(input, output, session) {
   
-  # ----------------------------------------------------------
-  # REACTIVE STATE
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# REACTIVE STATE
+# ----------------------------------------------------------
   
-  result_data <- reactiveVal(NULL)
-  result_sql <- reactiveVal(NULL)
-  status_msg <- reactiveVal("Ready")
+result_data <- reactiveVal(NULL)
+result_sql <- reactiveVal(NULL)
+status_msg <- reactiveVal("Ready")
   
   
-  # ----------------------------------------------------------
-  # STATUS OUTPUT
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# STATUS OUTPUT
+# ----------------------------------------------------------
   
-  output$status <- renderUI({
+output$status <- renderUI({
     
-    msg <- status_msg()
+  msg <- status_msg()
     
-    color <- switch(
-      msg,
-      "Running..." = "orange",
-      "Completed" = "green",
-      "Error occurred" = "red",
-      "Ready" = "gray",
-      "gray"
+  color <- switch(
+    msg,
+    "Running..." = "orange",
+    "Completed" = "green",
+    "Error occurred" = "red",
+    "Ready" = "gray",
+    "gray"
     )
     
-    tags$div(
-      style = paste0(
-        "font-weight: bold; color:",
-        color,
-        ";"
-      ),
-      paste(
-        "Status:",
-        msg
-      )
+  tags$div(
+    style = paste0(
+      "font-weight: bold; color:",
+      color,
+      ";"
+    ),
+    paste(
+    "Status:",
+    msg
     )
-  })
+  )
+})
   
   
-  # ----------------------------------------------------------
-  # RUN QUERY
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# RUN QUERY
+# ----------------------------------------------------------
   
-  observeEvent(input$run_query, {
+observeEvent(input$run_query, {
     
-    req(input$user_query)
+  req(input$user_query)
     
-    status_msg("Running...")
-    result_data(NULL)
-    result_sql(NULL)
+  status_msg("Running...")
+  result_data(NULL)
+  result_sql(NULL)
     
-    query <- input$user_query
+  query <- input$user_query
     
-    later::later(
-      function() {
+  later::later(
+    function() {
         
-        tryCatch(
-          {
+      tryCatch(
+        {
             
-            res <- log_query_execution(
-              query,
-              con,
-              verbose = FALSE
-            )
+          res <- log_query_execution(
+            query,
+            con,
+            verbose = FALSE
+          )
             
-            result_data(res$data)
-            result_sql(res$sql)
+          result_data(res$data)
+          result_sql(res$sql)
             
-            if (is.null(res$error)) {
+          if (is.null(res$error)) {
               
-              status_msg("Completed")
+            status_msg("Completed")
               
-            } else {
+          } else {
               
-              status_msg("Error occurred")
-              
-              shiny::showNotification(
-                res$error,
-                type = "error",
-                session = session
-              )
-            }
-            
-          },
-          error = function(e) {
-            
             status_msg("Error occurred")
-            
+              
             shiny::showNotification(
-              paste(
-                "Unexpected error:",
-                e$message
-              ),
+              res$error,
               type = "error",
               session = session
             )
           }
-        )
+            
+        },
+        error = function(e) {
+            
+          status_msg("Error occurred")
+            
+          shiny::showNotification(
+            paste(
+              "Unexpected error:",
+              e$message
+            ),
+            type = "error",
+            session = session
+          )
+        }
+      )
         
-      },
-      delay = 0.1
+    },
+    delay = 0.1
+  )
+})
+  
+  
+# ----------------------------------------------------------
+# DISPLAY TABLE
+# ----------------------------------------------------------
+  
+output$table <- DT::renderDataTable({
+    
+  req(result_data())
+    
+  DT::datatable(
+    result_data(),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE
     )
-  })
+  )
+})
   
   
-  # ----------------------------------------------------------
-  # DISPLAY TABLE
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# DISPLAY SQL
+# ----------------------------------------------------------
   
-  output$table <- DT::renderDataTable({
+output$sql <- renderText({
     
-    req(result_data())
+  result_sql() %||%
+    "No query executed yet"
+})
+  
+  
+# ----------------------------------------------------------
+# SAVE QUERY HISTORY
+# ----------------------------------------------------------
+  
+observeEvent(input$save_chat, {
     
-    DT::datatable(
-      result_data(),
-      options = list(
-        pageLength = 10,
-        scrollX = TRUE
-      )
-    )
-  })
-  
-  
-  # ----------------------------------------------------------
-  # DISPLAY SQL
-  # ----------------------------------------------------------
-  
-  output$sql <- renderText({
+  df_new <- get_query_log()
     
-    result_sql() %||%
-      "No query executed yet"
-  })
-  
-  
-  # ----------------------------------------------------------
-  # SAVE QUERY HISTORY
-  # ----------------------------------------------------------
-  
-  observeEvent(input$save_chat, {
-    
-    df_new <- get_query_log()
-    
-    if (is.null(df_new)) {
+  if (is.null(df_new)) {
       
-      shiny::showNotification(
-        "No logs to save.",
-        type = "warning",
-        session = session
-      )
-      
-      return(NULL)
-    }
-    
-    
-    # --------------------------------------------------------
-    # OUTPUT DIRECTORY
-    # --------------------------------------------------------
-    
-    dir.create(
-      here("data", "raw"),
-      recursive = TRUE,
-      showWarnings = FALSE
-    )
-    
-    
-    # --------------------------------------------------------
-    # FILE IDENTIFIERS
-    # --------------------------------------------------------
-    
-    model_name_safe <- gsub(
-      "[:/]",
-      "_",
-      unique(df_new$model)[1]
-    )
-    
-    ts <- format(
-      Sys.time(),
-      "%Y%m%d_%H%M%S"
-    )
-    
-    
-    # --------------------------------------------------------
-    # SNAPSHOT
-    # --------------------------------------------------------
-    
-    snapshot_file <- here::here(
-      "data",
-      "raw",
-      paste0(
-        "query_log_",
-        model_name_safe,
-        "_",
-        ts,
-        ".rds"
-      )
-    )
-    
-    saveRDS(
-      df_new,
-      snapshot_file
-    )
-    
-    
-    # --------------------------------------------------------
-    # CUMULATIVE HISTORY
-    # --------------------------------------------------------
-    
-    cumulative_file <- here::here(
-      "data",
-      "raw",
-      paste0(
-        "query_log_",
-        model_name_safe,
-        "_ALL.rds"
-      )
-    )
-    
-    if (file.exists(cumulative_file)) {
-      
-      df_existing <- readRDS(
-        cumulative_file
-      )
-      
-      df_combined <- rbind(
-        df_existing,
-        df_new
-      )
-      
-    } else {
-      
-      df_combined <- df_new
-    }
-    
-    saveRDS(
-      df_combined,
-      cumulative_file
-    )
-    
-    
-    # --------------------------------------------------------
-    # CLEAR IN-MEMORY LOG
-    # --------------------------------------------------------
-    
-    clear_query_log()
-    
-    
-    # --------------------------------------------------------
-    # USER NOTIFICATION
-    # --------------------------------------------------------
-    
     shiny::showNotification(
-      paste(
-        "Saved snapshot + updated cumulative:",
-        basename(snapshot_file)
-      ),
-      type = "message",
+      "No logs to save.",
+      type = "warning",
       session = session
     )
-  })
+      
+    return(NULL)
+  }
+    
+    
+# --------------------------------------------------------
+# OUTPUT DIRECTORY
+# --------------------------------------------------------
+    
+  dir.create(
+    here("data", "raw"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+    
+    
+# --------------------------------------------------------
+# FILE IDENTIFIERS
+# --------------------------------------------------------
+    
+  model_name_safe <- gsub(
+    "[:/]",
+    "_",
+    unique(df_new$model)[1]
+  )
+    
+  ts <- format(
+    Sys.time(),
+    "%Y%m%d_%H%M%S"
+  )
+    
+    
+# --------------------------------------------------------
+# SNAPSHOT
+# --------------------------------------------------------
+    
+snapshot_file <- here::here(
+  "data",
+  "raw",
+  paste0(
+    "query_log_",
+    model_name_safe,
+    "_",
+    ts,
+    ".rds"
+  )
+)
+    
+saveRDS(
+  df_new,
+  snapshot_file
+)
+    
+    
+# --------------------------------------------------------
+# CUMULATIVE HISTORY
+# --------------------------------------------------------
+    
+cumulative_file <- here::here(
+  "data",
+  "raw",
+  paste0(
+    "query_log_",
+    model_name_safe,
+    "_ALL.rds"
+  )
+)
+  
+if (file.exists(cumulative_file)) {
+    
+  df_existing <- readRDS(
+    cumulative_file
+  )
+    
+  df_combined <- rbind(
+    df_existing,
+    df_new
+  )
+      
+} else {
+      
+  df_combined <- df_new
+}
+    
+saveRDS(
+  df_combined,
+  cumulative_file
+)
+    
+    
+# --------------------------------------------------------
+# CLEAR IN-MEMORY LOG
+# --------------------------------------------------------
+    
+clear_query_log()
+    
+    
+# --------------------------------------------------------
+# USER NOTIFICATION
+# --------------------------------------------------------
+    
+shiny::showNotification(
+  paste(
+    "Saved snapshot + updated cumulative:",
+    basename(snapshot_file)
+  ),
+  type = "message",
+  session = session
+  )
+ })
 }
