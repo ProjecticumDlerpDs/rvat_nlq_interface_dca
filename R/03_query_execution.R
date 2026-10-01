@@ -19,8 +19,6 @@
 # - user_query: non-empty natural-language question
 # - con: active database connection
 # - verbose: controls console display of generated SQL
-# - on_sql_generated: optional function called when generated SQL
-# becomes available, before database execution
 #
 # OUTPUT:
 # -------

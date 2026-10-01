@@ -40,12 +40,7 @@
 # MAIN FUNCTION
 # ------------------------------------------------------------
 
-log_query_execution <- function(
-    user_query,
-    con,
-    verbose = TRUE,
-    on_sql_generated = NULL
-) {
+log_query_execution <- function(user_query, con, verbose = TRUE) {
   
 
   
@@ -75,8 +70,7 @@ result <- tryCatch({
   execute_query(
     user_query,
     con,
-    verbose = verbose,
-    on_sql_generated = on_sql_generated
+    verbose = verbose
   )
     
 }, error = function(e) {

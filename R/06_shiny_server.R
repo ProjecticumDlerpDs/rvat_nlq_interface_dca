@@ -101,55 +101,52 @@ output$status <- renderUI({
 # ----------------------------------------------------------
 # RUN QUERY
 # ----------------------------------------------------------
-  
+
 observeEvent(input$run_query, {
-    
+  
   req(input$user_query)
-    
+  
   status_msg("Running...")
   result_data(NULL)
   result_sql(NULL)
-    
+  
   query <- input$user_query
-    
+  
   later::later(
     function() {
-        
+      
       tryCatch(
         {
-            
+          
           res <- log_query_execution(
             query,
             con,
-            verbose = FALSE,
-            on_sql_generated = function(sql) {
-              result_sql(sql)
-            }
+            verbose = FALSE
           )
-            
+          
           result_data(res$data)
           result_sql(res$sql)
-            
+          
           if (is.null(res$error)) {
-              
+            
             status_msg("Completed")
-              
+            
           } else {
-              
+            
             status_msg("Error occurred")
-              
+            
             shiny::showNotification(
               res$error,
               type = "error",
               session = session
             )
           }
-            
+          
         },
         error = function(e) {
-            
+          
           status_msg("Error occurred")
-            
+          
           shiny::showNotification(
             paste(
               "Unexpected error:",
@@ -160,10 +157,11 @@ observeEvent(input$run_query, {
           )
         }
       )
-        
+      
     },
     delay = 0.1
   )
+  
 })
   
   
