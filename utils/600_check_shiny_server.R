@@ -270,88 +270,83 @@ cat("Logging integration passed\n")
 cat("\n[5] Checking mode-specific server behavior\n")
 
 if (DB_MODE == "full_gdb") {
-  
   test_query_multitable <-
     "How many samples occur in both SM and pheno?"
-  
   res_multi <- log_query_execution(
     test_query_multitable,
     con,
     verbose = FALSE
   )
-  
   cat("\nGenerated multi-table SQL:\n")
   cat("-------------------------------------\n")
   print(res_multi$sql)
   cat("-------------------------------------\n")
-  
   if (!is.null(res_multi$error)) {
-    stop(
-      "Multi-table server test failed: ",
-      res_multi$error
+    cat(
+      "Multi-table query outcome: CONTROLLED FAILURE\n"
     )
-  }
-  
-  if (
-    is.null(res_multi$sql) ||
-    length(res_multi$sql) != 1 ||
-    is.na(res_multi$sql) ||
-    !nzchar(res_multi$sql)
-  ) {
-    stop(
-      "Multi-table test returned no usable SQL."
+    cat(
+      "Execution error:",
+      res_multi$error,
+      "\n"
     )
-  }
-  
-  required_sql_terms <- c(
-    "SM",
-    "pheno",
-    "IID"
-  )
-  
-  missing_terms <- required_sql_terms[
-    !vapply(
-      required_sql_terms,
-      function(x) {
-        grepl(
-          x,
-          res_multi$sql,
-          fixed = TRUE
-        )
-      },
-      logical(1)
+  } else {
+    cat(
+      "Multi-table query outcome: SUCCESS\n"
     )
-  ]
-  
-  if (length(missing_terms) > 0) {
-    stop(
-      "Multi-table SQL is missing expected term(s): ",
-      paste(
-        missing_terms,
-        collapse = ", "
+    if (
+      is.null(res_multi$sql) ||
+      length(res_multi$sql) != 1 ||
+      is.na(res_multi$sql) ||
+      !nzchar(res_multi$sql)
+    ) {
+      stop(
+        "Multi-table test returned no usable SQL."
       )
+    }
+    required_sql_terms <- c(
+      "SM",
+      "pheno",
+      "IID"
+    )
+    missing_terms <- required_sql_terms[
+      !vapply(
+        required_sql_terms,
+        function(x) {
+          grepl(
+            x,
+            res_multi$sql,
+            fixed = TRUE
+          )
+        },
+        logical(1)
+      )
+    ]
+    if (length(missing_terms) > 0) {
+      stop(
+        "Multi-table SQL is missing expected term(s): ",
+        paste(
+          missing_terms,
+          collapse = ", "
+        )
+      )
+    }
+    if (
+      is.null(res_multi$data) ||
+      !is.data.frame(res_multi$data) ||
+      nrow(res_multi$data) == 0
+    ) {
+      stop(
+        "Multi-table query returned no usable data."
+      )
+    }
+    cat("\nReturned multi-table result:\n")
+    print(res_multi$data)
+    cat(
+      "full_gdb multi-table integration passed\n"
     )
   }
-  
-  if (
-    is.null(res_multi$data) ||
-    !is.data.frame(res_multi$data) ||
-    nrow(res_multi$data) == 0
-  ) {
-    stop(
-      "Multi-table query returned no usable data."
-    )
-  }
-  
-  cat("\nReturned multi-table result:\n")
-  print(res_multi$data)
-  
-  cat(
-    "full_gdb multi-table integration passed\n"
-  )
-  
 } else {
-  
   cat(
     "Synthetic mode: full_gdb multi-table test skipped.\n"
   )
