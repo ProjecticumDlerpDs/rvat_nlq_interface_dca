@@ -66,6 +66,10 @@ execute_query <- function(
   sql <- NA_character_
   data <- NULL
   error_msg <- NULL
+  prompt_tokens <- NA_integer_
+  generated_tokens <- NA_integer_
+
+
 
     
 # ----------------------------------------------------------
@@ -78,6 +82,19 @@ execute_query <- function(
     error_msg <<- paste("SQL generation failed:", e$message)
     return(NA_character_)
   })
+  
+  if (!is.na(sql)) {
+    prompt_tokens <- attr(sql, "prompt_tokens")
+    generated_tokens <- attr(sql, "generated_tokens")
+    
+    if (is.null(prompt_tokens)) {
+      prompt_tokens <- NA_integer_
+    }
+    
+    if (is.null(generated_tokens)) {
+      generated_tokens <- NA_integer_
+    }
+  }
   
   if (
     !is.na(sql) &&
@@ -112,8 +129,10 @@ if (!is.na(sql) && is.null(error_msg)) {
 # ----------------------------------------------------------
   
 return(list(
-  data  = data,
-  sql   = sql,
-  error = error_msg
+  data = data,
+  sql = sql,
+  error = error_msg,
+  prompt_tokens = prompt_tokens,
+  generated_tokens = generated_tokens
  ))
 }
