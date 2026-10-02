@@ -135,19 +135,29 @@ print(model_list)
 
 extract_params <- function(model_name) {
   
-  match <- regmatches(
+  idx <- match(
     model_name,
-    regexpr("[0-9]+b", model_name)
+    models$name
   )
   
   if (
-    length(match) == 0 ||
-    match == ""
+    is.na(idx) ||
+    !"parameter_size" %in% names(models)
   ) {
-    return(NA)
+    return(NA_character_)
   }
   
-  toupper(match)
+  value <- models$parameter_size[idx]
+  
+  if (
+    length(value) == 0 ||
+    is.na(value) ||
+    !nzchar(value)
+  ) {
+    return(NA_character_)
+  }
+  
+  return(as.character(value))
 }
 
 
