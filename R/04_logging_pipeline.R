@@ -130,9 +130,9 @@ model_capability <- tryCatch(
   error = function(e) NA
 )
   
-model_temperature <- tryCatch(
-  get_temperature(model_name),
-  error = function(e) NA
+model_temperature_used <- tryCatch(
+  as.numeric(model_temperature),
+  error = function(e) NA_real_
 )
   
 # ----------------------------------------------------------
@@ -152,7 +152,7 @@ log_entry <- data.frame(
   model = model_used,
   model_parameters = ifelse(is.na(model_parameters), "Unknown", model_parameters),
   model_capability = ifelse(is.na(model_capability), "Unknown", model_capability),
-  model_temperature = ifelse(is.na(model_temperature), "Not defined", model_temperature),
+  model_temperature = model_temperature_used,
   time_total_sec = time_total_sec,
   stringsAsFactors = FALSE
 )

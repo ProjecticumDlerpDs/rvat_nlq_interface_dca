@@ -257,6 +257,11 @@ get_temperature <- function(model) {
 
 model_name <- "qwen2.5-coder:latest"
 
+# Explicit experimental temperature.
+# Fixed at 0.8 for reproducibility and comparability
+# with the reference RVAT-LLM configuration.
+model_temperature <- 0.8
+
 cat(
   "\n✅ Selected model:",
   model_name,
@@ -280,9 +285,8 @@ model_capability <- infer_capability(
   model_name
 )
 
-model_temp <- get_temperature(
-  model_name
-)
+model_temp <- model_temperature
+
 
 
 cat("\n[Model Info]\n")
@@ -309,26 +313,11 @@ cat(
   "\n"
 )
 
-cat("Temperature:\n")
-
-if (is.na(model_temp)) {
-  
-  cat(
-    "- Not explicitly defined in model\n"
-  )
-  
-  cat(
-    "- Using Ollama default behavior\n"
-  )
-  
-} else {
-  
-  cat(
-    "- Defined in model:",
-    model_temp,
-    "\n"
-  )
-}
+cat(
+  "Temperature:",
+  model_temp,
+  "(explicit RVAT experimental setting)\n"
+ )
 
 
 # ------------------------------------------------------------
@@ -489,8 +478,10 @@ generate_sql_ollama <- function(user_query, con, ctx) {
         role = "user",
         content = prompt
       )
-    )
+    ),
+    temperature = model_temperature
   )
+  
   
   parsed <- resp |> httr2::resp_body_json()
   sql <- parsed$message$content
