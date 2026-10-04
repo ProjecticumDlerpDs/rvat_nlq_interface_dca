@@ -254,80 +254,82 @@ for (i in seq_len(nrow(benchmark))) {
     # 32_ deliberately does not duplicate this logic.
     # --------------------------------------------------------
     
-    log_query_execution(
+    execution_result <- log_query_execution(
       user_query = user_query,
       con = con,
       verbose = TRUE
     )
     
+# --------------------------------------------------------
+# RETRIEVE OBSERVATION JUST PRODUCED
+# --------------------------------------------------------
     
-    # --------------------------------------------------------
-    # RETRIEVE OBSERVATION JUST PRODUCED
-    # --------------------------------------------------------
+  current_log <- get_query_log()
     
-    current_log <- get_query_log()
-    
-    if (is.null(current_log) || nrow(current_log) == 0) {
-      stop(
-        "Production logger did not return an observation for ",
-        question_id,
-        ", run ",
-        run_id,
-        "."
-      )
-    }
-    
-    observation <- current_log[
-      nrow(current_log),
-      ,
-      drop = FALSE
-    ]
-    
-    
-    # --------------------------------------------------------
-    # ATTACH EXPERIMENTAL PROVENANCE
-    # --------------------------------------------------------
-    #
-    # These fields are known at execution time.
-    # They must therefore be captured now rather than inferred
-    # later from row order or timestamps.
-    # --------------------------------------------------------
-    
-    observation$question_id <- question_id
-    observation$run_id <- run_id
-    observation$db_mode <- db_mode_used
-    
-    
-    # --------------------------------------------------------
-    # PLACE PROVENANCE FIELDS FIRST
-    # --------------------------------------------------------
-    
-    observation <- observation[
-      ,
-      c(
-        "question_id",
-        "run_id",
-        "db_mode",
-        setdiff(
-          names(observation),
-          c(
-            "question_id",
-            "run_id",
-            "db_mode"
-          )
-        )
-      ),
-      drop = FALSE
-    ]
-    
-    
-    # --------------------------------------------------------
-    # STORE OBSERVATION
-    # --------------------------------------------------------
-    
-    raw_results[[counter]] <- observation
-    counter <- counter + 1
+  if (is.null(current_log) || nrow(current_log) == 0) {
+    stop(
+      "Production logger did not return an observation for ",
+      question_id,
+      ", run ",
+      run_id,
+      "."
+    )
   }
+    
+  observation <- current_log[
+    nrow(current_log),
+    ,
+    drop = FALSE
+  ]
+    
+    
+# --------------------------------------------------------
+# ATTACH EXPERIMENTAL PROVENANCE
+# --------------------------------------------------------
+#
+# These fields are known at execution time.
+# They must therefore be captured now rather than inferred
+# later from row order or timestamps.
+# --------------------------------------------------------
+    
+  observation$question_id <- question_id
+  observation$run_id <- run_id
+  observation$db_mode <- db_mode_used
+    
+  observation$result_full <- I(
+    list(execution_result$data)
+  )
+  
+# --------------------------------------------------------
+# PLACE PROVENANCE FIELDS FIRST
+# --------------------------------------------------------
+    
+  observation <- observation[
+    ,
+    c(
+      "question_id",
+      "run_id",
+      "db_mode",
+      setdiff(
+        names(observation),
+        c(
+          "question_id",
+          "run_id",
+          "db_mode"
+        )
+      )
+    ),
+    drop = FALSE
+  ]
+    
+    
+# --------------------------------------------------------
+# STORE OBSERVATION
+# --------------------------------------------------------
+    
+  raw_results[[counter]] <- observation
+  counter <- counter + 1
+}
 }
 
 

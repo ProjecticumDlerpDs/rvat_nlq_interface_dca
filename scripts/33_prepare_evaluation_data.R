@@ -63,7 +63,7 @@ BENCHMARK_FILE <- here(
 RAW_CAPTURE_FILE <- here(
   "data",
   "raw",
-  "raw_capture_qwen2.5-coder_latest_full_gdb_recovery_test.rds"
+  "raw_capture_qwen2.5-coder_latest_synthetic_20261004_215748.rds"
 )
 
 
@@ -367,6 +367,52 @@ evaluation_data$notes <-
   benchmark_metadata$notes[
     benchmark_match
   ]
+
+
+# ------------------------------------------------------------
+# CONVERT COMPLETE QUERY RESULTS FOR MANUAL EX EVALUATION
+# ------------------------------------------------------------
+
+evaluation_data$result_full_text <- vapply(
+  evaluation_data$result_full,
+  function(x) {
+    
+    if (is.null(x)) {
+      return(NA_character_)
+    }
+    
+    if (!is.data.frame(x)) {
+      return(
+        paste(
+          capture.output(print(x)),
+          collapse = "\n"
+        )
+      )
+    }
+    
+    paste(
+      capture.output(
+        print(
+          x,
+          row.names = FALSE
+        )
+      ),
+      collapse = "\n"
+    )
+  },
+  character(1)
+)
+
+
+# ------------------------------------------------------------
+# REMOVE STRUCTURED RESULT FROM CSV DATASET
+# ------------------------------------------------------------
+#
+# result_full remains preserved in the raw RDS.
+# The CSV uses result_full_text for manual EX evaluation.
+# ------------------------------------------------------------
+
+evaluation_data$result_full <- NULL
 
 
 # ------------------------------------------------------------
