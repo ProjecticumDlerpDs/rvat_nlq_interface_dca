@@ -1,0 +1,2363 @@
+question_id,run_id,question_type,db_mode,timestamp,user_query,expected_query,sql_query,expected_answer,result_preview,notes,EM,EX,status,error_message,rows_returned,model,model_parameters,model_capability,model_temperature,prompt_tokens,generated_tokens,time_total_sec,result_full_text
+Q01,1,Lookup Queries,synthetic,2026-10-04 22:33:49.90827,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';,Result: There are 190 variants.,  COUNT(*) | 1      190,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,18,8.508268117904663," COUNT(*)
+      190"
+Q01,2,Lookup Queries,synthetic,2026-10-04 22:33:58.439498,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';,Result: There are 190 variants.,  COUNT(*) | 1      190,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,22,2.66953182220459," COUNT(*)
+      190"
+Q01,3,Lookup Queries,synthetic,2026-10-04 22:34:01.118225,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';,Result: There are 190 variants.,  COUNT(*) | 1      190,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,22,2.6477625370025635," COUNT(*)
+      190"
+Q01,4,Lookup Queries,synthetic,2026-10-04 22:34:03.770543,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';,Result: There are 190 variants.,  COUNT(*) | 1      190,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,22,2.6574366092681885," COUNT(*)
+      190"
+Q01,5,Lookup Queries,synthetic,2026-10-04 22:34:06.432605,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'NEK1';,Result: There are 190 variants.,  COUNT(*) | 1      190,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,22,2.6802966594696045," COUNT(*)
+      190"
+Q02,1,Lookup Queries,synthetic,2026-10-04 22:34:09.117796,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",SELECT * FROM varInfo_synthetic WHERE gene_name = 'NEK1' AND HighImpact = 1 AND CADDphred > 20;,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,  VAR_id CHROM       POS          ID REF ALT   QUAL FILTER AC    AN           AF gene_name HighImpact | 1   1331  chr4 169406666 rs770767730   G   A 133.15   <NA>  1 50000        2e-05      NEK1          1 | 2   1350  chr4 169424668 rs199947197   G   C  58949   <NA> 26 49324 0.0005271268      NEK1          1 | 3   1366  chr4 169438088        <NA>   A   T 189.14   <NA>  1 48158   2.0765e-05      NEK1          1 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              0          0        41        .    .     2     2     2     0     2         0         1 | 2              0          0        36        .    .     0     1     2     0     0         0         2 | 3              0          0        37        .    .     1     2     0     0     0         0         2 |   Control_3 Control_4 Control_5 | 1         2         2         1 | 2         1         1         1 | 3         0         2         0,,,,PASS,,13,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,184,33,4.403367757797241," VAR_id CHROM       POS          ID REF ALT    QUAL FILTER AC    AN           AF gene_name HighImpact
+   1331  chr4 169406666 rs770767730   G   A  133.15   <NA>  1 50000        2e-05      NEK1          1
+   1350  chr4 169424668 rs199947197   G   C   58949   <NA> 26 49324 0.0005271268      NEK1          1
+   1366  chr4 169438088        <NA>   A   T  189.14   <NA>  1 48158   2.0765e-05      NEK1          1
+   1377  chr4 169477124 rs749428135   T   A  511.73   <NA>  1 50000        2e-05      NEK1          1
+   1416  chr4 169507793        <NA>   C   T 2583.29   <NA>  1 49066  2.03807e-05      NEK1          1
+   1423  chr4 169537807        <NA>   A   G  764.15   <NA>  1 49920  2.00321e-05      NEK1          1
+   1424  chr4 169537809 rs762590802   C   T 2173.16   <NA>  1 48908  2.04466e-05      NEK1          1
+   1429  chr4 169537856 rs758677637   G   A 2179.54   <NA>  2 46730  4.27991e-05      NEK1          1
+   1449  chr4 169561520        <NA>   C   T 4876.84   <NA>  2 46992  4.25604e-05      NEK1          1
+   1483  chr4 169590725        <NA>   C   A 2860.31   <NA>  5 46986 0.0001064147      NEK1          1
+   1484  chr4 169590743 rs387906890   G   A 4483.73   <NA>  2 49292  4.05745e-05      NEK1          1
+   1493  chr4 169599141 rs781184197   G   A 5582.65   <NA>  1 46426  2.15397e-05      NEK1          1
+   1496  chr4 169602007        <NA>   C   T 4389.01   <NA>  1 48600  2.05761e-05      NEK1          1
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              0          0        41        .    .     2     2     2     0     2         0         1
+              0          0        36        .    .     0     1     2     0     0         0         2
+              0          0        37        .    .     1     2     0     0     0         0         2
+              0          0        37        .    .     0     0     2     2     0         0         1
+              0          0        33        .    .     2     1     1     0     1         2         0
+              0          0        33        .    .     0     0     2     1     2         0         0
+              0          0        34        B    D     0     2     0     0     2         0         0
+              0          0        38        .    .     2     0     2     2     1         1         0
+              0          0        41        .    .     0     1     2     1     2         0         1
+              0          0        34        .    .     1     1     2     0     2         2         2
+              0          0        39        .    .     1     1     1     1     1         1         0
+              0          0        36        .    .     2     0     0     0     0         1         2
+              0          0        33        .    .     1     2     0     2     1         2         1
+ Control_3 Control_4 Control_5
+         2         2         1
+         1         1         1
+         0         2         0
+         2         2         0
+         0         2         1
+         0         2         1
+         1         0         1
+         2         0         0
+         2         1         2
+         2         0         0
+         1         1         2
+         0         0         1
+         2         0         2"
+Q02,2,Lookup Queries,synthetic,2026-10-04 22:34:13.528998,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",SELECT * FROM varInfo_synthetic WHERE gene_name = 'NEK1' AND HighImpact = 1 AND CADDphred > 20;,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,  VAR_id CHROM       POS          ID REF ALT   QUAL FILTER AC    AN           AF gene_name HighImpact | 1   1331  chr4 169406666 rs770767730   G   A 133.15   <NA>  1 50000        2e-05      NEK1          1 | 2   1350  chr4 169424668 rs199947197   G   C  58949   <NA> 26 49324 0.0005271268      NEK1          1 | 3   1366  chr4 169438088        <NA>   A   T 189.14   <NA>  1 48158   2.0765e-05      NEK1          1 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              0          0        41        .    .     2     2     2     0     2         0         1 | 2              0          0        36        .    .     0     1     2     0     0         0         2 | 3              0          0        37        .    .     1     2     0     0     0         0         2 |   Control_3 Control_4 Control_5 | 1         2         2         1 | 2         1         1         1 | 3         0         2         0,,,,PASS,,13,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,184,37,4.384323358535767," VAR_id CHROM       POS          ID REF ALT    QUAL FILTER AC    AN           AF gene_name HighImpact
+   1331  chr4 169406666 rs770767730   G   A  133.15   <NA>  1 50000        2e-05      NEK1          1
+   1350  chr4 169424668 rs199947197   G   C   58949   <NA> 26 49324 0.0005271268      NEK1          1
+   1366  chr4 169438088        <NA>   A   T  189.14   <NA>  1 48158   2.0765e-05      NEK1          1
+   1377  chr4 169477124 rs749428135   T   A  511.73   <NA>  1 50000        2e-05      NEK1          1
+   1416  chr4 169507793        <NA>   C   T 2583.29   <NA>  1 49066  2.03807e-05      NEK1          1
+   1423  chr4 169537807        <NA>   A   G  764.15   <NA>  1 49920  2.00321e-05      NEK1          1
+   1424  chr4 169537809 rs762590802   C   T 2173.16   <NA>  1 48908  2.04466e-05      NEK1          1
+   1429  chr4 169537856 rs758677637   G   A 2179.54   <NA>  2 46730  4.27991e-05      NEK1          1
+   1449  chr4 169561520        <NA>   C   T 4876.84   <NA>  2 46992  4.25604e-05      NEK1          1
+   1483  chr4 169590725        <NA>   C   A 2860.31   <NA>  5 46986 0.0001064147      NEK1          1
+   1484  chr4 169590743 rs387906890   G   A 4483.73   <NA>  2 49292  4.05745e-05      NEK1          1
+   1493  chr4 169599141 rs781184197   G   A 5582.65   <NA>  1 46426  2.15397e-05      NEK1          1
+   1496  chr4 169602007        <NA>   C   T 4389.01   <NA>  1 48600  2.05761e-05      NEK1          1
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              0          0        41        .    .     2     2     2     0     2         0         1
+              0          0        36        .    .     0     1     2     0     0         0         2
+              0          0        37        .    .     1     2     0     0     0         0         2
+              0          0        37        .    .     0     0     2     2     0         0         1
+              0          0        33        .    .     2     1     1     0     1         2         0
+              0          0        33        .    .     0     0     2     1     2         0         0
+              0          0        34        B    D     0     2     0     0     2         0         0
+              0          0        38        .    .     2     0     2     2     1         1         0
+              0          0        41        .    .     0     1     2     1     2         0         1
+              0          0        34        .    .     1     1     2     0     2         2         2
+              0          0        39        .    .     1     1     1     1     1         1         0
+              0          0        36        .    .     2     0     0     0     0         1         2
+              0          0        33        .    .     1     2     0     2     1         2         1
+ Control_3 Control_4 Control_5
+         2         2         1
+         1         1         1
+         0         2         0
+         2         2         0
+         0         2         1
+         0         2         1
+         1         0         1
+         2         0         0
+         2         1         2
+         2         0         0
+         1         1         2
+         0         0         1
+         2         0         2"
+Q02,3,Lookup Queries,synthetic,2026-10-04 22:34:17.921385,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",SELECT * FROM varInfo_synthetic WHERE gene_name = 'NEK1' AND HighImpact = 'TRUE' AND CADDphred > 20;,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20., [1] VAR_id         CHROM          POS            ID             REF            ALT            |  [7] QUAL           FILTER         AC             AN             AF             gene_name      | [13] HighImpact     ModerateImpact Synonymous     CADDphred      PolyPhen       SIFT           | [19] ALS_1          ALS_2          ALS_3          ALS_4          ALS_5          Control_1      | [25] Control_2      Control_3      Control_4      Control_5      | <0 rows> (or 0-length row.names),,,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,184,38,4.509673595428467," [1] VAR_id         CHROM          POS            ID             REF            ALT           
+ [7] QUAL           FILTER         AC             AN             AF             gene_name     
+[13] HighImpact     ModerateImpact Synonymous     CADDphred      PolyPhen       SIFT          
+[19] ALS_1          ALS_2          ALS_3          ALS_4          ALS_5          Control_1     
+[25] Control_2      Control_3      Control_4      Control_5     
+<0 rows> (or 0-length row.names)"
+Q02,4,Lookup Queries,synthetic,2026-10-04 22:34:22.436485,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",SELECT * FROM varInfo_synthetic WHERE gene_name = 'NEK1' AND HighImpact = 1 AND CADDphred > 20;,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,  VAR_id CHROM       POS          ID REF ALT   QUAL FILTER AC    AN           AF gene_name HighImpact | 1   1331  chr4 169406666 rs770767730   G   A 133.15   <NA>  1 50000        2e-05      NEK1          1 | 2   1350  chr4 169424668 rs199947197   G   C  58949   <NA> 26 49324 0.0005271268      NEK1          1 | 3   1366  chr4 169438088        <NA>   A   T 189.14   <NA>  1 48158   2.0765e-05      NEK1          1 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              0          0        41        .    .     2     2     2     0     2         0         1 | 2              0          0        36        .    .     0     1     2     0     0         0         2 | 3              0          0        37        .    .     1     2     0     0     0         0         2 |   Control_3 Control_4 Control_5 | 1         2         2         1 | 2         1         1         1 | 3         0         2         0,,,,PASS,,13,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,184,37,4.389217376708984," VAR_id CHROM       POS          ID REF ALT    QUAL FILTER AC    AN           AF gene_name HighImpact
+   1331  chr4 169406666 rs770767730   G   A  133.15   <NA>  1 50000        2e-05      NEK1          1
+   1350  chr4 169424668 rs199947197   G   C   58949   <NA> 26 49324 0.0005271268      NEK1          1
+   1366  chr4 169438088        <NA>   A   T  189.14   <NA>  1 48158   2.0765e-05      NEK1          1
+   1377  chr4 169477124 rs749428135   T   A  511.73   <NA>  1 50000        2e-05      NEK1          1
+   1416  chr4 169507793        <NA>   C   T 2583.29   <NA>  1 49066  2.03807e-05      NEK1          1
+   1423  chr4 169537807        <NA>   A   G  764.15   <NA>  1 49920  2.00321e-05      NEK1          1
+   1424  chr4 169537809 rs762590802   C   T 2173.16   <NA>  1 48908  2.04466e-05      NEK1          1
+   1429  chr4 169537856 rs758677637   G   A 2179.54   <NA>  2 46730  4.27991e-05      NEK1          1
+   1449  chr4 169561520        <NA>   C   T 4876.84   <NA>  2 46992  4.25604e-05      NEK1          1
+   1483  chr4 169590725        <NA>   C   A 2860.31   <NA>  5 46986 0.0001064147      NEK1          1
+   1484  chr4 169590743 rs387906890   G   A 4483.73   <NA>  2 49292  4.05745e-05      NEK1          1
+   1493  chr4 169599141 rs781184197   G   A 5582.65   <NA>  1 46426  2.15397e-05      NEK1          1
+   1496  chr4 169602007        <NA>   C   T 4389.01   <NA>  1 48600  2.05761e-05      NEK1          1
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              0          0        41        .    .     2     2     2     0     2         0         1
+              0          0        36        .    .     0     1     2     0     0         0         2
+              0          0        37        .    .     1     2     0     0     0         0         2
+              0          0        37        .    .     0     0     2     2     0         0         1
+              0          0        33        .    .     2     1     1     0     1         2         0
+              0          0        33        .    .     0     0     2     1     2         0         0
+              0          0        34        B    D     0     2     0     0     2         0         0
+              0          0        38        .    .     2     0     2     2     1         1         0
+              0          0        41        .    .     0     1     2     1     2         0         1
+              0          0        34        .    .     1     1     2     0     2         2         2
+              0          0        39        .    .     1     1     1     1     1         1         0
+              0          0        36        .    .     2     0     0     0     0         1         2
+              0          0        33        .    .     1     2     0     2     1         2         1
+ Control_3 Control_4 Control_5
+         2         2         1
+         1         1         1
+         0         2         0
+         2         2         0
+         0         2         1
+         0         2         1
+         1         0         1
+         2         0         0
+         2         1         2
+         2         0         0
+         1         1         2
+         0         0         1
+         2         0         2"
+Q02,5,Lookup Queries,synthetic,2026-10-04 22:34:26.959744,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",SELECT * FROM varInfo_synthetic WHERE gene_name = 'NEK1' AND HighImpact = 1 AND CADDphred > 20;,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,  VAR_id CHROM       POS          ID REF ALT   QUAL FILTER AC    AN           AF gene_name HighImpact | 1   1331  chr4 169406666 rs770767730   G   A 133.15   <NA>  1 50000        2e-05      NEK1          1 | 2   1350  chr4 169424668 rs199947197   G   C  58949   <NA> 26 49324 0.0005271268      NEK1          1 | 3   1366  chr4 169438088        <NA>   A   T 189.14   <NA>  1 48158   2.0765e-05      NEK1          1 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              0          0        41        .    .     2     2     2     0     2         0         1 | 2              0          0        36        .    .     0     1     2     0     0         0         2 | 3              0          0        37        .    .     1     2     0     0     0         0         2 |   Control_3 Control_4 Control_5 | 1         2         2         1 | 2         1         1         1 | 3         0         2         0,,,,PASS,,13,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,184,37,4.392423391342163," VAR_id CHROM       POS          ID REF ALT    QUAL FILTER AC    AN           AF gene_name HighImpact
+   1331  chr4 169406666 rs770767730   G   A  133.15   <NA>  1 50000        2e-05      NEK1          1
+   1350  chr4 169424668 rs199947197   G   C   58949   <NA> 26 49324 0.0005271268      NEK1          1
+   1366  chr4 169438088        <NA>   A   T  189.14   <NA>  1 48158   2.0765e-05      NEK1          1
+   1377  chr4 169477124 rs749428135   T   A  511.73   <NA>  1 50000        2e-05      NEK1          1
+   1416  chr4 169507793        <NA>   C   T 2583.29   <NA>  1 49066  2.03807e-05      NEK1          1
+   1423  chr4 169537807        <NA>   A   G  764.15   <NA>  1 49920  2.00321e-05      NEK1          1
+   1424  chr4 169537809 rs762590802   C   T 2173.16   <NA>  1 48908  2.04466e-05      NEK1          1
+   1429  chr4 169537856 rs758677637   G   A 2179.54   <NA>  2 46730  4.27991e-05      NEK1          1
+   1449  chr4 169561520        <NA>   C   T 4876.84   <NA>  2 46992  4.25604e-05      NEK1          1
+   1483  chr4 169590725        <NA>   C   A 2860.31   <NA>  5 46986 0.0001064147      NEK1          1
+   1484  chr4 169590743 rs387906890   G   A 4483.73   <NA>  2 49292  4.05745e-05      NEK1          1
+   1493  chr4 169599141 rs781184197   G   A 5582.65   <NA>  1 46426  2.15397e-05      NEK1          1
+   1496  chr4 169602007        <NA>   C   T 4389.01   <NA>  1 48600  2.05761e-05      NEK1          1
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              0          0        41        .    .     2     2     2     0     2         0         1
+              0          0        36        .    .     0     1     2     0     0         0         2
+              0          0        37        .    .     1     2     0     0     0         0         2
+              0          0        37        .    .     0     0     2     2     0         0         1
+              0          0        33        .    .     2     1     1     0     1         2         0
+              0          0        33        .    .     0     0     2     1     2         0         0
+              0          0        34        B    D     0     2     0     0     2         0         0
+              0          0        38        .    .     2     0     2     2     1         1         0
+              0          0        41        .    .     0     1     2     1     2         0         1
+              0          0        34        .    .     1     1     2     0     2         2         2
+              0          0        39        .    .     1     1     1     1     1         1         0
+              0          0        36        .    .     2     0     0     0     0         1         2
+              0          0        33        .    .     1     2     0     2     1         2         1
+ Control_3 Control_4 Control_5
+         2         2         1
+         1         1         1
+         0         2         0
+         2         2         0
+         0         2         1
+         0         2         1
+         1         0         1
+         2         0         0
+         2         1         2
+         2         0         0
+         1         1         2
+         0         0         1
+         2         0         2"
+Q03,1,Lookup Queries,synthetic,2026-10-04 22:34:31.360658,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND SIFT = 'deleterious';,Result: 4 variants are predicted to be deleterious. ,  COUNT(*) | 1        0,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,179,29,3.863924503326416," COUNT(*)
+        0"
+Q03,2,Lookup Queries,synthetic,2026-10-04 22:34:35.230309,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND SIFT = 'deleterious';,Result: 4 variants are predicted to be deleterious. ,  COUNT(*) | 1        0,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,179,29,3.446946144104004," COUNT(*)
+        0"
+Q03,3,Lookup Queries,synthetic,2026-10-04 22:34:38.68346,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND SIFT = 'deleterious';,Result: 4 variants are predicted to be deleterious. ,  COUNT(*) | 1        0,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,179,29,3.4620578289031982," COUNT(*)
+        0"
+Q03,4,Lookup Queries,synthetic,2026-10-04 22:34:42.151303,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND SIFT = 'D';,Result: 4 variants are predicted to be deleterious. ,  COUNT(*) | 1        4,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,179,26,3.113992214202881," COUNT(*)
+        4"
+Q03,5,Lookup Queries,synthetic,2026-10-04 22:34:45.271513,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND SIFT = 'deleterious';,Result: 4 variants are predicted to be deleterious. ,  COUNT(*) | 1        0,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,179,29,3.4628005027770996," COUNT(*)
+        0"
+Q04,1,Lookup Queries,synthetic,2026-10-04 22:34:48.740943,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)","SELECT DISTINCT VAR_id, gene_name
+FROM varInfo_synthetic
+WHERE HighImpact = 1 AND (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2 OR ALS_4 = 2 OR ALS_5 = 2);",Result: 102 variants have at least one homozygous carrier.,  VAR_id gene_name | 1     10    TARDBP | 2     30     ABCA4 | 3     33     ABCA4,,,,PASS,,102,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,185,62,7.98884129524231," VAR_id gene_name
+     10    TARDBP
+     30     ABCA4
+     33     ABCA4
+     63     ABCA4
+     64     ABCA4
+     66     ABCA4
+     79     ABCA4
+     86     ABCA4
+     88     ABCA4
+     90     ABCA4
+    120     ABCA4
+    147     ABCA4
+    165     ABCA4
+    171     ABCA4
+    180     ABCA4
+    181     ABCA4
+    183     ABCA4
+    196     ABCA4
+    197     ABCA4
+    198     ABCA4
+    213     ABCA4
+    233     ABCA4
+    245     ABCA4
+    286     ABCA4
+    341     ABCA4
+    383     ABCA4
+    396     ABCA4
+    397     ABCA4
+    451     ABCA4
+    457     ABCA4
+    487     ABCA4
+    488     ABCA4
+    520     ABCA4
+    521     ABCA4
+    560     ABCA4
+    586     ABCA4
+    588     ABCA4
+    602     ABCA4
+    615     ABCA4
+    628      OPTN
+    644      OPTN
+    658      OPTN
+    661      OPTN
+    683      OPTN
+    717      OPTN
+    728      OPTN
+    735      OPTN
+    738      PEX5
+    774      PEX5
+    781      PEX5
+    792      PEX5
+    802      PEX5
+    808      PEX5
+    861      PEX5
+    906      RIN3
+    954      RIN3
+   1137   CYP19A1
+   1162   CYP19A1
+   1175       FUS
+   1286      SOD1
+   1301      SOD1
+   1311      SOD1
+   1324      NEK1
+   1329      NEK1
+   1330      NEK1
+   1331      NEK1
+   1342      NEK1
+   1350      NEK1
+   1354      NEK1
+   1366      NEK1
+   1377      NEK1
+   1390      NEK1
+   1394      NEK1
+   1407      NEK1
+   1408      NEK1
+   1410      NEK1
+   1416      NEK1
+   1422      NEK1
+   1423      NEK1
+   1424      NEK1
+   1429      NEK1
+   1449      NEK1
+   1451      NEK1
+   1454      NEK1
+   1483      NEK1
+   1485      NEK1
+   1493      NEK1
+   1496      NEK1
+   1540    ZNF483
+   1646     IL3RA
+   1673     IL3RA
+   1681     IL3RA
+   1682     IL3RA
+   1684     IL3RA
+   1707     IL3RA
+   1713     IL3RA
+   1714     IL3RA
+   1717     IL3RA
+   1734     IL3RA
+   1754     IL3RA
+   1766     IL3RA
+   1775    UBQLN2"
+Q04,2,Lookup Queries,synthetic,2026-10-04 22:34:56.736883,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)",SELECT DISTINCT ID FROM varInfo_synthetic WHERE HighImpact = 'yes' AND (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2 OR ALS_4 = 2 OR ALS_5 = 2),Result: 102 variants have at least one homozygous carrier.,[1] ID | <0 rows> (or 0-length row.names),,,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,185,53,6.405759334564209,"[1] ID
+<0 rows> (or 0-length row.names)"
+Q04,3,Lookup Queries,synthetic,2026-10-04 22:35:03.149176,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)","SELECT DISTINCT varInfo_synthetic.VAR_id, gene_name 
+FROM varInfo_synthetic 
+WHERE HighImpact = 'TRUE' AND (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2 OR ALS_4 = 2 OR ALS_5 = 2);",Result: 102 variants have at least one homozygous carrier.,[1] VAR_id    gene_name | <0 rows> (or 0-length row.names),,,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,185,68,8.080073595046997,"[1] VAR_id    gene_name
+<0 rows> (or 0-length row.names)"
+Q04,4,Lookup Queries,synthetic,2026-10-04 22:35:11.235954,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)",SELECT DISTINCT ID FROM varInfo_synthetic WHERE HighImpact = 'Yes' AND (ALS_1 = '2/2' OR ALS_2 = '2/2' OR ALS_3 = '2/2' OR ALS_4 = '2/2' OR ALS_5 = '2/2'),Result: 102 variants have at least one homozygous carrier.,[1] ID | <0 rows> (or 0-length row.names),,,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,185,67,8.38809609413147,"[1] ID
+<0 rows> (or 0-length row.names)"
+Q04,5,Lookup Queries,synthetic,2026-10-04 22:35:19.630973,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)",SELECT DISTINCT gene_name FROM varInfo_synthetic WHERE HighImpact = 'true' AND (ALS_1 = '2/2' OR ALS_2 = '2/2' OR ALS_3 = '2/2' OR ALS_4 = '2/2' OR ALS_5 = '2/2'),Result: 102 variants have at least one homozygous carrier.,[1] gene_name | <0 rows> (or 0-length row.names),,,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,185,68,8.66453742980957,"[1] gene_name
+<0 rows> (or 0-length row.names)"
+Q05,1,Lookup Queries,synthetic,2026-10-04 22:35:28.302114,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;",SELECT VAR_id FROM varInfo_synthetic WHERE gene_name = 'ABCA4' ORDER BY CADDphred DESC LIMIT 10,"VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",  VAR_id | 1     29 | 2    185 | 3    547,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,PASS,,10,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,29,3.83803391456604," VAR_id
+     29
+    185
+    547
+    282
+     87
+    278
+    303
+    272
+    535
+    304"
+Q05,2,Lookup Queries,synthetic,2026-10-04 22:35:32.147479,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;",SELECT * FROM varInfo_synthetic WHERE gene_name = 'ABCA4' ORDER BY CADDphred DESC LIMIT 10,"VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",  VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact | 1     29  chr1 93996111 rs765900918   G   T  402.13   <NA>  1 48464 2.06339e-05     ABCA4          0 | 2    185  chr1 94021292        <NA>   C   G 2126.26   <NA>  1 50000       2e-05     ABCA4          0 | 3    547  chr1 94083420 rs767947718   G   A  603.26   <NA>  1 43878 2.27905e-05     ABCA4          0 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              1          0     9.855        B    T     2     0     1     1     1         1         0 | 2              1          0     9.849        B    T     1     1     0     2     1         2         0 | 3              1          0     9.848        P    T     0     2     2     1     0         2         0 |   Control_3 Control_4 Control_5 | 1         2         2         2 | 2         1         1         1 | 3         1         0         0,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,PASS,,10,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,28,3.3277947902679443," VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact
+     29  chr1 93996111 rs765900918   G   T  402.13   <NA>  1 48464 2.06339e-05     ABCA4          0
+    185  chr1 94021292        <NA>   C   G 2126.26   <NA>  1 50000       2e-05     ABCA4          0
+    547  chr1 94083420 rs767947718   G   A  603.26   <NA>  1 43878 2.27905e-05     ABCA4          0
+    282  chr1 94031993        <NA>   C   G  239.13   <NA>  1 49676 2.01304e-05     ABCA4          0
+     87  chr1 94001958 rs769125527   G   C 4149.23   <NA>  1 49876 2.00497e-05     ABCA4          0
+    278  chr1 94031961        <NA>   C   G  241.13   <NA>  1 50000       2e-05     ABCA4          0
+    303  chr1 94037321 rs142882518   G   A 7508.42   <NA>  2 48052 4.16216e-05     ABCA4          0
+    272  chr1 94031932 rs371582683   G   A 11360.9   <NA>  2 50000       4e-05     ABCA4          0
+    535  chr1 94080614 rs745364081   G   T 2144.13   <NA>  1 49596 2.01629e-05     ABCA4          0
+    304  chr1 94037332  rs76258939   A   G 29736.1   <NA>  5 50000       1e-04     ABCA4          0
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              1          0     9.855        B    T     2     0     1     1     1         1         0
+              1          0     9.849        B    T     1     1     0     2     1         2         0
+              1          0     9.848        P    T     0     2     2     1     0         2         0
+              1          0     9.689        B    T     2     0     0     2     0         0         2
+              1          0     9.622        B    T     1     1     2     1     2         0         0
+              1          0     9.197        B    T     0     1     1     2     0         1         0
+              1          0     8.791        B    T     1     2     1     2     2         1         2
+              1          0     8.684        B    T     1     0     1     0     0         1         0
+              1          0     8.497        B    T     1     2     1     1     0         1         2
+              1          0     8.439        B    D     1     1     1     2     1         1         0
+ Control_3 Control_4 Control_5
+         2         2         2
+         1         1         1
+         1         0         0
+         0         1         1
+         1         2         0
+         2         2         1
+         2         1         1
+         2         2         0
+         0         2         1
+         1         1         0"
+Q05,3,Lookup Queries,synthetic,2026-10-04 22:35:35.485185,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;",SELECT VAR_id FROM varInfo_synthetic WHERE gene_name = 'ABCA4' AND (HighImpact OR ModerateImpact) ORDER BY CADDphred DESC LIMIT 10,"VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",  VAR_id | 1     29 | 2    185 | 3    547,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,PASS,,10,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,37,4.664560317993164," VAR_id
+     29
+    185
+    547
+    282
+     87
+    278
+    303
+    272
+    535
+    304"
+Q05,4,Lookup Queries,synthetic,2026-10-04 22:35:40.157145,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;","SELECT * FROM varInfo_synthetic WHERE gene_name = 'ABCA4' ORDER BY CADDphred DESC, PolyPhen DESC, SIFT DESC LIMIT 10","VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",  VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact | 1     29  chr1 93996111 rs765900918   G   T  402.13   <NA>  1 48464 2.06339e-05     ABCA4          0 | 2    185  chr1 94021292        <NA>   C   G 2126.26   <NA>  1 50000       2e-05     ABCA4          0 | 3    547  chr1 94083420 rs767947718   G   A  603.26   <NA>  1 43878 2.27905e-05     ABCA4          0 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              1          0     9.855        B    T     2     0     1     1     1         1         0 | 2              1          0     9.849        B    T     1     1     0     2     1         2         0 | 3              1          0     9.848        P    T     0     2     2     1     0         2         0 |   Control_3 Control_4 Control_5 | 1         2         2         2 | 2         1         1         1 | 3         1         0         0,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,PASS,,10,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,37,4.365911483764648," VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact
+     29  chr1 93996111 rs765900918   G   T  402.13   <NA>  1 48464 2.06339e-05     ABCA4          0
+    185  chr1 94021292        <NA>   C   G 2126.26   <NA>  1 50000       2e-05     ABCA4          0
+    547  chr1 94083420 rs767947718   G   A  603.26   <NA>  1 43878 2.27905e-05     ABCA4          0
+    282  chr1 94031993        <NA>   C   G  239.13   <NA>  1 49676 2.01304e-05     ABCA4          0
+     87  chr1 94001958 rs769125527   G   C 4149.23   <NA>  1 49876 2.00497e-05     ABCA4          0
+    278  chr1 94031961        <NA>   C   G  241.13   <NA>  1 50000       2e-05     ABCA4          0
+    303  chr1 94037321 rs142882518   G   A 7508.42   <NA>  2 48052 4.16216e-05     ABCA4          0
+    272  chr1 94031932 rs371582683   G   A 11360.9   <NA>  2 50000       4e-05     ABCA4          0
+    535  chr1 94080614 rs745364081   G   T 2144.13   <NA>  1 49596 2.01629e-05     ABCA4          0
+    304  chr1 94037332  rs76258939   A   G 29736.1   <NA>  5 50000       1e-04     ABCA4          0
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              1          0     9.855        B    T     2     0     1     1     1         1         0
+              1          0     9.849        B    T     1     1     0     2     1         2         0
+              1          0     9.848        P    T     0     2     2     1     0         2         0
+              1          0     9.689        B    T     2     0     0     2     0         0         2
+              1          0     9.622        B    T     1     1     2     1     2         0         0
+              1          0     9.197        B    T     0     1     1     2     0         1         0
+              1          0     8.791        B    T     1     2     1     2     2         1         2
+              1          0     8.684        B    T     1     0     1     0     0         1         0
+              1          0     8.497        B    T     1     2     1     1     0         1         2
+              1          0     8.439        B    D     1     1     1     2     1         1         0
+ Control_3 Control_4 Control_5
+         2         2         2
+         1         1         1
+         1         0         0
+         0         1         1
+         1         2         0
+         2         2         1
+         2         1         1
+         2         2         0
+         0         2         1
+         1         1         0"
+Q05,5,Lookup Queries,synthetic,2026-10-04 22:35:44.53333,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;","SELECT VAR_id FROM varInfo_synthetic WHERE gene_name = 'ABCA4' ORDER BY HighImpact DESC, CADDphred DESC, PolyPhen DESC, SIFT DESC LIMIT 10;","VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",  VAR_id | 1     90 | 2     33 | 3    183,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,PASS,,10,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,43,5.130822658538818," VAR_id
+     90
+     33
+    183
+    165
+    457
+     30
+    606
+    286
+    346
+    588"
+Q06,1,Analytical Queries,synthetic,2026-10-04 22:35:49.672087,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+","SELECT VAR_id, CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphred, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5 FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1",Result: VAR_id 901 has the highest AF (9.68148e-05),  VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact | 1    901 chr14 92577459 rs149690430   A   G 8532.99   <NA>  4 41316 9.68148e-05      RIN3          0 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              1          0     10.97        B    T     0     1     2     1     1         0         0 |   Control_3 Control_4 Control_5 | 1         1         0         1,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,174,101,11.921650648117065," VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact
+    901 chr14 92577459 rs149690430   A   G 8532.99   <NA>  4 41316 9.68148e-05      RIN3          0
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              1          0     10.97        B    T     0     1     2     1     1         0         0
+ Control_3 Control_4 Control_5
+         1         0         1"
+Q06,2,Analytical Queries,synthetic,2026-10-04 22:36:01.605128,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",SELECT VAR_id FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1,Result: VAR_id 901 has the highest AF (9.68148e-05),  VAR_id | 1    901,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,174,16,2.120739459991455," VAR_id
+    901"
+Q06,3,Analytical Queries,synthetic,2026-10-04 22:36:03.733901,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+","SELECT VAR_id, CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphred, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+FROM varInfo_synthetic
+ORDER BY AF DESC
+LIMIT 1;",Result: VAR_id 901 has the highest AF (9.68148e-05),  VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact | 1    901 chr14 92577459 rs149690430   A   G 8532.99   <NA>  4 41316 9.68148e-05      RIN3          0 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              1          0     10.97        B    T     0     1     2     1     1         0         0 |   Control_3 Control_4 Control_5 | 1         1         0         1,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,174,109,12.816253900527954," VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact
+    901 chr14 92577459 rs149690430   A   G 8532.99   <NA>  4 41316 9.68148e-05      RIN3          0
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              1          0     10.97        B    T     0     1     2     1     1         0         0
+ Control_3 Control_4 Control_5
+         1         0         1"
+Q06,4,Analytical Queries,synthetic,2026-10-04 22:36:16.559966,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",SELECT * FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1;,Result: VAR_id 901 has the highest AF (9.68148e-05),  VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact | 1    901 chr14 92577459 rs149690430   A   G 8532.99   <NA>  4 41316 9.68148e-05      RIN3          0 |   ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 | 1              1          0     10.97        B    T     0     1     2     1     1         0         0 |   Control_3 Control_4 Control_5 | 1         1         0         1,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,174,20,2.4353740215301514," VAR_id CHROM      POS          ID REF ALT    QUAL FILTER AC    AN          AF gene_name HighImpact
+    901 chr14 92577459 rs149690430   A   G 8532.99   <NA>  4 41316 9.68148e-05      RIN3          0
+ ModerateImpact Synonymous CADDphred PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2
+              1          0     10.97        B    T     0     1     2     1     1         0         0
+ Control_3 Control_4 Control_5
+         1         0         1"
+Q06,5,Analytical Queries,synthetic,2026-10-04 22:36:19.005231,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",SELECT VAR_id FROM varInfo_synthetic ORDER BY AF DESC LIMIT 1,Result: VAR_id 901 has the highest AF (9.68148e-05),  VAR_id | 1    901,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,174,16,1.974909782409668," VAR_id
+    901"
+Q07,1,Analytical Queries,synthetic,2026-10-04 22:36:20.987903,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",SELECT AVG(AF) FROM varInfo_synthetic WHERE Synonymous = 1 OR ModerateImpact = 1 OR HighImpact = 1;,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,      AVG(AF) | 1 0.001584295,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,181,29,4.143841981887817,"     AVG(AF)
+ 0.001584295"
+Q07,2,Analytical Queries,synthetic,2026-10-04 22:36:25.139552,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",SELECT AVG(AF) AS avg_AF FROM varInfo_synthetic WHERE Synonymous = 'True' OR ModerateImpact = 'True' OR HighImpact = 'True';,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,  avg_AF | 1     NA,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,181,34,4.297229766845703," avg_AF
+     NA"
+Q07,3,Analytical Queries,synthetic,2026-10-04 22:36:29.44486,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",SELECT AVG(AF) FROM varInfo_synthetic WHERE Synonymous = 1 OR ModerateImpact = 1 OR HighImpact = 1;,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,      AVG(AF) | 1 0.001584295,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,181,29,3.577423334121704,"     AVG(AF)
+ 0.001584295"
+Q07,4,Analytical Queries,synthetic,2026-10-04 22:36:33.030347,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",SELECT AVG(AF) AS avg_AF FROM varInfo_synthetic WHERE Synonymous = 1 OR ModerateImpact = 1 OR HighImpact = 1;,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,       avg_AF | 1 0.001584295,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,181,32,4.101056337356567,"      avg_AF
+ 0.001584295"
+Q07,5,Analytical Queries,synthetic,2026-10-04 22:36:37.139664,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",SELECT AVG(AF) FROM varInfo_synthetic WHERE Synonymous = 1 OR ModerateImpact = 1 OR HighImpact = 1;,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,      AVG(AF) | 1 0.001584295,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,181,29,3.695727586746216,"     AVG(AF)
+ 0.001584295"
+Q08,1,Analytical Queries,synthetic,2026-10-04 22:36:40.844178,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",SELECT COUNT(*) FROM varInfo_synthetic WHERE HighImpact = 'true' AND ALS_1 = 1;,Result: 42 heterozygous and 33 homozygous variants,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,24,3.355968952178955," COUNT(*)
+        0"
+Q08,2,Analytical Queries,synthetic,2026-10-04 22:36:44.209121,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",SELECT COUNT(*) FROM varInfo_synthetic WHERE HighImpact = 'yes' AND ALS_1 > 0;,Result: 42 heterozygous and 33 homozygous variants,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,24,2.905334234237671," COUNT(*)
+        0"
+Q08,3,Analytical Queries,synthetic,2026-10-04 22:36:47.123573,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",SELECT COUNT(*) FROM varInfo_synthetic WHERE HighImpact = 'true' AND ALS_1 = '1';,Result: 42 heterozygous and 33 homozygous variants,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,24,2.9096553325653076," COUNT(*)
+        0"
+Q08,4,Analytical Queries,synthetic,2026-10-04 22:36:50.042181,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",SELECT COUNT(*) FROM varInfo_synthetic WHERE HighImpact = 'true' AND ALS_1 = 1;,Result: 42 heterozygous and 33 homozygous variants,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,24,2.898611545562744," COUNT(*)
+        0"
+Q08,5,Analytical Queries,synthetic,2026-10-04 22:36:52.950156,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",SELECT COUNT(*) FROM varInfo_synthetic WHERE HighImpact = 'true' AND VAR_id IN (SELECT VAR_id FROM varInfo_synthetic WHERE ALS_1 = 1);,Result: 42 heterozygous and 33 homozygous variants,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,37,4.367395401000977," COUNT(*)
+        0"
+Q09,1,Analytical Queries,synthetic,2026-10-04 22:36:57.327093,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;",SELECT SUM(CASE WHEN CHROM = 'ALS' THEN 1 ELSE 0 END) - SUM(CASE WHEN CHROM = 'Control' THEN 1 ELSE 0 END) AS allele_difference FROM varInfo_synthetic;,"Result: Cases = 9083, Controls = 8974.",  allele_difference | 1                 0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,187,48,6.2024290561676025," allele_difference
+                 0"
+Q09,2,Analytical Queries,synthetic,2026-10-04 22:37:03.539028,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;","SELECT SUM(CASE WHEN gene_name IS NOT NULL THEN 1 ELSE 0 END) AS total_burden
+FROM varInfo_synthetic
+WHERE VAR_id IN (
+    SELECT VAR_id FROM varInfo_synthetic WHERE gene_name IS NOT NULL AND (ALS_1 = 1 OR ALS_2 = 1 OR ALS_3 = 1 OR ALS_4 = 1 OR ALS_5 = 1)
+) - SUM(CASE WHEN gene_name IS NOT NULL THEN 1 ELSE 0 END) AS total_burden
+FROM varInfo_synthetic
+WHERE VAR_id IN (
+    SELECT VAR_id FROM varInfo_synthetic WHERE gene_name IS NOT NULL AND (Control_1 = 1 OR Control_2 = 1 OR Control_3 = 1 OR Control_4 = 1 OR Control_5 = 1)
+);","Result: Cases = 9083, Controls = 8974.",,,,,FAIL,"SQL execution failed: near ""AS"": syntax error",,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,187,181,20.973979711532593,
+Q09,3,Analytical Queries,synthetic,2026-10-04 22:37:24.527729,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;","SELECT SUM(AC) AS Total_Effect_Alleles 
+FROM varInfo_synthetic 
+WHERE VAR_id IN (
+    SELECT VAR_id 
+    FROM varInfo_synthetic 
+    WHERE gene_name IN ('ALS_1', 'ALS_2', 'ALS_3', 'ALS_4', 'ALS_5')
+);","Result: Cases = 9083, Controls = 8974.",  Total_Effect_Alleles | 1                   NA,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,187,72,8.399876832962036," Total_Effect_Alleles
+                   NA"
+Q09,4,Analytical Queries,synthetic,2026-10-04 22:37:32.937579,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;","SELECT SUM(AC) AS TotalEffectAlleles 
+FROM varInfo_synthetic 
+WHERE VAR_id IN (
+    SELECT VAR_id 
+    FROM varInfo_synthetic 
+    WHERE ALS_1 > 0 OR ALS_2 > 0 OR ALS_3 > 0 OR ALS_4 > 0 OR ALS_5 > 0
+) - SUM(AC) AS TotalEffectAlleles 
+FROM varInfo_synthetic 
+WHERE VAR_id IN (
+    SELECT VAR_id 
+    FROM varInfo_synthetic 
+    WHERE Control_1 > 0 OR Control_2 > 0 OR Control_3 > 0 OR Control_4 > 0 OR Control_5 > 0
+);","Result: Cases = 9083, Controls = 8974.",,,,,FAIL,"SQL execution failed: near ""AS"": syntax error",,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,187,149,17.258799076080322,
+Q09,5,Analytical Queries,synthetic,2026-10-04 22:37:50.205225,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;","SELECT SUM(AC_ALS) - SUM(AC_Control) AS Total_Burden
+FROM varInfo_synthetic;","Result: Cases = 9083, Controls = 8974.",,,,,FAIL,SQL execution failed: no such column: AC_Control,,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,187,30,3.5776429176330566,
+Q10,1,Analytical Queries,synthetic,2026-10-04 22:37:53.795812,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;",SELECT SUM(CASE WHEN CHROM LIKE 'chr%' THEN 1 ELSE 0 END) - SUM(CASE WHEN CHROM LIKE 'control%' THEN 1 ELSE 0 END) AS Variant_Difference FROM varInfo_synthetic,"VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",  Variant_Difference | 1               1802,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,48,5.8744096755981445," Variant_Difference
+               1802"
+Q10,2,Analytical Queries,synthetic,2026-10-04 22:37:59.680367,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;",SELECT SUM(CASE WHEN VAR_id LIKE '%CASE%' THEN 1 ELSE 0 END) - SUM(CASE WHEN VAR_id LIKE '%CONTROL%' THEN 1 ELSE 0 END) AS diff FROM varInfo_synthetic;,"VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",  diff | 1    0,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,47,5.513305187225342," diff
+    0"
+Q10,3,Analytical Queries,synthetic,2026-10-04 22:38:05.204048,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;",SELECT SUM(CASE WHEN CHROM LIKE 'chr%' THEN 1 ELSE 0 END) - SUM(CASE WHEN CHROM LIKE 'control%' THEN 1 ELSE 0 END) AS diff FROM varInfo_synthetic,"VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",  diff | 1 1802,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,46,5.38234543800354," diff
+ 1802"
+Q10,4,Analytical Queries,synthetic,2026-10-04 22:38:10.596819,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;","SELECT SUM(CASE WHEN gene_name IN (SELECT DISTINCT gene_name FROM varInfo_synthetic WHERE CHROM IN ('chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10', 'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19', 'chr20', 'chr21', 'chr22')) THEN 1 ELSE 0 END) - SUM(CASE WHEN gene_name IN (SELECT DISTINCT gene_name FROM varInfo_synthetic WHERE CHROM IN ('chrX', 'chrY', 'chrM')) THEN 1 ELSE 0 END) AS diff;","VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,,,FAIL,SQL execution failed: no such column: gene_name,,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,177,20.44145441055298,
+Q10,5,Analytical Queries,synthetic,2026-10-04 22:38:31.048077,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;","SELECT SUM(CASE WHEN ALS_1 = 'case' THEN 1 ELSE 0 END) AS case_count, 
+       SUM(CASE WHEN Control_1 = 'control' THEN 1 ELSE 0 END) AS control_count
+FROM varInfo_synthetic;","VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",  case_count control_count | 1          0             0,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,60,7.029101848602295," case_count control_count
+          0             0"
+Q11,1,Analytical Queries,synthetic,2026-10-04 22:38:38.088334,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC","SELECT gene_name, COUNT(*) as Variant_Count 
+FROM varInfo_synthetic 
+GROUP BY gene_name 
+HAVING Variant_Count > 10 
+ORDER BY Variant_Count;","   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",  gene_name Variant_Count | 1    TARDBP            27 | 2    UBQLN2            36 | 3      SOD1            49,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,PASS,,12,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,194,40,5.429178714752197," gene_name Variant_Count
+    TARDBP            27
+    UBQLN2            36
+      SOD1            49
+   CYP19A1            89
+       FUS            95
+    ZNF483           113
+      OPTN           121
+      PEX5           124
+     IL3RA           147
+      NEK1           190
+      RIN3           222
+     ABCA4           589"
+Q11,2,Analytical Queries,synthetic,2026-10-04 22:38:43.528031,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC","SELECT gene_name, COUNT(*) AS variant_count
+FROM varInfo_synthetic
+GROUP BY gene_name
+HAVING COUNT(*) > 10
+ORDER BY variant_count;","   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",  gene_name variant_count | 1    TARDBP            27 | 2    UBQLN2            36 | 3      SOD1            49,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,PASS,,12,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,194,40,4.717535495758057," gene_name variant_count
+    TARDBP            27
+    UBQLN2            36
+      SOD1            49
+   CYP19A1            89
+       FUS            95
+    ZNF483           113
+      OPTN           121
+      PEX5           124
+     IL3RA           147
+      NEK1           190
+      RIN3           222
+     ABCA4           589"
+Q11,3,Analytical Queries,synthetic,2026-10-04 22:38:48.256379,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC","SELECT gene_name, COUNT(*) AS num_variants FROM varInfo_synthetic GROUP BY gene_name HAVING COUNT(*) > 10 ORDER BY num_variants;","   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",  gene_name num_variants | 1    TARDBP           27 | 2    UBQLN2           36 | 3      SOD1           49,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,PASS,,12,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,194,34,4.015007257461548," gene_name num_variants
+    TARDBP           27
+    UBQLN2           36
+      SOD1           49
+   CYP19A1           89
+       FUS           95
+    ZNF483          113
+      OPTN          121
+      PEX5          124
+     IL3RA          147
+      NEK1          190
+      RIN3          222
+     ABCA4          589"
+Q11,4,Analytical Queries,synthetic,2026-10-04 22:38:52.282342,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC","SELECT gene_name, COUNT(*) AS num_variants
+FROM varInfo_synthetic
+GROUP BY gene_name
+HAVING COUNT(*) > 10
+ORDER BY num_variants;","   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",  gene_name num_variants | 1    TARDBP           27 | 2    UBQLN2           36 | 3      SOD1           49,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,PASS,,12,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,194,42,4.949458599090576," gene_name num_variants
+    TARDBP           27
+    UBQLN2           36
+      SOD1           49
+   CYP19A1           89
+       FUS           95
+    ZNF483          113
+      OPTN          121
+      PEX5          124
+     IL3RA          147
+      NEK1          190
+      RIN3          222
+     ABCA4          589"
+Q11,5,Analytical Queries,synthetic,2026-10-04 22:38:57.242608,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC","SELECT gene_name, COUNT(*) AS num_variants
+FROM varInfo_synthetic
+GROUP BY gene_name
+HAVING COUNT(*) > 10
+ORDER BY num_variants;","   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",  gene_name num_variants | 1    TARDBP           27 | 2    UBQLN2           36 | 3      SOD1           49,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,PASS,,12,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,194,42,4.945365905761719," gene_name num_variants
+    TARDBP           27
+    UBQLN2           36
+      SOD1           49
+   CYP19A1           89
+       FUS           95
+    ZNF483          113
+      OPTN          121
+      PEX5          124
+     IL3RA          147
+      NEK1          190
+      RIN3          222
+     ABCA4          589"
+Q12,1,Unanswerable Questions,synthetic,2026-10-04 22:39:02.199039,What is the average age of ALS cases?,N/A,SELECT AVG(AGE) AS avg_age FROM varInfo_synthetic WHERE ALS_1 > 0 OR ALS_2 > 0 OR ALS_3 > 0 OR ALS_4 > 0 OR ALS_5 > 0;,N/A,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL execution failed: no such column: AGE,,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,54,6.584586143493652,
+Q12,2,Unanswerable Questions,synthetic,2026-10-04 22:39:08.794008,What is the average age of ALS cases?,N/A,SELECT AVG(ALS_1) AS Average_ALS_Age FROM varInfo_synthetic;,N/A,  Average_ALS_Age | 1        1.014428,"No age information is available in the table, so this question cannot be answered.",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,24,2.9113376140594482," Average_ALS_Age
+        1.014428"
+Q12,3,Unanswerable Questions,synthetic,2026-10-04 22:39:11.716721,What is the average age of ALS cases?,N/A,SELECT AVG(ALS) FROM varInfo_synthetic;,N/A,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL execution failed: no such column: ALS,,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,12,1.5236616134643555,
+Q12,4,Unanswerable Questions,synthetic,2026-10-04 22:39:13.251211,What is the average age of ALS cases?,N/A,SELECT AVG(age) FROM varInfo_synthetic WHERE gene_name = 'ALS';,N/A,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL execution failed: no such column: age,,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,17,2.089426279067993,
+Q12,5,Unanswerable Questions,synthetic,2026-10-04 22:39:15.351661,What is the average age of ALS cases?,N/A,SELECT AVG(ALS_1) AS Average_ALS_Age FROM varInfo_synthetic;,N/A,  Average_ALS_Age | 1        1.014428,"No age information is available in the table, so this question cannot be answered.",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,24,2.8960940837860107," Average_ALS_Age
+        1.014428"
+Q13,1,Unanswerable Questions,synthetic,2026-10-04 22:39:18.259744,Is VAR_id 100 previously reported as pathogenic?,N/A,SELECT CASE WHEN HighImpact = 'Y' THEN 'Yes' ELSE 'No' END AS Pathogenic_Reported FROM varInfo_synthetic WHERE VAR_id = 100;,N/A,  Pathogenic_Reported | 1                  No,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,177,42,5.320636510848999," Pathogenic_Reported
+                  No"
+Q13,2,Unanswerable Questions,synthetic,2026-10-04 22:39:23.600304,Is VAR_id 100 previously reported as pathogenic?,N/A,SELECT HighImpact FROM varInfo_synthetic WHERE VAR_id = 100 AND HighImpact IS NOT NULL;,N/A,  HighImpact | 1          0,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,177,24,2.9021787643432617," HighImpact
+          0"
+Q13,3,Unanswerable Questions,synthetic,2026-10-04 22:39:26.514268,Is VAR_id 100 previously reported as pathogenic?,N/A,SELECT HighImpact FROM varInfo_synthetic WHERE VAR_id = 100 AND HighImpact IS NOT NULL;,N/A,  HighImpact | 1          0,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,177,28,3.3679184913635254," HighImpact
+          0"
+Q13,4,Unanswerable Questions,synthetic,2026-10-04 22:39:29.894393,Is VAR_id 100 previously reported as pathogenic?,N/A,SELECT HighImpact FROM varInfo_synthetic WHERE VAR_id = 100 AND HighImpact IS NOT NULL;,N/A,  HighImpact | 1          0,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,177,24,2.8769166469573975," HighImpact
+          0"
+Q13,5,Unanswerable Questions,synthetic,2026-10-04 22:39:32.78333,Is VAR_id 100 previously reported as pathogenic?,N/A,SELECT CASE WHEN HighImpact = 'Yes' THEN 'Pathogenic' ELSE 'Not Pathogenic' END AS pathogenic_status FROM varInfo_synthetic WHERE VAR_id = 100;,N/A,  pathogenic_status | 1    Not Pathogenic,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,177,40,4.690917015075684," pathogenic_status
+    Not Pathogenic"
+Q14,1,Unanswerable Questions,synthetic,2026-10-04 22:39:37.486577,What is the allele frequency of VAR_id 30 in Europeans?,N/A,SELECT AF FROM varInfo_synthetic WHERE VAR_id = 30;,N/A,           AF | 1 4.33257e-05,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,16,2.3303561210632324,"          AF
+ 4.33257e-05"
+Q14,2,Unanswerable Questions,synthetic,2026-10-04 22:39:39.829468,What is the allele frequency of VAR_id 30 in Europeans?,N/A,"SELECT AF FROM varInfo_synthetic WHERE VAR_id = 30 AND CHROM IN ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20');",N/A,[1] AF | <0 rows> (or 0-length row.names),"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,90,10.432987928390503,"[1] AF
+<0 rows> (or 0-length row.names)"
+Q14,3,Unanswerable Questions,synthetic,2026-10-04 22:39:50.274713,What is the allele frequency of VAR_id 30 in Europeans?,N/A,SELECT AF FROM varInfo_synthetic WHERE VAR_id = 30;,N/A,           AF | 1 4.33257e-05,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,16,1.9515190124511719,"          AF
+ 4.33257e-05"
+Q14,4,Unanswerable Questions,synthetic,2026-10-04 22:39:52.239072,What is the allele frequency of VAR_id 30 in Europeans?,N/A,SELECT AF FROM varInfo_synthetic WHERE VAR_id = 30 AND gene_name LIKE '%Europeans%',N/A,[1] AF | <0 rows> (or 0-length row.names),"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,23,2.7753965854644775,"[1] AF
+<0 rows> (or 0-length row.names)"
+Q14,5,Unanswerable Questions,synthetic,2026-10-04 22:39:55.026927,What is the allele frequency of VAR_id 30 in Europeans?,N/A,SELECT AF FROM varInfo_synthetic WHERE VAR_id = 30;,N/A,           AF | 1 4.33257e-05,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,178,20,2.416017770767212,"          AF
+ 4.33257e-05"
+Q15,1,Unanswerable Questions,synthetic,2026-10-04 22:39:57.456017,What is the sex distribution of carriers?,N/A,"SELECT CHROM, POS, REF, ALT, gene_name, SUM(CASE WHEN ALS_1 = 'Carrier' THEN 1 ELSE 0 END) AS ALS_Carriers, SUM(CASE WHEN Control_1 = 'Carrier' THEN 1 ELSE 0 END) AS Control_Carriers
+FROM varInfo_synthetic
+GROUP BY CHROM, POS, REF, ALT, gene_name;",N/A,  CHROM      POS REF ALT gene_name ALS_Carriers Control_Carriers | 1  chr1 11013912   A   G    TARDBP            0                0 | 2  chr1 11013928   C   T    TARDBP            0                0 | 3  chr1 11013936   A   C    TARDBP            0                0,"No sex information is available in the table, so this question cannot be answered",,,PASS,,1802,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,88,10.358859062194824," CHROM      POS                                   REF ALT gene_name ALS_Carriers Control_Carriers
+  chr1 11013912                                     A   G    TARDBP            0                0
+  chr1 11013928                                     C   T    TARDBP            0                0
+  chr1 11013936                                     A   C    TARDBP            0                0
+  chr1 11013936                                     A   G    TARDBP            0                0
+  chr1 11013952                                     C   G    TARDBP            0                0
+  chr1 11016874                                     C   T    TARDBP            0                0
+  chr1 11016878                                     A   G    TARDBP            0                0
+  chr1 11016917                                     C   T    TARDBP            0                0
+  chr1 11018741                                     A   G    TARDBP            0                0
+  chr1 11020426                                     C   A    TARDBP            0                0
+  chr1 11020509                                     G   C    TARDBP            0                0
+  chr1 11020554                                     C   G    TARDBP            0                0
+  chr1 11022129                                     G   A    TARDBP            0                0
+  chr1 11022209                                     A   G    TARDBP            0                0
+  chr1 11022290                                     G   T    TARDBP            0                0
+  chr1 11022301                                     G   A    TARDBP            0                0
+  chr1 11022354                                     G   A    TARDBP            0                0
+  chr1 11022372                                     C   T    TARDBP            0                0
+  chr1 11022385                                     G   A    TARDBP            0                0
+  chr1 11022418                                     A   G    TARDBP            0                0
+  chr1 11022464                                     A   G    TARDBP            0                0
+  chr1 11022505                                     G   A    TARDBP            0                0
+  chr1 11022510                                     C   T    TARDBP            0                0
+  chr1 11022531                                     T   C    TARDBP            0                0
+  chr1 11022556                                     A   G    TARDBP            0                0
+  chr1 11022559                                     G   C    TARDBP            0                0
+  chr1 11022578                                     A   G    TARDBP            0                0
+  chr1 93993244                                     T   G     ABCA4            0                0
+  chr1 93996111                                     G   T     ABCA4            0                0
+  chr1 93996120                                     G   A     ABCA4            0                0
+  chr1 93996123                                     T   G     ABCA4            0                0
+  chr1 93996129                                     C   T     ABCA4            0                0
+  chr1 93996138                                     G   A     ABCA4            0                0
+  chr1 93996161                                     C   A     ABCA4            0                0
+  chr1 93996168                                     T   C     ABCA4            0                0
+  chr1 93996177                                     T   C     ABCA4            0                0
+  chr1 93996190                                     A   G     ABCA4            0                0
+  chr1 93996193                                     C   T     ABCA4            0                0
+  chr1 93997869                                     G   C     ABCA4            0                0
+  chr1 93997896                                     C   T     ABCA4            0                0
+  chr1 93997907                                     C   T     ABCA4            0                0
+  chr1 93997908                                     T   C     ABCA4            0                0
+  chr1 93997913                                     T   C     ABCA4            0                0
+  chr1 93997924                                     G   A     ABCA4            0                0
+  chr1 93997931                                     T   C     ABCA4            0                0
+  chr1 93997943                                     G   A     ABCA4            0                0
+  chr1 93997969                                     C   A     ABCA4            0                0
+  chr1 93998009 GGGAAGTTCCCCTGGAAGAACTGCTCCACAGGGTTCA   G     ABCA4            0                0
+  chr1 93998061                                     C   T     ABCA4            0                0
+  chr1 93998068                                     C   T     ABCA4            0                0
+  chr1 93998069                                     G   A     ABCA4            0                0
+  chr1 93998075                                     T   C     ABCA4            0                0
+  chr1 93998085                                     T   C     ABCA4            0                0
+  chr1 93998092                                     G   A     ABCA4            0                0
+  chr1 93998094                                     T   C     ABCA4            0                0
+  chr1 94000856                                     G   C     ABCA4            0                0
+  chr1 94000863                                     A   G     ABCA4            0                0
+  chr1 94000866                                     C   T     ABCA4            0                0
+  chr1 94000869                                     C   T     ABCA4            0                0
+  chr1 94000886                                     C   T     ABCA4            0                0
+  chr1 94000899                                     C   T     ABCA4            0                0
+  chr1 94000919                                     T   C     ABCA4            0                0
+  chr1 94000923                                    TC   T     ABCA4            0                0
+  chr1 94001000                                     G   C     ABCA4            0                0
+  chr1 94001008                                     G   A     ABCA4            0                0
+  chr1 94001035                                    CT   C     ABCA4            0                0
+  chr1 94001041                                     A   T     ABCA4            0                0
+  chr1 94001042                                     T   A     ABCA4            0                0
+  chr1 94001048                                     C   T     ABCA4            0                0
+  chr1 94001054                                     C   T     ABCA4            0                0
+  chr1 94001060                                     A   G     ABCA4            0                0
+  chr1 94001068                                     C   T     ABCA4            0                0
+  chr1 94001069                                     G   A     ABCA4            0                0
+  chr1 94001072                                     G   A     ABCA4            0                0
+  chr1 94001087                                     T   A     ABCA4            0                0
+  chr1 94001102                                     C   T     ABCA4            0                0
+  chr1 94001103                                     A   G     ABCA4            0                0
+  chr1 94001104                                     T   C     ABCA4            0                0
+  chr1 94001857                                     C   G     ABCA4            0                0
+  chr1 94001879                                     G   A     ABCA4            0                0
+  chr1 94001885                                     G   A     ABCA4            0                0
+  chr1 94001891                                     G   A     ABCA4            0                0
+  chr1 94001919                                     C   T     ABCA4            0                0
+  chr1 94001933                                     G   A     ABCA4            0                0
+  chr1 94001951                                     G   A     ABCA4            0                0
+  chr1 94001955                                 ACAGT   A     ABCA4            0                0
+  chr1 94001958                                     G   C     ABCA4            0                0
+  chr1 94001992                                     C   G     ABCA4            0                0
+  chr1 94005469                                     C   T     ABCA4            0                0
+  chr1 94005470                                     G   A     ABCA4            0                0
+  chr1 94005475                                     C   T     ABCA4            0                0
+  chr1 94005486                                     G   A     ABCA4            0                0
+  chr1 94005499                                     C   T     ABCA4            0                0
+  chr1 94005509                                     G   A     ABCA4            0                0
+  chr1 94005518                                     C   T     ABCA4            0                0
+  chr1 94005550                                     T   C     ABCA4            0                0
+  chr1 94005553                                     T   C     ABCA4            0                0
+  chr1 94007647                                     C   T     ABCA4            0                0
+  chr1 94007673                                     G   A     ABCA4            0                0
+  chr1 94007682                                     G   T     ABCA4            0                0
+  chr1 94007711                                     G   A     ABCA4            0                0
+  chr1 94007731                                     G   A     ABCA4            0                0
+  chr1 94008245                                     C   T     ABCA4            0                0
+  chr1 94008246                                     G   A     ABCA4            0                0
+  chr1 94008251                                     C   T     ABCA4            0                0
+  chr1 94008252                                     C   T     ABCA4            0                0
+  chr1 94008261                                     G   C     ABCA4            0                0
+  chr1 94008265                                     G   A     ABCA4            0                0
+  chr1 94008279                                     T   C     ABCA4            0                0
+  chr1 94008289                                     T   C     ABCA4            0                0
+  chr1 94008290                                     G   A     ABCA4            0                0
+  chr1 94008295                                     A   T     ABCA4            0                0
+  chr1 94008772                                     T   C     ABCA4            0                0
+  chr1 94008795                                     C   T     ABCA4            0                0
+  chr1 94008797                                     G   A     ABCA4            0                0
+  chr1 94008851                                     T   C     ABCA4            0                0
+  chr1 94008852                                     C   T     ABCA4            0                0
+  chr1 94008857                                     G   A     ABCA4            0                0
+  chr1 94008865                                     G   A     ABCA4            0                0
+  chr1 94010795                                     C   T     ABCA4            0                0
+  chr1 94010802                                     T   C     ABCA4            0                0
+  chr1 94010821                                     C   T     ABCA4            0                0
+  chr1 94010822                                     G   A     ABCA4            0                0
+  chr1 94010823                                     C   T     ABCA4            0                0
+  chr1 94010832                                     C   G     ABCA4            0                0
+  chr1 94010856                                     C   A     ABCA4            0                0
+  chr1 94010862                                     C   T     ABCA4            0                0
+  chr1 94010872                                     G   A     ABCA4            0                0
+  chr1 94010874                                     A   T     ABCA4            0                0
+  chr1 94010904                                     G   T     ABCA4            0                0
+  chr1 94010911                                     T   A     ABCA4            0                0
+  chr1 94010919                                     G   A     ABCA4            0                0
+  chr1 94011263                                     A   G     ABCA4            0                0
+  chr1 94011267                                     C   T     ABCA4            0                0
+  chr1 94011268                                     G   A     ABCA4            0                0
+  chr1 94011274                                     A   T     ABCA4            0                0
+  chr1 94011282                                     G   T     ABCA4            0                0
+  chr1 94011286                                     C   A     ABCA4            0                0
+  chr1 94011309                                     A   G     ABCA4            0                0
+  chr1 94011318                                     C   T     ABCA4            0                0
+  chr1 94011319                                     G   C     ABCA4            0                0
+  chr1 94011357                                     C   T     ABCA4            0                0
+ [ reached 'max' / getOption(""max.print"") -- omitted 1660 rows ]"
+Q15,2,Unanswerable Questions,synthetic,2026-10-04 22:40:07.828713,What is the sex distribution of carriers?,N/A,"SELECT 
+    CASE 
+        WHEN (ALS_1 > 0 OR ALS_2 > 0 OR ALS_3 > 0 OR ALS_4 > 0 OR ALS_5 > 0) THEN 'Male'
+        WHEN (Control_1 > 0 OR Control_2 > 0 OR Control_3 > 0 OR Control_4 > 0 OR Control_5 > 0) THEN 'Female'
+        ELSE 'Unknown'
+    END AS Sex,
+    COUNT(*) AS CarrierCount
+FROM 
+    varInfo_synthetic
+GROUP BY 
+    CASE 
+        WHEN (ALS_1 > 0 OR ALS_2 > 0 OR ALS_3 > 0 OR ALS_4 > 0 OR ALS_5 > 0) THEN 'Male'
+        WHEN (Control_1 > 0 OR Control_2 > 0 OR Control_3 > 0 OR Control_4 > 0 OR Control_5 > 0) THEN 'Female'
+        ELSE 'Unknown'
+    END;",N/A,     Sex CarrierCount | 1 Female            7 | 2   Male         1795,"No sex information is available in the table, so this question cannot be answered",,,PASS,,2,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,217,25.039316177368164,"    Sex CarrierCount
+ Female            7
+   Male         1795"
+Q15,3,Unanswerable Questions,synthetic,2026-10-04 22:40:32.881462,What is the sex distribution of carriers?,N/A,"SELECT SEX, COUNT(*) FROM varInfo_synthetic WHERE VAR_id IN (SELECT DISTINCT VAR_id FROM varInfo_synthetic WHERE AC > 0) GROUP BY SEX;",N/A,,"No sex information is available in the table, so this question cannot be answered",,,FAIL,SQL execution failed: no such column: SEX,,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,35,4.155981779098511,
+Q15,4,Unanswerable Questions,synthetic,2026-10-04 22:40:37.049792,What is the sex distribution of carriers?,N/A,"SELECT SUM(CASE WHEN VAR_id IN (SELECT VAR_id FROM varInfo_synthetic WHERE gene_name LIKE '%X%') THEN 1 ELSE 0 END) AS FemaleCarriers,
+       SUM(CASE WHEN VAR_id IN (SELECT VAR_id FROM varInfo_synthetic WHERE gene_name LIKE '%Y%') THEN 1 ELSE 0 END) AS MaleCarriers
+FROM varInfo_synthetic;",N/A,  FemaleCarriers MaleCarriers | 1            124           89,"No sex information is available in the table, so this question cannot be answered",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,87,10.07714056968689," FemaleCarriers MaleCarriers
+            124           89"
+Q15,5,Unanswerable Questions,synthetic,2026-10-04 22:40:47.140478,What is the sex distribution of carriers?,N/A,"SELECT gender, COUNT(*) FROM ( SELECT IIF(AC > 0 AND AN = 2, 'Male', IIF(AC > 0 AND AN = 1, 'Female', 'Other')) AS gender FROM varInfo_synthetic ) WHERE gender IS NOT NULL GROUP BY gender;",N/A,  gender COUNT(*) | 1  Other     1802,"No sex information is available in the table, so this question cannot be answered",,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,172,61,7.12734055519104," gender COUNT(*)
+  Other     1802"
+Q16,1,Unanswerable Questions,synthetic,2026-10-04 22:40:54.281615,Which variants are most important,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE HighImpact = 'true' OR ModerateImpact = 'true';,N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,169,23,2.9418892860412598,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q16,2,Unanswerable Questions,synthetic,2026-10-04 22:40:57.236907,Which variants are most important,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE HighImpact OR ModerateImpact;,N/A,  VAR_id | 1      1 | 2      3 | 3      4,"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,PASS,,1269,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,169,16,1.9758617877960205," VAR_id
+      1
+      3
+      4
+      6
+     10
+     14
+     15
+     16
+     19
+     20
+     21
+     22
+     25
+     26
+     27
+     28
+     29
+     30
+     31
+     32
+     33
+     34
+     35
+     36
+     39
+     40
+     41
+     42
+     43
+     45
+     46
+     47
+     48
+     49
+     51
+     52
+     53
+     55
+     57
+     58
+     59
+     60
+     61
+     63
+     64
+     65
+     66
+     67
+     68
+     69
+     70
+     71
+     72
+     73
+     74
+     75
+     76
+     78
+     79
+     83
+     86
+     87
+     88
+     89
+     90
+     91
+     93
+     94
+     95
+     96
+     97
+     98
+     99
+    100
+    102
+    103
+    104
+    105
+    106
+    107
+    109
+    111
+    114
+    115
+    116
+    117
+    118
+    120
+    122
+    123
+    128
+    129
+    130
+    131
+    134
+    135
+    136
+    137
+    138
+    139
+    140
+    141
+    142
+    143
+    144
+    145
+    146
+    147
+    148
+    149
+    150
+    151
+    152
+    153
+    156
+    157
+    158
+    159
+    160
+    161
+    162
+    165
+    168
+    170
+    171
+    172
+    174
+    175
+    176
+    177
+    178
+    179
+    180
+    181
+    183
+    184
+    185
+    186
+    188
+    189
+    190
+    191
+    192
+    193
+    194
+    196
+    197
+    198
+    199
+    200
+    201
+    203
+    204
+    205
+    206
+    208
+    209
+    210
+    211
+    212
+    213
+    215
+    216
+    217
+    219
+    221
+    222
+    223
+    224
+    225
+    226
+    227
+    228
+    229
+    230
+    232
+    233
+    235
+    236
+    237
+    240
+    243
+    244
+    245
+    246
+    248
+    249
+    252
+    253
+    255
+    256
+    258
+    260
+    262
+    263
+    268
+    270
+    272
+    274
+    276
+    277
+    278
+    279
+    281
+    282
+    283
+    284
+    285
+    286
+    287
+    289
+    290
+    293
+    294
+    295
+    296
+    297
+    298
+    299
+    300
+    303
+    304
+    305
+    306
+    308
+    309
+    310
+    312
+    313
+    314
+    316
+    318
+    320
+    321
+    322
+    323
+    325
+    326
+    327
+    328
+    331
+    333
+    336
+    337
+    341
+    342
+    343
+    344
+    345
+    346
+    347
+    348
+    349
+    350
+    352
+    354
+    355
+    356
+    357
+    358
+    359
+    360
+    361
+    363
+    364
+    367
+    368
+    369
+    370
+    371
+    373
+    374
+    375
+    377
+    380
+    381
+    382
+    383
+    386
+    388
+    389
+    390
+    391
+    394
+    396
+    397
+    398
+    399
+    400
+    401
+    404
+    405
+    406
+    407
+    408
+    412
+    413
+    417
+    419
+    420
+    421
+    423
+    424
+    425
+    427
+    429
+    430
+    432
+    433
+    434
+    435
+    436
+    437
+    438
+    439
+    441
+    442
+    443
+    446
+    447
+    449
+    450
+    451
+    453
+    454
+    456
+    457
+    459
+    460
+    461
+    462
+    463
+    464
+    466
+    467
+    468
+    469
+    470
+    471
+    475
+    476
+    477
+    478
+    480
+    481
+    482
+    485
+    487
+    488
+    489
+    490
+    491
+    492
+    493
+    495
+    496
+    497
+    498
+    499
+    501
+    503
+    504
+    505
+    506
+    509
+    510
+    512
+    514
+    516
+    518
+    520
+    521
+    522
+    525
+    526
+    529
+    530
+    533
+    534
+    535
+    537
+    539
+    541
+    543
+    544
+    545
+    546
+    547
+    548
+    550
+    551
+    552
+    553
+    554
+    556
+    557
+    558
+    559
+    560
+    562
+    563
+    564
+    566
+    567
+    568
+    570
+    572
+    573
+    577
+    578
+    580
+    581
+    583
+    584
+    585
+    586
+    587
+    588
+    589
+    590
+    591
+    592
+    593
+    594
+    595
+    596
+    598
+    601
+    602
+    603
+    604
+    605
+    606
+    607
+    608
+    609
+    611
+    613
+    614
+    615
+    616
+    617
+    618
+    620
+    621
+    623
+    628
+    629
+    630
+    631
+    634
+    635
+    636
+    637
+    638
+    639
+    641
+    642
+    643
+    644
+    647
+    648
+    652
+    653
+    655
+    658
+    660
+    661
+    662
+    663
+    664
+    668
+    669
+    671
+    672
+    675
+    676
+    677
+    678
+    679
+    680
+    681
+    683
+    684
+    685
+    686
+    687
+    688
+    690
+    692
+    695
+    701
+    702
+    703
+    704
+    705
+    706
+    709
+    711
+    713
+    716
+    717
+    718
+    720
+    721
+    722
+    723
+    724
+    726
+    727
+    728
+    729
+    730
+    731
+    732
+    733
+    734
+    735
+    736
+    737
+    738
+    741
+    743
+    746
+    749
+    751
+    752
+    754
+    756
+    757
+    758
+    759
+    760
+    761
+    762
+    767
+    769
+    770
+    771
+    772
+    773
+    774
+    775
+    776
+    777
+    780
+    781
+    782
+    784
+    785
+    786
+    787
+    788
+    789
+    791
+    792
+    793
+    794
+    795
+    796
+    800
+    802
+    803
+    804
+    808
+    810
+    811
+    812
+    814
+    816
+    818
+    819
+    820
+    821
+    822
+    824
+    826
+    828
+    829
+    830
+    831
+    839
+    840
+    841
+    842
+    843
+    844
+    845
+    847
+    849
+    850
+    851
+    853
+    854
+    856
+    857
+    858
+    859
+    861
+    862
+    864
+    865
+    866
+    867
+    868
+    870
+    871
+    872
+    873
+    874
+    875
+    876
+    878
+    879
+    880
+    882
+    883
+    884
+    885
+    886
+    887
+    888
+    889
+    892
+    893
+    895
+    898
+    901
+    902
+    904
+    906
+    908
+    909
+    910
+    911
+    914
+    915
+    917
+    918
+    919
+    921
+    922
+    923
+    925
+    926
+    928
+    929
+    931
+    932
+    934
+    935
+    936
+    939
+    942
+    943
+    944
+    945
+    947
+    948
+    950
+    951
+    953
+    954
+    956
+    957
+    960
+    962
+    963
+    964
+    965
+    966
+    967
+    969
+    970
+    971
+    972
+    974
+    975
+    977
+    980
+    981
+    982
+    984
+    986
+    987
+    989
+    990
+    992
+    994
+    996
+    998
+    999
+   1001
+   1003
+   1005
+   1007
+   1008
+   1009
+   1011
+   1012
+   1013
+   1014
+   1015
+   1016
+   1017
+   1018
+   1020
+   1021
+   1022
+   1024
+   1025
+   1026
+   1027
+   1028
+   1029
+   1030
+   1032
+   1033
+   1034
+   1036
+   1037
+   1040
+   1041
+   1042
+   1043
+   1045
+   1048
+   1050
+   1051
+   1052
+   1053
+   1054
+   1057
+   1058
+   1061
+   1062
+   1063
+   1066
+   1067
+   1068
+   1069
+   1071
+   1072
+   1073
+   1074
+   1076
+   1077
+   1078
+   1080
+   1081
+   1082
+   1083
+   1085
+   1086
+   1089
+   1091
+   1092
+   1093
+   1095
+   1096
+   1097
+   1098
+   1100
+   1101
+   1104
+   1105
+   1106
+   1107
+   1108
+   1111
+   1112
+   1113
+   1115
+   1116
+   1117
+   1118
+   1119
+   1120
+   1121
+   1123
+   1124
+   1127
+   1129
+   1130
+   1132
+   1133
+   1134
+   1135
+   1136
+   1137
+   1138
+   1139
+   1140
+   1141
+   1142
+   1143
+   1144
+   1145
+   1146
+   1147
+   1149
+   1150
+   1151
+   1154
+   1155
+   1157
+   1158
+   1159
+   1160
+   1162
+   1164
+   1166
+   1167
+   1168
+   1169
+   1170
+   1171
+   1175
+   1176
+   1177
+   1180
+   1182
+   1183
+   1186
+   1188
+   1192
+   1193
+   1194
+   1196
+   1198
+   1200
+   1202
+   1205
+   1206
+   1207
+   1208
+   1210
+   1211
+   1215
+   1216
+   1218
+   1219
+   1221
+   1222
+   1223
+   1224
+   1225
+   1226
+   1227
+   1228
+   1233
+   1234
+   1236
+   1239
+   1240
+   1241
+   1244
+   1245
+   1246
+   1248
+   1249
+   1250
+   1252
+   1253
+   1254
+   1256
+   1257
+   1258
+   1261
+   1262
+   1263
+   1265
+   1266
+   1268
+   1270
+   1271
+   1273
+   1275
+   1276
+   1277
+   1278
+   1279
+   1281
+   1282
+   1283
+   1284
+   1285
+   1286
+   1287
+   1288
+   1289
+   1290
+   1291
+   1292
+   1293
+   1294
+   1296
+   1297
+   1298
+   1299
+   1300
+   1301
+   1302
+   1304
+   1305
+   1306
+   1307
+   1308
+   1309
+   1311
+   1312
+   1313
+   1314
+   1315
+   1316
+   1321
+   1324
+   1325
+   1327
+   1329
+   1330
+   1331
+   1332
+   1333
+   1334
+   1335
+   1340
+   1341
+   1342
+   1343
+   1344
+   1347
+   1348
+   1350
+   1351
+   1353
+   1354
+   1355
+   1358
+   1359
+   1360
+   1361
+   1362
+   1365
+   1366
+   1367
+   1368
+   1369
+   1370
+   1371
+   1372
+   1373
+   1375
+   1376
+   1377
+   1381
+   1383
+   1384
+   1386
+   1387
+   1389
+   1390
+   1391
+   1393
+   1394
+   1395
+   1397
+   1398
+   1399
+   1401
+   1402
+   1403
+   1404
+   1405
+   1407
+   1408
+   1409
+   1410
+   1411
+   1413
+   1414
+   1415
+   1416
+   1418
+   1419
+   1420
+   1421
+   1422
+   1423
+   1424
+   1425
+   1426
+   1427
+   1428
+   1429
+   1432
+   1433
+   1435
+   1438
+   1439
+ [ reached 'max' / getOption(""max.print"") -- omitted 269 rows ]"
+Q16,3,Unanswerable Questions,synthetic,2026-10-04 22:40:59.226907,Which variants are most important,N/A,"SELECT VAR_id FROM varInfo_synthetic WHERE HighImpact = 'true' OR ModerateImpact = 'true' ORDER BY CADDphred DESC, PolyPhen DESC, SIFT DESC;",N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,169,40,4.69984245300293,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q16,4,Unanswerable Questions,synthetic,2026-10-04 22:41:03.957642,Which variants are most important,N/A,"SELECT VAR_id, CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphred, PolyPhen, SIFT FROM varInfo_synthetic WHERE HighImpact = 'TRUE' OR ModerateImpact = 'TRUE';",N/A, [1] VAR_id         CHROM          POS            ID             REF            ALT            |  [7] QUAL           FILTER         AC             AN             AF             gene_name      | [13] HighImpact     ModerateImpact Synonymous     CADDphred      PolyPhen       SIFT           | <0 rows> (or 0-length row.names),"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,169,68,7.935561656951904," [1] VAR_id         CHROM          POS            ID             REF            ALT           
+ [7] QUAL           FILTER         AC             AN             AF             gene_name     
+[13] HighImpact     ModerateImpact Synonymous     CADDphred      PolyPhen       SIFT          
+<0 rows> (or 0-length row.names)"
+Q16,5,Unanswerable Questions,synthetic,2026-10-04 22:41:11.907001,Which variants are most important,N/A,"SELECT VAR_id, CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous FROM varInfo_synthetic WHERE HighImpact = 'YES' OR ModerateImpact = 'YES' ORDER BY CADDphred DESC LIMIT 10;",N/A, [1] VAR_id         CHROM          POS            ID             REF            ALT            |  [7] QUAL           FILTER         AC             AN             AF             gene_name      | [13] HighImpact     ModerateImpact Synonymous     | <0 rows> (or 0-length row.names),"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,169,68,7.947099924087524," [1] VAR_id         CHROM          POS            ID             REF            ALT           
+ [7] QUAL           FILTER         AC             AN             AF             gene_name     
+[13] HighImpact     ModerateImpact Synonymous    
+<0 rows> (or 0-length row.names)"
+Q17,1,Unanswerable Questions,synthetic,2026-10-04 22:41:19.867944,Which variants are both synonymous and high impact?,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE Synonymous = 'true' AND HighImpact = 'true';,N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,23,2.9673526287078857,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q17,2,Unanswerable Questions,synthetic,2026-10-04 22:41:22.849125,Which variants are both synonymous and high impact?,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE Synonymous = 1 AND HighImpact = 1;,N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,22,2.6593236923217773,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q17,3,Unanswerable Questions,synthetic,2026-10-04 22:41:25.522352,Which variants are both synonymous and high impact?,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE Synonymous = 'yes' AND HighImpact = 'yes';,N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,23,2.7695798873901367,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q17,4,Unanswerable Questions,synthetic,2026-10-04 22:41:28.306356,Which variants are both synonymous and high impact?,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE Synonymous = 1 AND HighImpact = 1;,N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,26,3.1171324253082275,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q17,5,Unanswerable Questions,synthetic,2026-10-04 22:41:31.437819,Which variants are both synonymous and high impact?,N/A,SELECT VAR_id FROM varInfo_synthetic WHERE Synonymous = 1 AND HighImpact = 1;,N/A,[1] VAR_id | <0 rows> (or 0-length row.names),"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,PASS,,0,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,173,22,2.643494129180908,"[1] VAR_id
+<0 rows> (or 0-length row.names)"
+Q18,1,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:34.096275,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)",SELECT AF FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND ModerateImpact = 1;,Obeject VarSet created.Count of MAF is actually into this file,           AF | 1 2.19858e-05 | 2       2e-05 | 3 2.34544e-05,,,,PASS,,14,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,176,29,3.7744483947753906,"           AF
+  2.19858e-05
+        2e-05
+  2.34544e-05
+ 0.0006430093
+  6.16497e-05
+        4e-05
+  2.07357e-05
+   2.1548e-05
+        2e-05
+  4.09534e-05
+  2.11533e-05
+  4.27661e-05
+            0
+  6.00745e-05"
+Q18,2,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:37.885917,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)",SELECT AF FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND ModerateImpact = 1;,Obeject VarSet created.Count of MAF is actually into this file,           AF | 1 2.19858e-05 | 2       2e-05 | 3 2.34544e-05,,,,PASS,,14,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,176,25,2.9942357540130615,"           AF
+  2.19858e-05
+        2e-05
+  2.34544e-05
+ 0.0006430093
+  6.16497e-05
+        4e-05
+  2.07357e-05
+   2.1548e-05
+        2e-05
+  4.09534e-05
+  2.11533e-05
+  4.27661e-05
+            0
+  6.00745e-05"
+Q18,3,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:40.895437,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)","SELECT AVG(AF) AS MAF
+FROM varInfo_synthetic
+WHERE gene_name = 'TARDBP' AND ModerateImpact = 1;",Obeject VarSet created.Count of MAF is actually into this file,           MAF | 1 7.409501e-05,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,176,36,4.2514848709106445,"          MAF
+ 7.409501e-05"
+Q18,4,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:45.162214,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)","SELECT AVG(AF) AS MAF
+FROM varInfo_synthetic
+WHERE gene_name = 'TARDBP' AND ModerateImpact = 1;",Obeject VarSet created.Count of MAF is actually into this file,           MAF | 1 7.409501e-05,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,176,36,4.2620015144348145,"          MAF
+ 7.409501e-05"
+Q18,5,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:49.440118,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)",SELECT AF FROM varInfo_synthetic WHERE gene_name = 'TARDBP' AND ModerateImpact = 1;,Obeject VarSet created.Count of MAF is actually into this file,           AF | 1 2.19858e-05 | 2       2e-05 | 3 2.34544e-05,,,,PASS,,14,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,176,25,3.0066773891448975,"           AF
+  2.19858e-05
+        2e-05
+  2.34544e-05
+ 0.0006430093
+  6.16497e-05
+        4e-05
+  2.07357e-05
+   2.1548e-05
+        2e-05
+  4.09534e-05
+  2.11533e-05
+  4.27661e-05
+            0
+  6.00745e-05"
+Q19,1,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:52.462525,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)","SELECT COUNT(*) 
+FROM varInfo_synthetic 
+WHERE gene_name = 'SOD1' AND ModerateImpact IS NOT NULL OR HighImpact IS NOT NULL;",Result: 9 female carriers in the SAS cohort.,  COUNT(*) | 1     1802,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,186,37,4.901310920715332," COUNT(*)
+     1802"
+Q19,2,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:41:57.379833,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'SOD1' AND HighImpact = 'Pathogenic';,Result: 9 female carriers in the SAS cohort.,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,186,26,3.1093828678131104," COUNT(*)
+        0"
+Q19,3,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:42:00.505275,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'SOD1' AND (ALS_1 = 'female' OR ALS_2 = 'female' OR ALS_3 = 'female' OR ALS_4 = 'female' OR ALS_5 = 'female') AND SIFT = 'pathogenic';,Result: 9 female carriers in the SAS cohort.,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,186,67,7.756338596343994," COUNT(*)
+        0"
+Q19,4,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:42:08.277605,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",SELECT COUNT(*) FROM varInfo_synthetic WHERE gene_name = 'SOD1' AND ModerateImpact > 0 OR HighImpact > 0;,Result: 9 female carriers in the SAS cohort.,  COUNT(*) | 1      160,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,186,31,3.6851465702056885," COUNT(*)
+      160"
+Q19,5,Advanced Tests (RVAT Required),synthetic,2026-10-04 22:42:11.978946,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)","SELECT COUNT(*) 
+FROM varInfo_synthetic 
+WHERE gene_name = 'SOD1' AND ALS_1 IN ('female', 'carrier') AND PolyPhen = 'pathogenic';",Result: 9 female carriers in the SAS cohort.,  COUNT(*) | 1        0,,,,PASS,,1,qwen2.5-coder:latest,7.6B,High (code/SQL optimized),0.8,186,44,5.192447662353516," COUNT(*)
+        0"

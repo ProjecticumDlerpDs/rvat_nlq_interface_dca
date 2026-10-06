@@ -63,7 +63,7 @@ BENCHMARK_FILE <- here(
 RAW_CAPTURE_FILE <- here(
   "data",
   "raw",
-  "raw_capture_qwen2.5-coder_latest_synthetic_20261004_215748.rds"
+  "raw_capture_qwen2.5-coder_latest_full_gdb_20261004_225921.rds"
 )
 
 
@@ -541,6 +541,14 @@ output_file <- here(
     "_evaluation_template.csv"
   )
 )
+
+
+# def exact_match(predicted, expected):
+#   predicted = normalize_answer(predicted)
+# expected = normalize_answer(expected)
+# return int(predicted == expected)
+
+#em_score = exact_match(predicted_answer, expected_answer)
 
 
 # ------------------------------------------------------------
