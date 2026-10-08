@@ -48,6 +48,9 @@ docs/renv_changes.preview.html
 
 # pkgdown site - manual entry
 demo/demo_next_and_archive
+data/raw/log_archived_tests
+data/processed/log_archived_tests
+data/analysis/log_archived_tests
 
 # files in root - manual entry
 README.html
