@@ -86,7 +86,8 @@ PROCESSED_DIR <- here(
 
 ANALYSIS_DIR <- here(
   "data",
-  "analysis"
+  "analysis",
+  "scored"
 )
 
 RESULTS_DIR <- here(
