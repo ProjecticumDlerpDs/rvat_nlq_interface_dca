@@ -155,6 +155,11 @@ question_types <- unique(
 
 for (current_type in question_types) {
   
+  perf_subset <- performance |>
+    filter(
+      question_type == current_type
+    )
+  
   pair_subset <- pairwise |>
     filter(
       question_type == current_type &
@@ -165,14 +170,47 @@ for (current_type in question_types) {
   
   for (i in seq_len(nrow(pair_subset))) {
     
+    m1 <- pair_subset$model_1[i]
+    m2 <- pair_subset$model_2[i]
+    
+    v1 <- perf_subset$VES_mean[
+      perf_subset$model == m1
+    ]
+    
+    v2 <- perf_subset$VES_mean[
+      perf_subset$model == m2
+    ]
+    
+    sig <- pair_subset$stars[i]
+    
+    if (sig == "ns") {
+      
+      next
+    }
+    
+    if (v1 < v2) {
+      
+      line <- paste(
+        m1,
+        ">",
+        m2,
+        sig
+      )
+      
+    } else {
+      
+      line <- paste(
+        m2,
+        ">",
+        m1,
+        sig
+      )
+      
+    }
+    
     lines <- c(
       lines,
-      paste(
-        pair_subset$model_1[i],
-        "≠",
-        pair_subset$model_2[i],
-        pair_subset$stars[i]
-      )
+      line
     )
   }
   
@@ -185,7 +223,7 @@ for (current_type in question_types) {
     kw$question_type == current_type
   ]
   
-  annotations[[current_type]] <- paste(
+  annotations[[as.character(current_type)]] <- paste(
     paste0(
       "KW p=",
       signif(
@@ -214,7 +252,9 @@ annotation_data <- performance |>
 
 annotation_data$label <- unlist(
   annotations[
-    annotation_data$question_type
+    as.character(
+      annotation_data$question_type
+    )
   ]
 )
 
