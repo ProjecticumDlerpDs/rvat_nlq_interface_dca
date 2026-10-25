@@ -62,6 +62,20 @@ OUTPUT_FILE <- here(
 )
 
 # ------------------------------------------------------------
+# PREPARE OUTPUT DIRECTORY
+# ------------------------------------------------------------
+dir.create(
+  here(
+    "data",
+    "analysis",
+    "visualisations"
+  ),
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+
+# ------------------------------------------------------------
 # VALIDATE INPUTS
 # ------------------------------------------------------------
 
@@ -158,179 +172,188 @@ pairwise$stars <- dplyr::case_when(
 performance <- question_level |>
   group_by(
     question_type,
+    db_mode,
     model
   ) |>
   summarise(
-    
     EX_mean = mean(
       EX_rate,
       na.rm = TRUE
     ),
-    
     .groups = "drop"
   )
-
 # ------------------------------------------------------------
-# DETERMINE PAIRWISE LABELS
+# BUILD ANNOTATIONS
 # ------------------------------------------------------------
-
-pairwise <- pairwise |>
-  filter(
-    !is.na(adjusted_p_value)
-  )
-
 pairwise$stars <- ifelse(
   pairwise$adjusted_p_value < 0.001,
-  "***",
+  "",
   ifelse(
     pairwise$adjusted_p_value < 0.01,
-    "**",
+    "",
     ifelse(
       pairwise$adjusted_p_value < 0.05,
-      "*",
+      "",
       "ns"
     )
   )
 )
 
-labels <- list()
 
+labels <- list()
 question_types <- unique(
   performance$question_type
 )
-
+db_modes <- unique(
+  performance$db_mode
+)
 for (current_type in question_types) {
-  
-  perf_subset <- performance |>
-    filter(
-      question_type == current_type
-    )
-  
-  pair_subset <- pairwise |>
-    filter(
-      question_type == current_type
-    )
-  
-  text_lines <- c()
-  
-  for (i in seq_len(nrow(pair_subset))) {
-    
-    m1 <- pair_subset$model_1[i]
-    m2 <- pair_subset$model_2[i]
-    
-    p1 <- perf_subset$EX_mean[
-      perf_subset$model == m1
-    ]
-    
-    p2 <- perf_subset$EX_mean[
-      perf_subset$model == m2
-    ]
-    
-    significance <- pair_subset$stars[i]
-    
-    if (significance == "ns") {
-      
-      next
-    }
-    
-    if (length(p1) == 0 || length(p2) == 0) {
-      
-      next
-    }
-    
-    if (p1 > p2) {
-      
-      line <- paste(
-        m1,
-        ">",
-        m2,
-        significance
+  for (current_db_mode in db_modes) {
+    perf_subset <- performance |>
+      filter(
+        question_type == current_type,
+        db_mode == current_db_mode
       )
-      
-    } else {
-      
-      line <- paste(
-        m2,
-        ">",
-        m1,
-        significance
+    pair_subset <- pairwise |>
+      filter(
+        question_type == current_type,
+        db_mode == current_db_mode
+      )
+    text_lines <- c()
+    for (i in seq_len(nrow(pair_subset))) {
+      m1 <- pair_subset$model_1[i]
+      m2 <- pair_subset$model_2[i]
+      p1 <- mean(
+        perf_subset$EX_mean[
+          perf_subset$model == m1
+        ]
+      )
+      p2 <- mean(
+        perf_subset$EX_mean[
+          perf_subset$model == m2
+        ]
+      )
+      significance <- pair_subset$stars[i]
+      if (significance == "ns") {
+        next
+      }
+      if (is.na(p1) || is.na(p2)) {
+        next
+      }
+      if (p1 > p2) {
+        line <- paste(
+          m1,
+          ">",
+          m2,
+          significance
+        )
+      } else {
+        line <- paste(
+          m2,
+          ">",
+          m1,
+          significance
+        )
+      }
+      text_lines <- c(
+        text_lines,
+        line
       )
     }
-    
-    text_lines <- c(
-      text_lines,
-      line
+    if (length(text_lines) == 0) {
+      text_lines <- "No significant pairwise differences"
+    }
+    kw_p <- kw$p_value[
+      kw$question_type == current_type &
+        kw$db_mode == current_db_mode
+    ]
+    annotation_key <- paste(
+      current_type,
+      current_db_mode,
+      sep = "::"
+    )
+    labels[[annotation_key]] <- paste(
+      paste0(
+        current_db_mode,
+        "\nKW p=",
+        signif(
+          kw_p,
+          3
+        )
+      ),
+      paste(
+        text_lines,
+        collapse = "\n"
+      ),
+      sep = "\n"
     )
   }
-  
-  if (length(text_lines) == 0) {
-    
-    text_lines <- "No significant pairwise differences"
-  }
-  
-  kw_p <- kw$p_value[
-    kw$question_type == current_type
-  ]
-  
-  labels[[current_type]] <- paste(
-    paste0(
-      "Kruskal-Wallis p=",
-      signif(
-        kw_p,
-        3
-      )
-    ),
-    paste(
-      text_lines,
-      collapse = "\n"
-    ),
-    sep = "\n"
-  )
 }
 
 # ------------------------------------------------------------
 # CREATE ANNOTATION DATA
 # ------------------------------------------------------------
-
 annotation_data <- performance |>
   group_by(
-    question_type
+    question_type,
+    db_mode
   ) |>
   summarise(
-    
     y_position =
       max(EX_mean) + 0.15,
-    
     .groups = "drop"
   )
-
-annotation_data$label <- unlist(
-  labels[
-    as.character(
-      annotation_data$question_type
-    )
-  ]
+annotation_data$key <- paste(
+  annotation_data$question_type,
+  annotation_data$db_mode,
+  sep = "::"
+)
+annotation_data$label <- vapply(
+  annotation_data$key,
+  function(x) {
+    if (x %in% names(labels)) {
+      labels[[x]]
+    } else {
+      ""
+    }
+  },
+  character(1)
 )
 
+
+# ------------------------------------------------------------
+# CREATE DISPLAY LABELS
+# ------------------------------------------------------------
+performance$question_db <- paste(
+  performance$question_type,
+  performance$db_mode,
+  sep = "\n"
+)
+annotation_data$question_db <- paste(
+  annotation_data$question_type,
+  annotation_data$db_mode,
+  sep = "\n"
+)
 # ------------------------------------------------------------
 # ORDER QUESTION TYPES
 # ------------------------------------------------------------
-
-question_type_order <- c(
-  "Lookup Queries",
-  "Analytical Queries",
-  "Unanswerable Questions",
-  "Advanced Tests (RVAT Required)"
+question_order <- c(
+  "Lookup Queries\nfull_gdb",
+  "Lookup Queries\nsynthetic",
+  "Analytical Queries\nfull_gdb",
+  "Analytical Queries\nsynthetic",
+  "Unanswerable Questions\nfull_gdb",
+  "Unanswerable Questions\nsynthetic",
+  "Advanced Tests (RVAT Required)\nfull_gdb",
+  "Advanced Tests (RVAT Required)\nsynthetic"
 )
-
-performance$question_type <- factor(
-  performance$question_type,
-  levels = question_type_order
+performance$question_db <- factor(
+  performance$question_db,
+  levels = question_order
 )
-
-annotation_data$question_type <- factor(
-  annotation_data$question_type,
-  levels = question_type_order
+annotation_data$question_db <- factor(
+  annotation_data$question_db,
+  levels = question_order
 )
 
 # ------------------------------------------------------------
@@ -340,19 +363,17 @@ annotation_data$question_type <- factor(
 p <- ggplot(
   performance,
   aes(
-    x = question_type,
+    x = question_db,
     y = EX_mean,
     fill = model
   )
 ) +
-  
   geom_col(
     position = position_dodge(
       width = 0.8
     ),
     width = 0.7
   ) +
-  
   geom_text(
     aes(
       label = percent(
@@ -366,11 +387,10 @@ p <- ggplot(
     vjust = -0.3,
     size = 4
   ) +
-  
   geom_text(
     data = annotation_data,
     aes(
-      x = question_type,
+      x = question_db,
       y = y_position,
       label = label
     ),
@@ -378,7 +398,6 @@ p <- ggplot(
     size = 3.2,
     fontface = "bold"
   ) +
-  
   scale_y_continuous(
     labels = percent_format(),
     limits = c(
@@ -386,25 +405,18 @@ p <- ggplot(
       1.25
     )
   ) +
-  
   labs(
     title =
       "EX Performance and Statistical Significance",
-    
     subtitle =
-      "Kruskal-Wallis and Pairwise Wilcoxon Results",
-    
-    x = "Question Type",
-    
+      "Question Type × Database Mode",
+    x = "Question Type / Database Mode",
     y = "Mean EX Rate",
-    
     fill = "LLM"
   ) +
-  
   theme_minimal(
     base_size = 12
   ) +
-  
   theme(
     legend.position = "top",
     panel.grid.major.x = element_blank(),
@@ -413,6 +425,11 @@ p <- ggplot(
       hjust = 1
     )
   )
+
+print(head(annotation_data))
+print(dim(annotation_data))
+print(file.exists(dirname(OUTPUT_FILE)))
+
 
 # ------------------------------------------------------------
 # SAVE FIGURE
@@ -425,6 +442,8 @@ ggsave(
   height = 8,
   dpi = 300
 )
+
+print(file.exists(OUTPUT_FILE))
 
 # ------------------------------------------------------------
 # VERIFY OUTPUT
