@@ -1,10 +1,6 @@
 # ------------------------------------------------------------
 # 34_analyse_evaluation.R
 #
-# VERSION
-# -------
-# Version 1 - analysis ingestion and provenance validation
-#
 # PURPOSE
 # -------
 # Construct a trusted execution-level analysis dataset by
