@@ -49,7 +49,7 @@
 #   *_scored-2* -> iteration 2
 #   *_scored-3* -> iteration 3
 #
-# VERSION 1 OUTPUT
+# OUTPUT
 # ----------------
 # Builds and validates an execution-level master dataset.
 #
