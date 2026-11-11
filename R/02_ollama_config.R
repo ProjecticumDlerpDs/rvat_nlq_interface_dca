@@ -252,7 +252,7 @@ get_temperature <- function(model) {
 }
 
 # ------------------------------------------------------------
-# MODEL CONFIGURATION
+# MODEL CONFIGURATION (USER EDITABLE)
 # ------------------------------------------------------------
 
 model_name <- "qwen2.5-coder:latest"
