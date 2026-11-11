@@ -1,10 +1,15 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
 RVAT NLQ Interface
 ================
-Version: 0.4.1 \
-Date:    2026.09.21
+Version: 1.0 \
+Date:    2026.11.10
 
 
-A Natural Language Query (NLQ) interface for exploring RVAT genetic
+A Natural Language Query (NLQ) interface prototype for exploring RVAT genetic
 variant data using locally hosted Large Language Models (LLM's).
 
 
@@ -37,7 +42,7 @@ The primary objective is to assess:
 
 To what extent can a locally hosted Large Language Model (LLM), integrated within an 
 R environment, translate natural language queries into accurate SQL queries and 
-use them to retrieve relevant data from an ALS-specific RVAT database, as evaluated 
+use them to retrieve relevant data from an Amyotrophic Lateral Sclerosis (ALS) specific RVAT database, as evaluated 
 using predefined benchmark questions?
 
 
@@ -45,12 +50,12 @@ The project establishes three core technical objectives:
 
 •  be used as an evaluation framework for Natural Language → SQL generation; \
 •  serve as a reference implementation of a local, privacy-preserving LLM-driven query interface; \
-•  demonstrate reproducible R/Shiny application that can be deployed in research or server environments. \
+•  demonstrate reproducible R/Shiny application that can be deployed in research or server environments.
 
 ------------------------------------------------------------------------
 
 
-# Architecture Overview
+# Application Architecture Overview
 
 The application consists of six main components, grouped under /R folder:
 
@@ -70,6 +75,13 @@ These components are orchestrated through:
 This is the **only script that end users need to run **.
 All other scripts are loaded automatically.
 
+
+# Technical Workflow Architecture 
+
+![Figure 01: Technical Workflow Architecture. The figure presents the technical architecture of the RVAT NL→SQL application, divided into three main processes: (1) application initialisation, (2) natural-language-to-SQL query processing, and (3) query history storage and management. During initialisation, the required database, model and server components are loaded. During a query session, a natural-language question is translated into SQL, executed against the database, and returned to the user while execution data are logged simultaneously. Optional user actions support saving, retrieving and clearing query history. According to the legend, solid black arrows represent control and process flow, whereas blue dashed arrows represent data and information flow. The figure provides an overview of the analysis pipeline from user query to stored result](docs/figuren/Technical_Workflow_README_v1.0.png)
+* **Figure 01:** The figure presents the technical architecture of the RVAT NL→SQL application, divided into three main processes: (1) application initialisation, (2) natural-language-to-SQL query processing, and (3) query history storage and management. During initialisation, the required database, model and server components are loaded. During a query session, a natural-language question is translated into SQL, executed against the database, and returned to the user while execution data are logged simultaneously. Optional user actions support saving, retrieving and clearing query history. According to the legend, solid black arrows represent control and process flow, whereas blue dashed arrows represent data and information flow. The figure provides an overview of the analysis pipeline from user query to stored result.*
+
+
 ------------------------------------------------------------------------
 
 
@@ -85,7 +97,7 @@ For full reproducibility:
 • Linux Server (x86_64-pc-linux-gnu)                \
 • 32 CPU cores                                      \
 • 64 GB RAM (~49GB memory available)                \
-• R version 4.5.0 (2025-04-11)                      \ 
+• R version 4.5.0 (2025-04-11)                      \
 • RStudio 2025.05.0 Build 496.pro5, Posit Software  \
 • Ollama installed (version 0.21.0)                 \
 👉 https://ollama.com/                              \
@@ -94,12 +106,58 @@ For full reproducibility:
 This configuration was used throughout development and validation.
 
 
+------------------------------------------------------------------------
+
+# Getting Started
+
+Before starting, ensure you have met the (minimum) 'Hardware and Software Specifications' described above.
+This Getting Started instructions are meant for **Server Environment (Recommended)**. 
+
+For **Local Laptop Environment**, see below.   
+
+
+### Create a Copy of this Project 
+
+1.	Clone the Github repository
+2.	Make a corresponding R project in Rstudio(Posit)
+3.	Run renv::restore() in console
+
+
+### Verify Package Dependencies (optional)
+
+4. Run `/scripts/00_renv_setup.R` to verify the restored environment
+
+### Configure LLM (optional) 
+If using another LLM than default (= qwen2.5-coder:latest), configure chosen LLM as follows before running app:
+
+5. Open `/R/02_ollama_config.R` and edit the following line of code accordingly: \
+model_name <- "qwen2.5-coder:latest", under [MODEL CONFIGURATION (USER EDITABLE)])
+
+### Database Usage Mode (optional)
+By default, database mode is set to "synthetic" as defined in `R/01_db_connection.R`, which uses an augmented, subset of the database
+based on the `varInfo` table. To use all the full RVAT geodatabase schema (e.g. varInfo, var, pheno, anno, meta, dosage, etc.),
+switch to `full_gdb` before running the application by:
+
+6. Open `/R/01_db_connection.R`, follow the instructions and edit under 
+[DEFAULT MODE (CHANGE FOR PRODUCTION)] by commenting / un-commenting desired setting.    
+
+### Run the Application
+
+7. Run "/app/rvat_nlq_app.R"
+
+
+For troubleshooting, see **Utilities and Troubleshooting** below.
+
+
+================
+
+
 **Local Laptop Environment**\
-Experimental trial:\
+Experimental:\
 Local execution is supported although very experimental at this stage and much dependent on available hardware.
 
-Please 
-Smaller models generally perform well:
+ 
+Smaller models generally perform reasonably:
 
 mistral:latest    \
 qwen2.5-coder:latest    
@@ -125,12 +183,12 @@ This behaviour is related to hardware constraints rather than application logic.
 • Disk space to download Ollama/LLM's locally           
 
 
-**Windows & Bioconductor Note**
+**Windows & Bioconductor Note** \
 RStudio and R do not natively require Bioconductor on Windows. However, core genomic dependencies used in this project (such as `SummarizedExperiment`, required upstream by `rvat`) frequently fail to resolve automatically on Windows via standard `install.packages()`. 
 
 While macOS and Linux typically handle these upstream Bioconductor dependencies dynamically, Windows environments require explicit initialization of `BiocManager` to register the necessary repositories and build binary packages smoothly.
 
-**Setup Script for Laptop Users**
+**Setup Script for Laptop Users** \
 To streamline setup and resolve cross-platform dependency issues (especially on Windows), an automated setup script is included in the project root: `/scripts/00_renv_setup.R`.
 
 This script automatically:
@@ -138,27 +196,27 @@ This script automatically:
 * Restores the exact project dependencies via `renv::restore()`.
 * Conducts post-installation checks to ensure core packages (`shiny`, `dplyr`, `DBI`, `RSQLite`, `rvat`, `ollamar`) are ready.
 
-### To Getting Started on Windows Laptop
+#### To Getting Started on Windows Laptop
 
-1. Ensure at least:
+1. Ensure at least:                                     \
 • Windows 11 Pro (x64)                                  \
 • CPU: 4 cores                                          \
 • 8GB RAM (available memory 7.5GB)                      \
 • Disk space to download Ollama/LLM's locally           \
 👉 Individual LLM's may require up to tens of GB's of disk space!
 
-2. Install:
-• R version 4.5.0 (2025-04-11)                      \ 
+2. Install:                                         \
+• R version 4.5.0 (2025-04-11)                      \
 • RStudio 2025.05.0 Build 496.pro5, Posit Software  \
 • Ollama installed (version 0.21.0)                 \
 👉 https://ollama.com/                              \
-• One or more LLM's (default: qwen2.5-coder:latest) \
+• One or more LLM's (default: qwen2.5-coder:latest) 
 
 
-3. Create a Copy of this Project
+3. Create a Copy of this Project                    \
 •	Clone the Github repository                       \
 •	Make a corresponding R project in Rstudio(Posit)  \
-•	Run renv::restore() in console                    \
+•	Run renv::restore() in console                    
 
 4. Verify Package Dependencies (including Bioconductor Windows dependency)
 
@@ -168,60 +226,23 @@ This script automatically:
 If using another LLM than default (= qwen2.5-coder:latest), configure chosen LLM as follows before running app:
 
 • Open `/R/02_ollama_config.R` and edit the following line of code accordingly: \
-model_name <- "qwen2.5-coder:latest" (line 131, under [MODEL CONFIGURATION (USER EDITABLE)])
+model_name <- "qwen2.5-coder:latest", under [MODEL CONFIGURATION (USER EDITABLE)])
 
 6. Database Usage Mode (optional, default is advisable for laptop usage)
 By default, database mode is set to "synthetic" as defined in `R/01_db_connection.R`, which uses an augmented, subset of the database
 based on the `varInfo` table. To use all the full RVAT geodatabase schema (e.g. varInfo, var, pheno, anno, meta, dosage, etc.),
 switch to `full_gdb` before running the application by:
 
-• Open `/R/01_db_connection.R`, follow the instructions and edit lines 44-48 under 
+• Open `/R/01_db_connection.R`, follow the instructions and edit under 
 [DEFAULT MODE (CHANGE FOR PRODUCTION)] by commenting / un-commenting desired setting.
 
 7. Run the Application
 • Run "/app/rvat_nlq_app.R"
 
+
 For troubleshooting, see **Utilities and Troubleshooting** below.
 
-
 ---
-# Getting Started
-
-Before starting, ensure you have met the (minimum) 'Hardware and Software Specifications' described above.
-This Getting Started instructions are meant for **Server Environment (Recommended)**. 
-
-For **Local Laptop Environment**, see above.   
-
-
-### Create a Copy of this Project 
-
-1.	Clone the Github repository
-2.	Make a corresponding R project in Rstudio(Posit)
-3.	Run renv::restore() in console
-
-
-### Verify Package Dependencies (optional)
-
-4. Run `/scripts/00_renv_setup.R` to verify the restored environment
-
-### Configure LLM (optional) 
-If using another LLM than default (= qwen2.5-coder:latest), configure chosen LLM as follows before running app:
-
-5. Open `/R/02_ollama_config.R` and edit the following line of code accordingly: \
-model_name <- "qwen2.5-coder:latest" (line 131, under [MODEL CONFIGURATION (USER EDITABLE)])
-
-### Database Usage Mode (optional)
-By default, database mode is set to "synthetic" as defined in `R/01_db_connection.R`, which uses an augmented, subset of the database
-based on the `varInfo` table. To use all the full RVAT geodatabase schema (e.g. varInfo, var, pheno, anno, meta, dosage, etc.),
-switch to `full_gdb` before running the application by:
-
-6. Open `/R/01_db_connection.R`, follow the instructions and edit lines 44-48 under 
-[DEFAULT MODE (CHANGE FOR PRODUCTION)] by commenting / un-commenting desired setting.    
-
-### Run the Application
-
-7. Run "/app/rvat_nlq_app.R"
-
 
 ## Utilities and Troubleshooting
 The `/utils/` directory contains standalone validation and troubleshooting scripts for testing individual layers of the application. 
