@@ -3,7 +3,7 @@
 #
 # PURPOSE
 # -------
-# Create a presentation-quality figure combining:
+# Create a presentation-quality visualisation combining:
 #
 # - EX performance per model
 # - Kruskal-Wallis significance
@@ -116,7 +116,7 @@ pairwise <- read_csv(
   show_col_types = FALSE
 )
 
-print(names(pairwise))
+
 
 # ------------------------------------------------------------
 # STANDARDISE PAIRWISE COLUMN NAMES
@@ -172,7 +172,6 @@ pairwise$stars <- dplyr::case_when(
 performance <- question_level |>
   group_by(
     question_type,
-    db_mode,
     model
   ) |>
   summarise(
@@ -185,129 +184,115 @@ performance <- question_level |>
 # ------------------------------------------------------------
 # BUILD ANNOTATIONS
 # ------------------------------------------------------------
-pairwise$stars <- ifelse(
-  pairwise$adjusted_p_value < 0.001,
-  "",
-  ifelse(
-    pairwise$adjusted_p_value < 0.01,
-    "",
-    ifelse(
-      pairwise$adjusted_p_value < 0.05,
-      "",
-      "ns"
-    )
-  )
-)
-
+# Create a presentation-quality visualisation combining:
+#
+# - EX performance per model
+# - Kruskal-Wallis significance
+# - Pairwise Wilcoxon significance
 
 labels <- list()
 question_types <- unique(
   performance$question_type
 )
-db_modes <- unique(
-  performance$db_mode
-)
+
 for (current_type in question_types) {
-  for (current_db_mode in db_modes) {
-    perf_subset <- performance |>
-      filter(
-        question_type == current_type,
-        db_mode == current_db_mode
-      )
-    pair_subset <- pairwise |>
-      filter(
-        question_type == current_type,
-        db_mode == current_db_mode
-      )
-    text_lines <- c()
-    for (i in seq_len(nrow(pair_subset))) {
-      m1 <- pair_subset$model_1[i]
-      m2 <- pair_subset$model_2[i]
-      p1 <- mean(
-        perf_subset$EX_mean[
-          perf_subset$model == m1
-        ]
-      )
-      p2 <- mean(
-        perf_subset$EX_mean[
-          perf_subset$model == m2
-        ]
-      )
-      significance <- pair_subset$stars[i]
-      if (significance == "ns") {
-        next
-      }
-      if (is.na(p1) || is.na(p2)) {
-        next
-      }
-      if (p1 > p2) {
-        line <- paste(
-          m1,
-          ">",
-          m2,
-          significance
-        )
-      } else {
-        line <- paste(
-          m2,
-          ">",
-          m1,
-          significance
-        )
-      }
-      text_lines <- c(
-        text_lines,
-        line
-      )
-    }
-    if (length(text_lines) == 0) {
-      text_lines <- "No significant pairwise differences"
-    }
-    kw_p <- kw$p_value[
-      kw$question_type == current_type &
-        kw$db_mode == current_db_mode
-    ]
-    annotation_key <- paste(
-      current_type,
-      current_db_mode,
-      sep = "::"
+  perf_subset <- performance |>
+    filter(
+      question_type == current_type
     )
-    labels[[annotation_key]] <- paste(
-      paste0(
-        current_db_mode,
-        "\nKW p=",
-        signif(
-          kw_p,
-          3
-        )
-      ),
-      paste(
-        text_lines,
-        collapse = "\n"
-      ),
-      sep = "\n"
+  pair_subset <- pairwise |>
+    filter(
+      question_type == current_type
+    )
+  text_lines <- c()
+  for (i in seq_len(nrow(pair_subset))) {
+    m1 <- pair_subset$model_1[i]
+    m2 <- pair_subset$model_2[i]
+    p1 <- mean(
+      perf_subset$EX_mean[
+        perf_subset$model == m1
+      ]
+    )
+    p2 <- mean(
+      perf_subset$EX_mean[
+        perf_subset$model == m2
+      ]
+    )
+    significance <- pair_subset$stars[i]
+    if (significance == "ns") {
+      next
+    }
+    if (is.na(p1) || is.na(p2)) {
+      next
+    }
+    if (p1 > p2) {
+      line <- paste(
+        m1,
+        ">",
+        m2,
+        significance
+      )
+    } else {
+      line <- paste(
+        m2,
+        ">",
+        m1,
+        significance
+      )
+    }
+    text_lines <- c(
+      text_lines,
+      line
     )
   }
+  if (length(text_lines) == 0) {
+    text_lines <- "No significant pairwise differences"
+  }
+  kw_p <- kw |>
+    filter(
+      question_type == current_type
+    ) |>
+    slice(1) |>
+    pull(p_value)
+  
+  if (length(kw_p) == 0) {
+    
+    kw_p <- NA_real_
+  }
+  
+  annotation_key <- current_type
+  
+  labels[[annotation_key]] <- paste(
+    paste0(
+      "KW p=",
+      signif(
+        kw_p,
+        3
+      )
+    ),
+    paste(
+      text_lines,
+      collapse = "\n"
+    ),
+    sep = "\n"
+  )
 }
+
 
 # ------------------------------------------------------------
 # CREATE ANNOTATION DATA
 # ------------------------------------------------------------
 annotation_data <- performance |>
   group_by(
-    question_type,
-    db_mode
+    question_type
   ) |>
   summarise(
     y_position =
-      max(EX_mean) + 0.15,
+      max(EX_mean) * 1.25,
     .groups = "drop"
   )
-annotation_data$key <- paste(
-  annotation_data$question_type,
-  annotation_data$db_mode,
-  sep = "::"
-)
+annotation_data$key <- annotation_data$question_type
+
 annotation_data$label <- vapply(
   annotation_data$key,
   function(x) {
@@ -322,58 +307,63 @@ annotation_data$label <- vapply(
 
 
 # ------------------------------------------------------------
-# CREATE DISPLAY LABELS
-# ------------------------------------------------------------
-performance$question_db <- paste(
-  performance$question_type,
-  performance$db_mode,
-  sep = "\n"
-)
-annotation_data$question_db <- paste(
-  annotation_data$question_type,
-  annotation_data$db_mode,
-  sep = "\n"
-)
-# ------------------------------------------------------------
 # ORDER QUESTION TYPES
 # ------------------------------------------------------------
 question_order <- c(
-  "Lookup Queries\nfull_gdb",
-  "Lookup Queries\nsynthetic",
-  "Analytical Queries\nfull_gdb",
-  "Analytical Queries\nsynthetic",
-  "Unanswerable Questions\nfull_gdb",
-  "Unanswerable Questions\nsynthetic",
-  "Advanced Tests (RVAT Required)\nfull_gdb",
-  "Advanced Tests (RVAT Required)\nsynthetic"
+  "Lookup Queries",
+  "Analytical Queries",
+  "Unanswerable Questions",
+  "Advanced Tests (RVAT Required)"
 )
-performance$question_db <- factor(
-  performance$question_db,
-  levels = question_order
-)
-annotation_data$question_db <- factor(
-  annotation_data$question_db,
+performance$question_type <- factor(
+  performance$question_type,
   levels = question_order
 )
 
+annotation_data$question_type <- factor(
+  annotation_data$question_type,
+  levels = question_order
+)
+
+
+
 # ------------------------------------------------------------
-# CREATE FIGURE
+# VALIDATE QUESTION ORDER MAPPING
 # ------------------------------------------------------------
+
+if (any(is.na(performance$question_type))) {
+  stop("Question type factor conversion failed.")
+}
+
+if (any(is.na(annotation_data$question_type))) {
+  stop("Annotation question type factor conversion failed.")
+}
+
+# ------------------------------------------------------------
+# CREATE VISUALISATION
+# ------------------------------------------------------------
+
+plot_upper_limit <- max(
+  annotation_data$y_position,
+  na.rm = TRUE
+) + 0.15
 
 p <- ggplot(
   performance,
   aes(
-    x = question_db,
+    x = question_type,
     y = EX_mean,
     fill = model
   )
 ) +
+  
   geom_col(
     position = position_dodge(
       width = 0.8
     ),
     width = 0.7
   ) +
+  
   geom_text(
     aes(
       label = percent(
@@ -385,51 +375,62 @@ p <- ggplot(
       width = 0.8
     ),
     vjust = -0.3,
-    size = 4
+    size = 3.5
   ) +
+  
   geom_text(
     data = annotation_data,
     aes(
-      x = question_db,
+      x = question_type,
       y = y_position,
       label = label
     ),
     inherit.aes = FALSE,
-    size = 3.2,
-    fontface = "bold"
+    size = 3.0,
+    fontface = "bold",
+    lineheight = 0.95
   ) +
+  
   scale_y_continuous(
     labels = percent_format(),
     limits = c(
       0,
-      1.25
+      plot_upper_limit
     )
   ) +
+  
   labs(
     title =
       "EX Performance and Statistical Significance",
+    
     subtitle =
-      "Question Type × Database Mode",
-    x = "Question Type / Database Mode",
-    y = "Mean EX Rate",
-    fill = "LLM"
+      "Kruskal-Wallis and Pairwise Wilcoxon Results",
+    
+    x =
+      "Question Type",
+    
+    y =
+      "Mean EX Rate",
+    
+    fill =
+      "LLM"
   ) +
+  
   theme_minimal(
     base_size = 12
   ) +
+  
   theme(
     legend.position = "top",
-    panel.grid.major.x = element_blank(),
+    
+    panel.grid.major.x =
+      element_blank(),
+    
     axis.text.x = element_text(
       angle = 15,
       hjust = 1
     )
   )
-
-print(head(annotation_data))
-print(dim(annotation_data))
-print(file.exists(dirname(OUTPUT_FILE)))
-
 
 # ------------------------------------------------------------
 # SAVE FIGURE

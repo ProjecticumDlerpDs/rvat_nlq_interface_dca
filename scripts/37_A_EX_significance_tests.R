@@ -115,7 +115,6 @@ if (nrow(question_level) == 0) {
 required_columns <- c(
   "model",
   "question_type",
-  "db_mode",
   "EX_rate"
 )
 
@@ -146,11 +145,6 @@ question_types <- sort(
   )
 )
 
-db_modes <- sort(
-  unique(
-    question_level$db_mode
-  )
-)
 
 # ------------------------------------------------------------
 # STORAGE
@@ -161,99 +155,91 @@ kruskal_results <- list()
 pairwise_results <- list()
 
 # ------------------------------------------------------------
-# TEST EACH QUESTION TYPE × DATABASE MODE
+# TEST EACH QUESTION TYPE
 # ------------------------------------------------------------
 
 for (current_type in question_types) {
   
-  for (current_db_mode in db_modes) {
-    
-    subset_data <- question_level |>
-      filter(
-        question_type == current_type,
-        db_mode == current_db_mode
-      )
-    
-# --------------------------------------------------------
-# KRUSKAL-WALLIS
-# --------------------------------------------------------
-    
-kw_test <- kruskal.test(
-  EX_rate ~ model,
-  data = subset_data
-)
-    
-kruskal_results[[length(kruskal_results) + 1]] <-
-  data.frame(
-    question_type = current_type,
-    db_mode = current_db_mode,
-    n_observations = nrow(subset_data),
-    n_models = length(
-      unique(
-        subset_data$model
-      )
-    ),
-    chi_square =
-      as.numeric(
-        kw_test$statistic
-      ),
-    degrees_freedom =
-      as.numeric(
-        kw_test$parameter
-      ),
-    p_value =
-      kw_test$p.value,
-     significant =
-       ifelse(
-         kw_test$p.value < 0.05,
-         "YES",
-         "NO"
-       ),
-     stringsAsFactors = FALSE
-   )
- 
- # --------------------------------------------------------
- # PAIRWISE WILCOXON
- # --------------------------------------------------------
-    
- pairwise_test <- pairwise.wilcox.test(
-   subset_data$EX_rate,
-   subset_data$model,
-   p.adjust.method = "holm"
- )
-    
-pairwise_table <- as.data.frame(
-  as.table(
-    pairwise_test$p.value
+  subset_data <- question_level |>
+    filter(
+      question_type == current_type
+    )
+  
+  # --------------------------------------------------------
+  # KRUSKAL-WALLIS
+  # --------------------------------------------------------
+  
+  kw_test <- kruskal.test(
+    EX_rate ~ model,
+    data = subset_data
   )
-)
-    
-names(pairwise_table) <- c(
-  "model_1",
-  "model_2",
-  "adjusted_p_value"
-)
-    
-pairwise_table$question_type <-
-  current_type
-    
-pairwise_table$db_mode <-
-  current_db_mode
-    
-pairwise_table$significant <-
-  ifelse(
-    !is.na(
-      pairwise_table$adjusted_p_value
-    ) &
-      pairwise_table$adjusted_p_value < 0.05,
-    "YES",
-    "NO"
+  
+  kruskal_results[[length(kruskal_results) + 1]] <-
+    data.frame(
+      question_type = current_type,
+      n_observations = nrow(subset_data),
+      n_models = length(
+        unique(
+          subset_data$model
+        )
+      ),
+      chi_square =
+        as.numeric(
+          kw_test$statistic
+        ),
+      degrees_freedom =
+        as.numeric(
+          kw_test$parameter
+        ),
+      p_value =
+        kw_test$p.value,
+      significant =
+        ifelse(
+          kw_test$p.value < 0.05,
+          "YES",
+          "NO"
+        ),
+      stringsAsFactors = FALSE
+    )
+  
+  # --------------------------------------------------------
+  # PAIRWISE WILCOXON
+  # --------------------------------------------------------
+  
+  pairwise_test <- pairwise.wilcox.test(
+    subset_data$EX_rate,
+    subset_data$model,
+    p.adjust.method = "holm"
   )
-    
-pairwise_results[[length(pairwise_results) + 1]] <-
-  pairwise_table
-    
- }
+  
+  pairwise_table <- as.data.frame(
+    as.table(
+      pairwise_test$p.value
+    )
+  )
+  
+  names(pairwise_table) <- c(
+    "model_1",
+    "model_2",
+    "adjusted_p_value"
+  )
+  
+  pairwise_table$question_type <-
+    current_type
+  
+  pairwise_table$significant <-
+    ifelse(
+      !is.na(
+        pairwise_table$adjusted_p_value
+      ) &
+        pairwise_table$adjusted_p_value < 0.05,
+      "YES",
+      "NO"
+    )
+  
+  pairwise_results[[length(pairwise_results) + 1]] <-
+    pairwise_table
+  
 }
 
 # ------------------------------------------------------------
