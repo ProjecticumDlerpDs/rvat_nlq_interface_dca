@@ -1,0 +1,5 @@
+question_type,n_observations,n_models,chi_square,degrees_freedom,p_value,significant
+Advanced Tests (RVAT Required),36,3,6.349384098544203,2,0.04180697659164191,YES
+Analytical Queries,108,3,12.782211146942895,2,0.0016764017911369748,YES
+Lookup Queries,90,3,32.882353240132616,2,7.239152372238413e-8,YES
+Unanswerable Questions,108,3,56.401435637591995,2,5.656969869572116e-13,YES

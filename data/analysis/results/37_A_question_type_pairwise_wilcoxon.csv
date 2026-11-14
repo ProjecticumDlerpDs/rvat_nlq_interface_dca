@@ -1,0 +1,17 @@
+model_1,model_2,adjusted_p_value,question_type,significant
+qwen2.5-coder:latest,llama3.1:8b,0.15761120489391628,Advanced Tests (RVAT Required),NO
+sqlcoder:latest,llama3.1:8b,0.15761120489391628,Advanced Tests (RVAT Required),NO
+qwen2.5-coder:latest,qwen2.5-coder:latest,NA,Advanced Tests (RVAT Required),NO
+sqlcoder:latest,qwen2.5-coder:latest,NA,Advanced Tests (RVAT Required),NO
+qwen2.5-coder:latest,llama3.1:8b,0.8039605788381281,Analytical Queries,NO
+sqlcoder:latest,llama3.1:8b,0.002229960966978119,Analytical Queries,YES
+qwen2.5-coder:latest,qwen2.5-coder:latest,NA,Analytical Queries,NO
+sqlcoder:latest,qwen2.5-coder:latest,0.002450633592504862,Analytical Queries,YES
+qwen2.5-coder:latest,llama3.1:8b,0.0027141554057542004,Lookup Queries,YES
+sqlcoder:latest,llama3.1:8b,0.0027141554057542004,Lookup Queries,YES
+qwen2.5-coder:latest,qwen2.5-coder:latest,NA,Lookup Queries,NO
+sqlcoder:latest,qwen2.5-coder:latest,1.3500809741347892e-7,Lookup Queries,YES
+qwen2.5-coder:latest,llama3.1:8b,0.047907509091706824,Unanswerable Questions,YES
+sqlcoder:latest,llama3.1:8b,9.192050213016765e-12,Unanswerable Questions,YES
+qwen2.5-coder:latest,qwen2.5-coder:latest,NA,Unanswerable Questions,NO
+sqlcoder:latest,qwen2.5-coder:latest,1.944651662217556e-9,Unanswerable Questions,YES

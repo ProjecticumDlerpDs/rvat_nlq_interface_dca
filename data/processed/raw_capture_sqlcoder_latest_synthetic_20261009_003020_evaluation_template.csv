@@ -1,0 +1,633 @@
+question_id,run_id,question_type,db_mode,timestamp,user_query,expected_query,sql_query,expected_answer,result_preview,result_full_text,notes,EM,EX,status,error_message,rows_returned,model,model_parameters,model_capability,model_temperature,prompt_tokens,generated_tokens,time_total_sec
+Q01,1,Lookup Queries,synthetic,2026-10-09 00:19:56.200413,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'","000K gene (gene_name column) that are synonymous and have a sift score > 0.5 AND a CADDphred score > 15.
+
+<s> - ######### HINTImpact ModerateImpact Synonymous CADDphren PolyPhen SIFT ALS_1 ALS_2 ALS_3 ALS_4 ALS_5 Control_1 Control_2 Control_3 Control_4 Control_5 FROM varInfo_synthetic WHERE gene_name = 'NEK1000K' AND HighImpact = 1 AND ModerateImpact = 1 AND Synonymous = 1 AND CADDphren > 15 AND SIFT > 0.5;",Result: There are 190 variants.,,,,0,,FAIL,"SQL execution failed: unrecognized token: ""000K""",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,163,26.84832763671875
+Q01,2,Lookup Queries,synthetic,2026-10-09 00:20:23.072843,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT statement. Do not return explanations or markdown.,Result: There are 190 variants.,,,,0,,FAIL,"SQL execution failed: near ""return"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,191,23.862809658050537
+Q01,3,Lookup Queries,synthetic,2026-10-09 00:20:46.943999,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",0001 chromosome with AC > 100 AND AN > 15 AND AF < 0.05 AND ALS_3 = 'Yes'.,Result: There are 190 variants.,,,,0,,FAIL,"SQL execution failed: near ""0001"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,38,4.742200613021851
+Q01,4,Lookup Queries,synthetic,2026-10-09 00:20:51.689746,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'",SELECT COUNT(VAR_id) FROM varInfo_synthetic WHERE ALT > 999 AND HighImpact = 'Yes',Result: There are 190 variants.,  COUNT(VAR_id) | 1             0," COUNT(VAR_id)
+             0",,0,,PASS,,1,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,48,5.995088338851929
+Q01,5,Lookup Queries,synthetic,2026-10-09 00:20:57.68989,Select number of variants in NEK1,"SELECT COUNT(VAR_id) AS number_of_variants
+ FROM  varInfo_synthetic 
+WHERE   gene_name = 'NEK1'","0kbp window of gene TP53 with high impact on splicing, moderate effect on coding, synonymous change, pathogenic, damaging, and located between -20kbp and +20kbp for chromosome 1.",Result: There are 190 variants.,,,,0,,FAIL,"SQL execution failed: unrecognized token: ""0kbp""",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,56,6.9611663818359375
+Q02,1,Lookup Queries,synthetic,2026-10-09 00:21:04.654904,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",.,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,,,,0,,FAIL,"SQL execution failed: near ""."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,186,2,0.6058540344238281
+Q02,2,Lookup Queries,synthetic,2026-10-09 00:21:05.264761,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",". Note that if there are multiple variations in NEK1, you only need to return the first one alphabetabetically.",Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,,,,0,,FAIL,"SQL execution failed: near ""."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,186,27,3.3880231380462646
+Q02,3,Lookup Queries,synthetic,2026-10-09 00:21:08.657074,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",.,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,,,,0,,FAIL,"SQL execution failed: near ""."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,186,2,0.28365254402160645
+Q02,4,Lookup Queries,synthetic,2026-10-09 00:21:08.94521,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",.,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,,,,0,,FAIL,"SQL execution failed: near ""."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,186,2,0.28468751907348633
+Q02,5,Lookup Queries,synthetic,2026-10-09 00:21:09.234551,Select variants in NEK1 that with HighImpact and a CADDphered > 20,"SELECT VAR_id,  gene_name,  HighImpact,  CADDphred 
+FROM  varInfo_synthetic  
+WHERE   HighImpact = 1  AND  CADDphred > 20  AND  gene_name = 'NEK1'",SELECT VAR_id FROM varInfo_synthetic WHERE (HighImpact = 'Yes' AND CADDphred > 20) AND CHROM = 'NEK1';,Result: There are 13 variants in NEK1 with a high impact and CADD score above 20.,[1] VAR_id | <0 rows> (or 0-length row.names),"[1] VAR_id
+<0 rows> (or 0-length row.names)",,0,,PASS,,0,sqlcoder:latest,7B,High (code/SQL optimized),0.8,186,42,5.2497851848602295
+Q03,1,Lookup Queries,synthetic,2026-10-09 00:21:14.489963,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",,Result: 4 variants are predicted to be deleterious. ,,,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.4098978042602539
+Q03,2,Lookup Queries,synthetic,2026-10-09 00:21:14.904823,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'","Note that there are multiple possible answers to this question.
+Return all of them. HINT more than one variant is deletorious, return a union query. If no variants are deletorious, return NULL.",Result: 4 variants are predicted to be deleterious. ,,,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),0,,FAIL,"SQL execution failed: near ""Note"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,181,44,5.488253593444824
+Q03,3,Lookup Queries,synthetic,2026-10-09 00:21:20.398202,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",,Result: 4 variants are predicted to be deleterious. ,,,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1581885814666748
+Q03,4,Lookup Queries,synthetic,2026-10-09 00:21:20.561917,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",,Result: 4 variants are predicted to be deleterious. ,,,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15879201889038086
+Q03,5,Lookup Queries,synthetic,2026-10-09 00:21:20.72624,How many variants in TARDBP are predicted deletorious by SIFT?,"SELECT COUNT(*)  AS  number_of_variants_with_SIFT_D 
+FROM  varInfo_synthetic  
+WHERE   gene_name = 'TARDBP' AND SIFT = 'D'",,Result: 4 variants are predicted to be deleterious. ,,,The chatbot should interpret that the letter D means “deleterious” in the SIFT column. (It could be good to specify in the instructions for the chatbot what the abbreviations in the table mean),,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15863704681396484
+Q04,1,Lookup Queries,synthetic,2026-10-09 00:21:20.890467,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)","SELECT var_id, gene_name FROM varInfo_synthetic WHERE high_impact = 1 AND als_5 IS NOT NULL;",Result: 102 variants have at least one homozygous carrier.,,,,0,,FAIL,SQL execution failed: no such column: high_impact,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,38,5.1627137660980225
+Q04,2,Lookup Queries,synthetic,2026-10-09 00:21:26.059095,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)","SELECT statement. Do not return explanations or markdown.  User question: Which high-impact variants have at least one ALS patient that is homozygous for this variant?
+8. You are a SQLice SQL generator. Use table: varInfo_synthetic Columns: VAR_id, CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5 Generate a SQLice query using ONLY the table and columns defined above. Return ONLY a valid SQLice SELECT statement. Do not return explanations or markdown.  User question: Which high-impact variants have at least one ALS patient that is homozygous for this variant?",Result: 102 variants have at least one homozygous carrier.,,,,0,,FAIL,"SQL execution failed: near ""return"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,383,48.248048305511475
+Q04,3,Lookup Queries,synthetic,2026-10-09 00:22:14.313307,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)","5. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphred, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+6. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphred, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+7. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphred, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+8. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+9. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+10. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+11. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+12. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+13. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+14. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+15. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+16. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+17. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+18. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+19. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+20. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5
+21. Return all of the following information for the variant with id=107204995: CHROM, POS, ID, REF, ALT, QUAL, FILTER, AC, AN, AF, gene_name, HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, Control_5",Result: 102 variants have at least one homozygous carrier.,,,,0,,FAIL,"SQL execution failed: near ""5."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,2138,291.90257501602173
+Q04,4,Lookup Queries,synthetic,2026-10-09 00:27:06.222178,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)",17000.0,Result: 102 variants have at least one homozygous carrier.,,,,0,,FAIL,"SQL execution failed: near ""17000.0"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,9,1.154533863067627
+Q04,5,Lookup Queries,synthetic,2026-10-09 00:27:07.382971,Which high-impact variants have at least one ALS patient that is homozygous for this variant?,"SELECT  VAR_id, gene_name,  HighImpact, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5 
+ FROM  varInfo_synthetic 
+WHERE  HighImpact = 1  AND  (ALS_1 = 2 OR ALS_2 = 2 OR ALS_3 = 2  OR  ALS_4 = 2  OR  ALS_5 = 2)",<s> ALS patients are heterozygous for the variant (i.e.g. they have two different alleles).,Result: 102 variants have at least one homozygous carrier.,,,,0,,FAIL,"SQL execution failed: near ""<"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,30,3.767106771469116
+Q05,1,Lookup Queries,synthetic,2026-10-09 00:27:11.156706,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;",,"VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",,,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.37259602546691895
+Q05,2,Lookup Queries,synthetic,2026-10-09 00:27:11.536003,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;","SELECT var_id, chrom, pos FROM varInfo_synthetic WHERE gene_name = 'ABC4' ORDER BY af DESC NULLS LAST LIMIT 10;","VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",[1] VAR_id CHROM  POS    | <0 rows> (or 0-length row.names),"[1] VAR_id CHROM  POS   
+<0 rows> (or 0-length row.names)","“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",0,,PASS,,0,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,42,5.2440550327301025
+Q05,3,Lookup Queries,synthetic,2026-10-09 00:27:16.7877,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;",SELECT * FROM varInfo_synthetic WHERE gene_name ILIKE '%ABCA4%' ORDER BY FILTER DESC NULLS LAST LIMIT 10;,"VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",,,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",0,,FAIL,"SQL execution failed: near ""ILIKE"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,52,6.492670059204102
+Q05,4,Lookup Queries,synthetic,2026-10-09 00:27:23.287308,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;","SELECT top (10) var_id, high_impact FROM varInfo_synthetic WHERE chrm = 'ABCA4' order by high_impact DESC;","VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",,,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",0,,FAIL,SQL execution failed: no such function: top,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,56,6.963858127593994
+Q05,5,Lookup Queries,synthetic,2026-10-09 00:27:30.25849,What are the ten most deleterious variants in ABCA4?,"SELECT
+  VAR_id,
+  gene_name,
+  CADDphred,
+  SIFT,
+  PolyPhen
+ FROM varInfo_synthetic
+ WHERE CADDphred > 20 AND SIFT = 'D'  AND  PolyPhen = 'D'  AND  gene_name = 'ABCA4' 
+ ORDER  BY  CADDphred  DESC
+ LIMIT 10;",,"VAR_id gene_name CADDphred SIFT PolyPhen
+1     602     ABCA4        33    D        D
+2      73     ABCA4        32    D        D
+3      78     ABCA4        32    D        D
+4     485     ABCA4        32    D        D
+5      74     ABCA4        31    D        D
+6     106     ABCA4        31    D        D
+7     160     ABCA4        31    D        D
+8     229     ABCA4        31    D        D
+9     290     ABCA4        31    D        D
+10    358     ABCA4        31    D        D",,,"“Most deleterious” is ambiguous and depends on the definition. Here, we use a combination of CADDphred > 20 and both SIFT and PolyPhen predicting deleteriousness. However, other definitions could be used. The important point is that the chatbot should explain its definition of deletoriousness or ask for clarification from the user",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1572868824005127
+Q06,1,Analytical Queries,synthetic,2026-10-09 00:27:30.423182,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",HINTImpact is HIGH IMPACT  SIFT is SIFT score (0 to 1) for missense effect on protein ModerateImpact is MODERATE impact (0 to 1) on protein PolyPhen is polyPhen score Synonymous is whether it is synonymous with respectacle gene CADDphred is CADDscore ALS_X are ALS scores for the different regions Control_X are control controls for the different regions,Result: VAR_id 901 has the highest AF (9.68148e-05),,,,0,,FAIL,"SQL execution failed: near ""HINTImpact"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,175,98,12.332678079605103
+Q06,2,Analytical Queries,synthetic,2026-10-09 00:27:42.763439,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",,Result: VAR_id 901 has the highest AF (9.68148e-05),,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.16087794303894043
+Q06,3,Analytical Queries,synthetic,2026-10-09 00:27:42.931967,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",,Result: VAR_id 901 has the highest AF (9.68148e-05),,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.190690279006958
+Q06,4,Analytical Queries,synthetic,2026-10-09 00:27:43.13024,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",,Result: VAR_id 901 has the highest AF (9.68148e-05),,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15770292282104492
+Q06,5,Analytical Queries,synthetic,2026-10-09 00:27:43.295363,What is the variant with the highest allele frequency?,"SELECT VAR_id, MAX(AF)  AS  highest_allele_frequency
+  FROM  varInfo_synthetic
+",,Result: VAR_id 901 has the highest AF (9.68148e-05),,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1565258502960205
+Q07,1,Analytical Queries,synthetic,2026-10-09 00:27:43.459592,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.4269862174987793
+Q07,2,Analytical Queries,synthetic,2026-10-09 00:27:43.894896,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",SELECT AVG(AN) FROM varInfo_synthetic WHERE HIGHIMPACT = 'Yes' AND MODERATEIMPACT = 'Yes' AND SYNONYMOUS = 'Yes',Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,  AVG(AN) | 1      NA," AVG(AN)
+      NA",,0,,PASS,,1,sqlcoder:latest,7B,High (code/SQL optimized),0.8,185,80,9.968549251556396
+Q07,3,Analytical Queries,synthetic,2026-10-09 00:27:53.873101,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1584300994873047
+Q07,4,Analytical Queries,synthetic,2026-10-09 00:27:54.039492,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",NOTE: All fields with missing data should be assigned NULL.,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,,,,0,,FAIL,"SQL execution failed: near ""NOTE"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,185,13,1.6467690467834473
+Q07,5,Analytical Queries,synthetic,2026-10-09 00:27:55.694825,"What is the average allele frequency for synonymous, moderate, and high-impact variants?","SELECT 
+  AVG(CASE  WHEN  Synonymous = 1 THEN AF END)  AS  average_AF_synonymous, 
+  AVG(CASE  WHEN  ModerateImpact = 1 THEN  AF  END)  AS  average_AF_moderate, 
+  AVG(CASE  WHEN  HighImpact = 1  THEN  AF  END)  AS  average_AF_high 
+FROM  varInfo_synthetic",,Result:   average_AF_synonymous = 0.003228473 average_AF_moderate = 0.0009676297 average_AF_high = 0.0001987828,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15848135948181152
+Q08,1,Analytical Queries,synthetic,2026-10-09 00:27:55.861813,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",,Result: 42 heterozygous and 33 homozygous variants,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.4190657138824463
+Q08,2,Analytical Queries,synthetic,2026-10-09 00:27:56.289824,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",,Result: 42 heterozygous and 33 homozygous variants,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.16032648086547852
+Q08,3,Analytical Queries,synthetic,2026-10-09 00:27:56.459702,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",,Result: 42 heterozygous and 33 homozygous variants,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.16445326805114746
+Q08,4,Analytical Queries,synthetic,2026-10-09 00:27:56.632864,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1",,Result: 42 heterozygous and 33 homozygous variants,,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15890073776245117
+Q08,5,Analytical Queries,synthetic,2026-10-09 00:27:56.800375,How many high-impact variants does the ALS_1 patient carry?,"SELECT 
+  SUM(CASE  WHEN   ALS_1 = 1 THEN 1 ELSE 0 END) AS heterozygous, 
+  SUM(CASE  WHEN  ALS_1 = 2 THEN 1 ELSE 0 END)  AS homozygous 
+FROM  varInfo_synthetic 
+WHERE  HighImpact = 1","Note that all of the columns used are string (except for ALT, QUAL, and AC) and so must be quoted accordingly.",Result: 42 heterozygous and 33 homozygous variants,,,,0,,FAIL,"SQL execution failed: near ""Note"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,181,29,3.6537351608276367
+Q09,1,Analytical Queries,synthetic,2026-10-09 00:28:00.463057,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;","for a gene named ""Synonymous"".","Result: Cases = 9083, Controls = 8974.",,,,0,,FAIL,"SQL execution failed: near ""for"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,10,1.7241296768188477
+Q09,2,Analytical Queries,synthetic,2026-10-09 00:28:02.196254,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;",,"Result: Cases = 9083, Controls = 8974.",,,,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15878605842590332
+Q09,3,Analytical Queries,synthetic,2026-10-09 00:28:02.364545,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;",for a specific ALS gene?,"Result: Cases = 9083, Controls = 8974.",,,,0,,FAIL,"SQL execution failed: near ""for"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,8,1.0302996635437012
+Q09,4,Analytical Queries,synthetic,2026-10-09 00:28:03.404441,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;",for each gene with HighImpact = 'yes'?,"Result: Cases = 9083, Controls = 8974.",,,,0,,FAIL,"SQL execution failed: near ""for"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,13,1.6521458625793457
+Q09,5,Analytical Queries,synthetic,2026-10-09 00:28:05.066313,What is the total burden of cases versus controls (so how many effect alleles do the ALS cases carry vs controls),"SELECT 
+  SUM(ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  total_cases_burden,  
+  SUM(Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  total_controls_burden 
+FROM  varInfo_synthetic;","given we have 5 controls for each case?
+
+<s> ## +## ########WriteSQL((variables) => { ## +## #######return SQL ## +## })","Result: Cases = 9083, Controls = 8974.",,,,0,,FAIL,"SQL execution failed: near ""given"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,189,38,4.7769715785980225
+Q10,1,Analytical Queries,synthetic,2026-10-09 00:28:09.8531,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;","If so, what is the ratio of number of variants to case vs control?","VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",,,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,0,,FAIL,"SQL execution failed: near ""If"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,174,18,2.3936283588409424
+Q10,2,Analytical Queries,synthetic,2026-10-09 00:28:12.256983,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;",,"VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",,,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15768909454345703
+Q10,3,Analytical Queries,synthetic,2026-10-09 00:28:12.424753,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;","HINTImpact is only present for variants that are in high impact genes. ModerateImpact is only present for variants that are in moderately important genes. Synonymous is only present for variants that are synonymous. CADDphred is only present for variants that are potentially damaging according to the CADD tool. PolyPhen is only present for variants that are predicted to be polyphonic by PolyPhen. SIFT is only present for variants that are deleterious according to SIFT. ALS_1, ALS_2, ALS_3, ALS_4, and ALS_5 are present for variants that have a minor allele frequency (MAF) greater than or equal to the threshold specified by column ALT. Control_1, Control_2, Control_3, Control_4, and Control_5 are present for variants that have a MAF less than the threshold specified by column ALT. The columns HighImpact, ModerateImpact, Synonymous, CADDphrem, PolyPhen, SIFT, ALS_1, ALS_2, ALS_3, ALS_4, ALS_5, Control_1, Control_2, Control_3, Control_4, and Control_5 are only present for variants that have a MAF less than or equal to the threshold specified by column ALT.","VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",,,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,0,,FAIL,"SQL execution failed: near ""HINTImpact"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,174,303,37.93299221992493
+Q10,4,Analytical Queries,synthetic,2026-10-09 00:28:50.368003,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;",Return TRUE if this is true.,"VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",,,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,0,,FAIL,"SQL execution failed: near ""Return"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,174,8,1.0229101181030273
+Q10,5,Analytical Queries,synthetic,2026-10-09 00:28:51.401468,Are there more variants in cases than controls?,"SELECT 
+  VAR_id, 
+  gene_name, 
+  (ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5)  AS  case_count, 
+  (Control_1 + Control_2 + Control_3 + Control_4 + Control_5)  AS  control_count, 
+  ((ALS_1 + ALS_2 + ALS_3 + ALS_4 + ALS_5) * 1.0) / 
+  NULLIF((Control_1 + Control_2 + Control_3 + Control_4 + Control_5), 0)  AS  case_control_ratio 
+FROM  varInfo_synthetic
+ORDER BY case_control_ratio DESC
+LIMIT 10;","If yes, return 'Yes'. If no, return 'No'.","VAR_id gene_name case_count control_count case_control_ratio
+1     447     ABCA4          8             1                  8
+2     525     ABCA4          8             1                  8
+3      33     ABCA4          7             1                  7
+4     399     ABCA4          7             1                  7
+5    1142   CYP19A1          7             1                  7
+6      14    TARDBP          6             1                  6
+7     135     ABCA4          6             1                  6
+8     173     ABCA4          6             1                  6
+9     412     ABCA4          6             1                  6
+10    601     ABCA4          6             1                  6",,,In this query we select the top 10 variants that have the highest ratio of case count to control count. Note that this can be interpreted differently. The chatbot should come up with an answer that is true and makes sense based on the data in the table.,0,,FAIL,"SQL execution failed: near ""If"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,174,15,1.8860752582550049
+Q11,1,Analytical Queries,synthetic,2026-10-09 00:28:53.298026,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC","SELECT gene_name, COUNT(*) AS num_variants FROM varInfo_synthetic GROUP BY gene_name HAVING COUNT(*) > 10 ORDER BY num_variants DESC;","   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",  gene_name num_variants | 1     ABCA4          589 | 2      RIN3          222 | 3      NEK1          190," gene_name num_variants
+     ABCA4          589
+      RIN3          222
+      NEK1          190
+     IL3RA          147
+      PEX5          124
+      OPTN          121
+    ZNF483          113
+       FUS           95
+   CYP19A1           89
+      SOD1           49
+    UBQLN2           36
+    TARDBP           27","The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",0,,PASS,,12,sqlcoder:latest,7B,High (code/SQL optimized),0.8,196,51,6.834358215332031
+Q11,2,Analytical Queries,synthetic,2026-10-09 00:29:00.144077,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC",,"   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",,,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1564655303955078
+Q11,3,Analytical Queries,synthetic,2026-10-09 00:29:00.31144,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC",,"   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",,,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.16110539436340332
+Q11,4,Analytical Queries,synthetic,2026-10-09 00:29:00.483314,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC",Return a DataFrame with two columns: gene_name and num_variants.,"   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",,,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",0,,FAIL,"SQL execution failed: near ""Return"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,196,18,2.2586560249328613
+Q11,5,Analytical Queries,synthetic,2026-10-09 00:29:02.752907,Summarize variant info for each gene. Only select genes that have more than 10 variants. Order the results by the number of variants.,"SELECT 
+  gene_name, 
+  CHROM, 
+  COUNT(*)  AS total_variants, 
+  SUM(CASE  WHEN  HighImpact = 1  THEN  1  ELSE  0  END)  AS  high_impact_count, 
+  SUM(CASE  WHEN  ModerateImpact = 1  THEN  1  ELSE  0  END)  AS  moderate_impact_count, 
+  SUM(CASE  WHEN  Synonymous = 1  THEN  1  ELSE  0  END)  AS  synonymous_count, 
+  AVG(AF)  AS  mean_AF, 
+  MIN(POS)  AS  start_pos, 
+  MAX(POS)  AS  end_pos, 
+  (MAX(POS) - MIN(POS))  AS  length 
+FROM  varInfo_synthetic 
+GROUP  BY  gene_name,  CHROM 
+HAVING  total_variants > 10 
+ORDER  BY  total_variants  DESC",,"   gene_name CHROM total_variants high_impact_count moderate_impact_count synonymous_count  mean_AF start_pos   end_pos length
+1      ABCA4  chr1            589                44                   382              163  2.664076e-03  93993244  94120999 127755
+2       RIN3 chr14            222                 2                   151               69  1.152572e-03  92555753  92688163 132410
+3       NEK1  chr4            190                33                   106               51  1.471440e-03 169400557 169602602 202045
+4      IL3RA  chrX            147                13                    99               35  2.103769e-03   1341769   1382465  40696
+5       PEX5 chr12            124                 8                    71               45  1.395899e-04   7190352   7210243  19891
+6       OPTN chr10            121                11                    68               42  2.649301e-03  13109153  13136862  27709
+7     ZNF483  chr9            113                 2                    76               35  4.336266e-05 111527483 111543165  15682
+8        FUS chr16             95                 1                    55               39  1.024871e-04  31180220  31191432  11212
+9    CYP19A1 chr15             89                 2                    63               24  7.754898e-04  51210832  51242889  32057
+10      SOD1 chr21             49                 4                    38                7  7.258263e-05  31659783  31668568   8785
+11    UBQLN2  chrX             36                 1                    24               11  3.859886e-04  56564068  56565497   1429
+12    TARDBP  chr1             27                 1                    14               12  7.696691e-05  11013912  11022578   8666",,,"The chatbot should interpret what the user means by “summarize variant info for each gene” and should be able to come up with a reasonable summary of the variant information for each gene. The chatbot should also be able to interpret the second part of the question “Only select genes that have more than 10 variants. Order the results by the number of variants” and include this in the query. However, there is no “correct” answer to this question, as there are many different ways to summarize the variant information for each gene. The important thing is that the chatbot can come up with a reasonable summary and can explain its reasoning in the answer.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15902423858642578
+Q12,1,Unanswerable Questions,synthetic,2026-10-09 00:29:02.922632,What is the average age of ALS cases?,N/A,,N/A,,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.3017551898956299
+Q12,2,Unanswerable Questions,synthetic,2026-10-09 00:29:03.23481,What is the average age of ALS cases?,N/A,,N/A,,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15529203414916992
+Q12,3,Unanswerable Questions,synthetic,2026-10-09 00:29:03.400411,What is the average age of ALS cases?,N/A,,N/A,,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15659427642822266
+Q12,4,Unanswerable Questions,synthetic,2026-10-09 00:29:03.567524,What is the average age of ALS cases?,N/A,,N/A,,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15624237060546875
+Q12,5,Unanswerable Questions,synthetic,2026-10-09 00:29:03.734231,What is the average age of ALS cases?,N/A,,N/A,,,"No age information is available in the table, so this question cannot be answered.",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1555652618408203
+Q13,1,Unanswerable Questions,synthetic,2026-10-09 00:29:03.900654,Is VAR_id 100 previously reported as pathogenic?,N/A,,N/A,,,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.3688690662384033
+Q13,2,Unanswerable Questions,synthetic,2026-10-09 00:29:04.280648,Is VAR_id 100 previously reported as pathogenic?,N/A,,N/A,,,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15546774864196777
+Q13,3,Unanswerable Questions,synthetic,2026-10-09 00:29:04.447079,Is VAR_id 100 previously reported as pathogenic?,N/A,,N/A,,,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15629839897155762
+Q13,4,Unanswerable Questions,synthetic,2026-10-09 00:29:04.614464,Is VAR_id 100 previously reported as pathogenic?,N/A,,N/A,,,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1550276279449463
+Q13,5,Unanswerable Questions,synthetic,2026-10-09 00:29:04.780715,Is VAR_id 100 previously reported as pathogenic?,N/A,,N/A,,,"Cannot be answered with the data in the table, as there is no information on pathogenicity or previous reports",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15504050254821777
+Q14,1,Unanswerable Questions,synthetic,2026-10-09 00:29:04.947178,What is the allele frequency of VAR_id 30 in Europeans?,N/A,,N/A,,,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.4129621982574463
+Q14,2,Unanswerable Questions,synthetic,2026-10-09 00:29:05.37186,What is the allele frequency of VAR_id 30 in Europeans?,N/A,,N/A,,,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15668225288391113
+Q14,3,Unanswerable Questions,synthetic,2026-10-09 00:29:05.54041,What is the allele frequency of VAR_id 30 in Europeans?,N/A,Hint: Please use SIFT.,N/A,,,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,FAIL,"SQL execution failed: near ""Hint"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,181,9,1.156601905822754
+Q14,4,Unanswerable Questions,synthetic,2026-10-09 00:29:06.708926,What is the allele frequency of VAR_id 30 in Europeans?,N/A,,N/A,,,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15587759017944336
+Q14,5,Unanswerable Questions,synthetic,2026-10-09 00:29:06.8769,What is the allele frequency of VAR_id 30 in Europeans?,N/A,,N/A,,,"No population-specific allele frequencies are available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1551973819732666
+Q15,1,Unanswerable Questions,synthetic,2026-10-09 00:29:07.044329,What is the sex distribution of carriers?,N/A,,N/A,,,"No sex information is available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.2434525489807129
+Q15,2,Unanswerable Questions,synthetic,2026-10-09 00:29:07.299632,What is the sex distribution of carriers?,N/A,,N/A,,,"No sex information is available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15900874137878418
+Q15,3,Unanswerable Questions,synthetic,2026-10-09 00:29:07.470437,What is the sex distribution of carriers?,N/A,"For example, this would column, female, this other gender.",N/A,,,"No sex information is available in the table, so this question cannot be answered",,,FAIL,"SQL execution failed: near ""For"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,14,1.785151481628418
+Q15,4,Unanswerable Questions,synthetic,2026-10-09 00:29:09.267751,What is the sex distribution of carriers?,N/A,,N/A,,,"No sex information is available in the table, so this question cannot be answered",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.1577589511871338
+Q15,5,Unanswerable Questions,synthetic,2026-10-09 00:29:09.437761,What is the sex distribution of carriers?,N/A,<s> ## Try to solve this question yourself first! ### Attempt(varInfo_synthoetic.AN).group,N/A,,,"No sex information is available in the table, so this question cannot be answered",,,FAIL,"SQL execution failed: near ""<"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,173,28,3.501354694366455
+Q16,1,Unanswerable Questions,synthetic,2026-10-09 00:29:12.951679,Which variants are most important,N/A,to you?,N/A,,,"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,FAIL,"SQL execution failed: near ""to"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,170,4,0.5957005023956299
+Q16,2,Unanswerable Questions,synthetic,2026-10-09 00:29:13.560149,Which variants are most important,N/A,"for each gene based on ALS score?
+---------------------------------------------------------------------------------",N/A,,,"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,FAIL,"SQL execution failed: near ""for"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,170,17,2.1329617500305176
+Q16,3,Unanswerable Questions,synthetic,2026-10-09 00:29:15.706277,Which variants are most important,N/A,for synthoetic studies?,N/A,,,"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,FAIL,"SQL execution failed: near ""for"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,170,8,1.0228345394134521
+Q16,4,Unanswerable Questions,synthetic,2026-10-09 00:29:16.742257,Which variants are most important,N/A,according to ALS score?,N/A,,,"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,FAIL,"SQL execution failed: near ""according"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,170,7,0.899317741394043
+Q16,5,Unanswerable Questions,synthetic,2026-10-09 00:29:17.654868,Which variants are most important,N/A,"for a gene named 'POUS1'?
++",N/A,,,"Important is subjective, so the chatbot should ask for clarification on what the user means by “important”",,,FAIL,"SQL execution failed: near ""for"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,170,13,1.6419198513031006
+Q17,1,Unanswerable Questions,synthetic,2026-10-09 00:29:19.310223,Which variants are both synonymous and high impact?,N/A,,N/A,,,"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.23795533180236816
+Q17,2,Unanswerable Questions,synthetic,2026-10-09 00:29:19.561882,Which variants are both synonymous and high impact?,N/A,SELECT statement. Do not return explanations or markdown.  User question: Which variants are both synonymous and high impact?,N/A,,,"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,FAIL,"SQL execution failed: near ""return"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,175,178,22.183582067489624
+Q17,3,Unanswerable Questions,synthetic,2026-10-09 00:29:41.759095,Which variants are both synonymous and high impact?,N/A,,N/A,,,"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15824604034423828
+Q17,4,Unanswerable Questions,synthetic,2026-10-09 00:29:41.931228,Which variants are both synonymous and high impact?,N/A,,N/A,,,"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,FAIL,SQL generation failed: No SQL returned from model,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,,,0.15566205978393555
+Q17,5,Unanswerable Questions,synthetic,2026-10-09 00:29:42.10074,Which variants are both synonymous and high impact?,N/A,"You may assume that all variants have gene_name, HighImpact, Synonymous columns.
++ You do NOT need to include the table name, column names, or column aliases in your SQL query.",N/A,,,"This is a trick question, as it is not possible for a variant to be both synonymous and high impact. The chatbot should recognize this and explain to the user why this is the case",,,FAIL,"SQL execution failed: near ""You"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,175,45,5.602465867996216
+Q18,1,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:29:47.717254,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)","SELECT gene_name, AVG(MAF) AS average_maf FROM varInfo_synthetic WHERE HighImpact = 'FALSE' AND ModerateImpact = 'TRUE' AND TARDBP = 'T' GROUP BY gene_name;",Obeject VarSet created.Count of MAF is actually into this file,,,,,,FAIL,SQL execution failed: no such column: MAF,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,75,9.505452871322632
+Q18,2,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:29:57.236943,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)",SELECT AVG(MAF) FROM varInfo_synthetic WHERE HighImpact = 'Yes' AND PolyPhen = 'Yes';,Obeject VarSet created.Count of MAF is actually into this file,,,,,,FAIL,SQL execution failed: no such column: MAF,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,38,4.74762487411499
+Q18,3,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:01.998828,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)",012.,Obeject VarSet created.Count of MAF is actually into this file,,,,,,FAIL,"SQL execution failed: near ""012."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,5,0.6552951335906982
+Q18,4,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:02.668546,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)",00006794.,Obeject VarSet created.Count of MAF is actually into this file,,,,,,FAIL,"SQL execution failed: near ""00006794."": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,10,1.276766300201416
+Q18,5,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:03.959952,Get the MAF for Moderate Impact variants in TARDBP,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/TARDBP.txt.gz""),
+  varSetName = ""TARDBP"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""ModerateImpact = 1""
+)","001709.gene_name filter by high impact.
+    impact.",Obeject VarSet created.Count of MAF is actually into this file,,,,,,FAIL,"SQL execution failed: unrecognized token: ""001709.gene_name""",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,180,21,2.6331913471221924
+Q19,1,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:06.608001,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",? pathogenic is defined as being annotated to any of the ALS_columns. Return only the number (i.e. a COUNT() statement).,Result: 9 female carriers in the SAS cohort.,,,,,,FAIL,"SQL execution failed: near ""?"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,192,36,4.93005633354187
+Q19,2,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:11.553081,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",gene? (See here: https://www.ncbi.nlm.nih.gov/clinvar/disp?term=phen&rid=SOD1),Result: 9 female carriers in the SAS cohort.,,,,,,FAIL,"SQL execution failed: near ""gene"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,192,39,4.883844614028931
+Q19,3,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:16.451981,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",?,Result: 9 female carriers in the SAS cohort.,,,,,,FAIL,"SQL execution failed: near ""?"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,192,2,0.2792854309082031
+Q19,4,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:16.746376,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",?,Result: 9 female carriers in the SAS cohort.,,,,,,FAIL,"SQL execution failed: near ""?"": syntax error",,sqlcoder:latest,7B,High (code/SQL optimized),0.8,192,2,0.2833902835845947
+Q19,5,Advanced Tests (RVAT Required),synthetic,2026-10-09 00:30:17.045026,How many female carriers are there in the SAS cohort that carry a “pathogenic” mutation in SOD1,"buildVarSet(
+  object = gdb,
+  output = paste0(outdir, ""/SOD1.txt.gz""),
+  varSetName = ""SOD1"",
+  unitTable = ""varInfo"",
+  unitName = ""gene_name"",
+  where = ""HighImpact = 1 OR ModerateImpact = 1""
+)",SELECT statement.,Result: 9 female carriers in the SAS cohort.,,,,,,FAIL,SQL execution failed: incomplete input,,sqlcoder:latest,7B,High (code/SQL optimized),0.8,192,26,3.267334222793579

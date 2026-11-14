@@ -1,0 +1,158 @@
+=================================================
+36_A MASTER DATASET VERIFICATION
+=================================================
+Verification timestamp: 2026-11-09 00:03:35.121129
+
+EXPERIMENTAL DESIGN SUMMARY
+------------------------------
+Execution-level structure:
+3 models × 2 database modes × 3 iterations × 19 questions × 5 runs
+Expected observations: 1710
+Observed observations: 1710
+
+Question-level structure:
+3 models × 2 database modes × 3 iterations × 19 questions
+Expected question-condition combinations: 342
+Observed rows: 342
+
+Question-type structure:
+3 models × 2 database modes × 3 iterations × 4 question types
+Expected analytical records: 72
+Observed rows: 72
+
+Execution-level count: PASS
+Question-level count: PASS
+Question-type count: PASS
+
+DATASET STRUCTURE AUDIT
+------------------------------
+Execution-level rows: 1710
+Execution-level columns: 27
+
+Variables present:
+- model
+- db_mode
+- experiment_iteration
+- question_id
+- run_id
+- question_type
+- EM
+- EX
+- time_total_sec
+- prompt_tokens
+- generated_tokens
+- model_temperature
+- timestamp
+- status
+- error_message
+- source_template
+- source_scored
+- user_query
+- expected_query
+- sql_query
+- expected_answer
+- result_preview
+- result_full_text
+- notes
+- rows_returned
+- model_parameters
+- model_capability
+
+ITERATION COVERAGE
+------------------------------
+llama3.1:8b | full_gdb | Iteration 1 | Observations: 95
+llama3.1:8b | full_gdb | Iteration 2 | Observations: 95
+llama3.1:8b | full_gdb | Iteration 3 | Observations: 95
+llama3.1:8b | synthetic | Iteration 1 | Observations: 95
+llama3.1:8b | synthetic | Iteration 2 | Observations: 95
+llama3.1:8b | synthetic | Iteration 3 | Observations: 95
+qwen2.5-coder:latest | full_gdb | Iteration 1 | Observations: 95
+qwen2.5-coder:latest | full_gdb | Iteration 2 | Observations: 95
+qwen2.5-coder:latest | full_gdb | Iteration 3 | Observations: 95
+qwen2.5-coder:latest | synthetic | Iteration 1 | Observations: 95
+qwen2.5-coder:latest | synthetic | Iteration 2 | Observations: 95
+qwen2.5-coder:latest | synthetic | Iteration 3 | Observations: 95
+sqlcoder:latest | full_gdb | Iteration 1 | Observations: 95
+sqlcoder:latest | full_gdb | Iteration 2 | Observations: 95
+sqlcoder:latest | full_gdb | Iteration 3 | Observations: 95
+sqlcoder:latest | synthetic | Iteration 1 | Observations: 95
+sqlcoder:latest | synthetic | Iteration 2 | Observations: 95
+sqlcoder:latest | synthetic | Iteration 3 | Observations: 95
+
+QUESTION-TYPE COVERAGE
+------------------------------
+Advanced Tests (RVAT Required) : 18
+Analytical Queries : 18
+Lookup Queries : 18
+Unanswerable Questions : 18
+
+Coverage checks completed.
+
+EXPERIMENTAL DESIGN VALIDATION
+------------------------------
+Duplicate execution keys: 0
+Unique execution key validation: PASS
+Question-condition combinations checked: 342
+Five repetitions per question validation: PASS
+
+VARIABLE INVENTORY
+------------------------------
+Variable inventory saved: 36_A_variable_inventory.csv
+
+EM / EX DISTRIBUTION SUMMARY
+------------------------------
+
+EM Distribution
+0 = 1710
+
+WARNING: EM contains no variation.
+This reflects the observed benchmark results.
+
+EX Distribution
+0 = 1297
+1 = 413
+
+STATISTICAL READINESS
+------------------------------
+Primary binary outcomes:
+- EM
+- EX
+
+Primary continuous outcome:
+- VES (time_total_sec)
+
+EM and EX are binary variables and do not require
+normality assessment.
+
+VES requires normality assessment because it is
+the primary continuous outcome variable.
+
+A Shapiro-Wilk test will be used to assess
+whether VES approximates a normal distribution.
+
+OVERALL VES NORMALITY
+------------------------------
+Observations: 1710
+Shapiro-Wilk W: 0.163
+Shapiro-Wilk p-value: 8.69709e-66
+Conclusion: VES is non-normal.
+Recommendation: use non-parametric methods for VES.
+
+MODEL-LEVEL VES NORMALITY
+------------------------------
+llama3.1:8b | N = 570 | W = 0.68129 | p = 2.33564e-31 | Non-normal
+qwen2.5-coder:latest | N = 570 | W = 0.78483 | p = 9.76944e-27 | Non-normal
+sqlcoder:latest | N = 570 | W = 0.10464 | p = 2.28836e-45 | Non-normal
+
+Model-level normality summary saved.
+
+CONDITION-LEVEL VES SUMMARY
+------------------------------
+llama3.1:8b | full_gdb | N = 285 | Mean = 8.184 | Median = 6.768 | SD = 6.694
+llama3.1:8b | synthetic | N = 285 | Mean = 6.156 | Median = 3.96 | SD = 5.736
+qwen2.5-coder:latest | full_gdb | N = 285 | Mean = 7.33 | Median = 6.057 | SD = 5.056
+qwen2.5-coder:latest | synthetic | N = 285 | Mean = 5.511 | Median = 4.206 | SD = 3.99
+sqlcoder:latest | full_gdb | N = 285 | Mean = 2.273 | Median = 0.309 | SD = 4.704
+sqlcoder:latest | synthetic | N = 285 | Mean = 6.896 | Median = 0.455 | SD = 41.222
+
+Statistical readiness assessment completed.
