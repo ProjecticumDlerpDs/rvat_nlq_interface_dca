@@ -99,6 +99,7 @@ For full reproducibility:
 • 64 GB RAM (~49GB memory available)                \
 • R version 4.5.0 (2025-04-11)                      \
 • RStudio 2025.05.0 Build 496.pro5, Posit Software  \
+• Git version 2.34.1                                \
 • Ollama installed (version 0.21.0)                 \
 👉 https://ollama.com/                              \
 • One or more LLM's (default: qwen2.5-coder:latest)             
@@ -154,7 +155,8 @@ For troubleshooting, see **Utilities and Troubleshooting** below.
 
 **Local Laptop Environment**\
 Experimental:\
-Local execution is supported although very experimental at this stage and much dependent on available hardware.
+Local Windows laptop execution is supported although very experimental at this stage and much dependent on available hardware.\
+Local Windows laptop execution is thus provided on a best-effort basis for reproducibility and demonstration purposes.\
 
  
 Smaller models generally perform reasonably:
@@ -176,17 +178,30 @@ Depending on available CPU and RAM these models may:
 This behaviour is related to hardware constraints rather than application logic.
 
 **Laptop Reference Specifications:**\
-• Dell Latitude 5220                                    \
-• Windows 11 Pro (x64)                                  \
-• CPU: 4 cores                                          \
-• 8GB RAM (available memory 7.5GB)                      \
-• Disk space to download Ollama/LLM's locally           
+Configuration A:                    \
+• Dell Latitude 5220                \
+• Windows 11 Pro (x64)              \
+• CPU: 4 cores                      \
+• 8 GB RAM                          \
+
+Configuration B:
+• HP EliteBook 6 G1i                \
+• Windows 11 Enterprise (x64)       \
+• Intel Core Ultra 5 225U           \
+• 12 CPU cores (14 logical processors)  \
+• 16 GB RAM                             \
 
 
 **Windows & Bioconductor Note** \
 RStudio and R do not natively require Bioconductor on Windows. However, core genomic dependencies used in this project (such as `SummarizedExperiment`, required upstream by `rvat`) frequently fail to resolve automatically on Windows via standard `install.packages()`. 
 
 While macOS and Linux typically handle these upstream Bioconductor dependencies dynamically, Windows environments require explicit initialization of `BiocManager` to register the necessary repositories and build binary packages smoothly.
+
+**Windows & Rtools45 Note** \
+Some project dependencies (including packages such as `Rcpp`, `stringi`, `curl`, and `XML`) may need to be compiled from source during `renv::restore()`. While Linux environments typically provide the required build tools by default, Windows requires `Rtools45` to supply essential compilation utilities (e.g. `make`, `gcc`, and `sh`).
+
+Without a correctly installed and configured `Rtools45`, package restoration may fail with errors such as `'make' not found` or `'sh' is not recognized as an internal or external command`, preventing installation of core dependencies required by the application.
+
 
 **Setup Script for Laptop Users** \
 To streamline setup and resolve cross-platform dependency issues (especially on Windows), an automated setup script is included in the project root: `/scripts/00_renv_setup.R`.
@@ -205,22 +220,24 @@ This script automatically:
 • Disk space to download Ollama/LLM's locally           \
 👉 Individual LLM's may require up to tens of GB's of disk space!
 
-2. Install:                                         \
-• R version 4.5.0 (2025-04-11)                      \
-• RStudio 2025.05.0 Build 496.pro5, Posit Software  \
-• Ollama installed (version 0.21.0)                 \
-👉 https://ollama.com/                              \
+2. Install:                                           \
+• R version 4.5.0 (2025-04-11)                        \
+• RStudio 2025.05.0 Build 496.pro5, Posit Software    \
+• Git version 2.34.1                                  \
+• Rtools45 (required for Windows package compilation) \
+👉  https://cran.r-project.org/bin/windows/Rtools/    \
+• Ollama installed (version 0.21.0)                   \
+👉 https://ollama.com/                                \
 • One or more LLM's (default: qwen2.5-coder:latest) 
 
 
 3. Create a Copy of this Project                    \
 •	Clone the Github repository                       \
 •	Make a corresponding R project in Rstudio(Posit)  \
-•	Run renv::restore() in console                    
+                    
+4. Restore project environment and verify Package Dependencies (including Bioconductor Windows dependency)
 
-4. Verify Package Dependencies (including Bioconductor Windows dependency)
-
-• Run `/scripts/00_renv_setup.R` to verify the restored environment
+• Run `/scripts/00_renv_setup.R`
 
 5. Configure LLM (optional) 
 If using another LLM than default (= qwen2.5-coder:latest), configure chosen LLM as follows before running app:
