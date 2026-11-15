@@ -32,6 +32,7 @@ library(shiny)
 library(bslib)
 library(DT)
 library(here)
+library(markdown)
 
 # ------------------------------------------------------------
 # UI DEFINITION
@@ -71,36 +72,39 @@ ui <- page_sidebar(
     uiOutput("status")
   ),
   
-  # ----------------------------------------------------------
-  # MAIN PANELS
-  # ----------------------------------------------------------
+# ----------------------------------------------------------
+# MAIN PANELS
+# ----------------------------------------------------------
   
-  layout_column_wrap(
+layout_column_wrap(
     
-    width = 1,
+  width = 1,
     
-    # --------------------------------------------------------
-    # CONTEXT PANEL
-    # --------------------------------------------------------
-    card(
-      card_header("About this tool"),
-      includeMarkdown(here("app", "rvat_greeting.md"))
-    ),
+# --------------------------------------------------------
+# CONTEXT PANEL
+# --------------------------------------------------------
+
+card(
+  card_header("About this tool"),
+  includeMarkdown(here("app", "rvat_greeting.md"))
+),
     
-    # --------------------------------------------------------
-    # SQL PANEL
-    # --------------------------------------------------------
-    card(
-      card_header("Generated SQL"),
-      verbatimTextOutput("sql")
-    ),
+# --------------------------------------------------------
+# SQL PANEL
+# --------------------------------------------------------
+
+card(
+  card_header("Generated SQL"),
+  verbatimTextOutput("sql")
+),
     
-    # --------------------------------------------------------
-    # RESULT PANEL
-    # --------------------------------------------------------
-    card(
-      card_header("Query Results"),
-      DT::dataTableOutput("table")
-    )
+# --------------------------------------------------------
+# RESULT PANEL
+# --------------------------------------------------------
+
+card(
+  card_header("Query Results"),
+  DT::dataTableOutput("table")
+)
   )
 )

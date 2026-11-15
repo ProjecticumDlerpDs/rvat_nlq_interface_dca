@@ -101,7 +101,7 @@ renv::restore()
 message("\nVerifying required packages...\n")
 
 required_pkgs <- c(
-  "shiny", "dplyr", "DBI", "RSQLite","rvat", "ollamar"
+  "shiny", "dplyr", "DBI", "RSQLite","rvat", "ollamar", "markdown"
 )
 
 missing <- required_pkgs[
