@@ -11,9 +11,9 @@
 
 <meta name="author" content="Diógenes Cruz de Arcelino" />
 
-<meta name="date" content="2026-09-21" />
+<meta name="date" content="2026-11-21" />
 
-<title>RVAT NLQ Interface Project Structure</title>
+<title>RVAT NLQ Interface Prototype Architecture and Project Structure</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -339,9 +339,10 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">RVAT NLQ Interface Project Structure</h1>
+<h1 class="title toc-ignore">RVAT NLQ Interface Prototype Architecture
+and Project Structure</h1>
 <h4 class="author">Diógenes Cruz de Arcelino</h4>
-<h4 class="date">2026-09-21</h4>
+<h4 class="date">2026-11-21</h4>
 
 </div>
 
@@ -350,7 +351,8 @@ display: none;
 <li><a href="#overview" id="toc-overview">📘 Overview</a></li>
 <li><a href="#project-structure" id="toc-project-structure">🗂️ Project
 Structure</a></li>
-<li><a href="#components" id="toc-components">🔍 Components</a></li>
+<li><a href="#system-architectur" id="toc-system-architectur">🏗️ System
+Architectur</a></li>
 <li><a href="#reproducibility" id="toc-reproducibility">🔁
 Reproducibility</a></li>
 </ul>
@@ -377,6 +379,19 @@ overflow-x: auto;
 display: block;
 }
 
+details {
+margin-bottom: 10px;
+}
+summary {
+font-size: 1.1em;
+font-weight: 600;
+cursor: pointer;
+padding: 4px 0;
+}
+summary:hover {
+color: #2c3e50;
+}
+
 .tree::-webkit-scrollbar {
 height: 8px;
 }
@@ -388,10 +403,12 @@ border-radius: 4px;
 <div id="overview" class="section level1">
 <h1>📘 Overview</h1>
 <div class="box">
-<p>This repository is organized to support a reproducible, maintainable,
-and scalable Natural Language Query (NLQ) interface for RVAT data. The
-structure separates core logic, application code, data pipelines, and
-analysis.</p>
+<p>This repository is organized to support a reproducible, maintainable
+and scalable Natural Language Query (NLQ) prototype for RVAT data. In
+addition to the Shiny application, the repository contains
+infrastructure for benchmark execution, model selection, manual EM/EX
+evaluation, performance aggregation, dataset validation, statistical
+analysis and reproducible research reporting.</p>
 </div>
 </div>
 <div id="project-structure" class="section level1">
@@ -400,198 +417,535 @@ analysis.</p>
 <pre>
 rvat-nlq-interface/
 └── rvat-nlq-interface/
-    │
-    ├── README.md                        #onboarding, quick start, usage
-    ├── LICENSE                          #project license
-    ├── .gitignore                       # git exclusion rules
-    ├── renv.lock                        # reproducible dependency snapshot
-    ├── .Rprofile                        # auto-initializes renv environment
-    │
-    ├── R/
-    │   ├── 01_db_connection.R           # initializes SQLite connection (data access layer)
-    │   ├── 02_ollama_config.R           # configures LLM (model, prompts, SQL generation)
-    │   ├── 03_query_execution.R         # executes NL → SQL → DB query pipeline
-    │   ├── 04_logging_pipeline.R        # wraps execution with logging, timing, and error capture
-    │   ├── 05_shiny_ui.R                # defines UI layout (inputs, outputs, panels)
-    │   └── 06_shiny_server.R            # handles reactivity, execution trigger, and UI updates
-    │
-    ├── app/
-    │   ├── rvat_nlq_app.R               # application entry point (loads pipeline + launches Shiny app)
-    │   └── rvat_greeting.md             # UI content (instructions, examples, user guidance)
-    │
-    ├── scripts/
-    │   ├── 00_renv_setup.R                # initialises project environment (renv setup/install)
-    |   ├── 10_data_preparation.R          # prepares RVAT database (full or synthetic dataset) 
-    |   ├── 20_select_model_guide.R        # guidance for selecting LLM models for evaluation/production
-    |   ├── 30_run_triage_llm.R            # runs multi-model inference (NL → SQL generation)
-    │   ├── 31_run_triage_executor.R       # executes generated SQL and collects performance metrics
-    │   ├── 50_process_logs.R              # cleans and transforms raw logs into analysis-ready format
-    │   └── 60_evaluate.R                  # computes evaluation metrics (EM / EX / VES)
-    │
-    ├── data/
-    │   ├── triage/                            # outputs from model comparison experiments
-    │   |    ├── triage_raw_metrics.csv        # raw performance metrics (latency, tokens, etc.)
-    │   |    └── triage_decision_matrix.csv    # model-level pass/fail selection results
-    |   ├── raw/                               # raw execution logs (.rds)
-    │   ├── processed/                         # cleaned and transformed datasets (.csv) 
-    │   └── evaluation/                 
-    │       └── golden_dataset.csv             # benchmark NL/SQL pairs for evaluation 
-    │
-    ├── analysis/
-    │   ├── 00_triage_filter.Rmd               # triage filtering + model selection reporting
-    |   ├── 01_exploratory.Rmd                 # exploratory analysis of logs/results
-    │   ├── 02_evaluation.Rmd                  # evaluation analysis (EM, EX, VES)
-    │   └── figures/
-    |       ├── triage_latency_comparison.png  # performance visualisation (speed vs throughput)
-    |       └── evaluation_accuracy.png        # model accuracy comparison
-    │
-    ├── tests/
-    |   ├── 100_checks_db_connection.R        # validates DB connectivity and schema access
-    │   ├── 200_check_ollama_config.R         # validates Ollama connection and model availability
-    |   ├── 300_check_query_execution.R       # validates NL → SQL → DB execution pipeline
-    │   ├── 400_check_logging_pipeline.R      # validates logging, timing, and output structure
-    |   ├── 500_check_shiny_ui.R              # validates UI structure and components
-    │   └── 600_check_shiny_server.R          # validates server logic and pipeline integration
-    |   
-    │   
-    |   
-    │
-    ├── docs/
-    │   ├── methodology.md                   # full methodological description (pipeline + evaluation)
-    │   └── architecture.md                  #system design and architecture overview
+  │
+  ├── README.md             # project overview, setup and usage instructions
+  ├── LICENSE               # project license
+  ├── .gitignore            # git exclusion rules
+  ├── renv.lock             # reproducible dependency snapshot
+  ├── .Rprofile             # auto-initializes renv project environment
+  │
+  ├── R/
+  │   ├── 01_db_connection.R           
+  │   │   # initializes SQLite connection (data access layer)
+  │   │
+  │   ├── 02_ollama_config.R           
+  │   │   # configures LLM (model, prompts, SQL generation)
+  │   │
+  │   ├── 03_query_execution.R         
+  │   │   # executes NL → SQL → DB query pipeline
+  │   │
+  │   ├── 04_logging_pipeline.R        
+  │   │   # wraps execution with logging, timing, and error capture
+  │   │
+  │   ├── 05_shiny_ui.R                
+  │   │   # defines UI layout (inputs, outputs, panels)
+  │   │
+  │   └── 06_shiny_server.R            
+  │       # handles reactivity, execution trigger, and UI updates
+  │   
+  ├── app/
+  │   ├── rvat_nlq_app.R               
+  │   │   # application entry point (loads pipeline + launches Shiny app)
+  │   │
+  │   └── rvat_greeting.md             
+  |       # UI content (instructions, examples, user guidance)
+  │   
+  ├── scripts/
+  │   ├── 00_renv_setup.R
+  │   │   # initializes reproducible project environment (laptop setup)
+  │   │
+  │   ├── 10_data_preparation.R
+  │   │   # prepares RVAT database (full and synthetic variants)
+  │   │
+  │   ├── 20_select_model_guide.R
+  │   │   # profiles available Ollama models to support triage model selection
+  │   │
+  │   ├── 30_run_triage_llm.R
+  │   │   # generates SQL and captures LLM performance metrics for 
+  │   │   # triage evaluation
+  │   │
+  │   ├── 31_run_triage_executor.R
+  │   │   # executes reproducible triage benchmarks and evaluates model 
+  │   │   # suitability
+  │   │
+  │   ├── 32_run_raw_data_capture.R
+  │   │   # executes benchmark questions repeatedly and captures 
+  │   │   # validated raw research data
+  │   │
+  │   ├── 33_prepare_evaluation_data.R
+  │   │   # transforms raw benchmark captures into manual EM/EX evaluation 
+  │   │   # datasets
+  │   │
+  │   ├── 34_analyse_evaluation.R
+  │   │   # builds a validated execution-level master dataset from scored 
+  │   │   # benchmark results
+  │   │
+  │   ├── 35_analyse_performance.R
+  │   │   # aggregates EM, EX and VES performance summaries at question 
+  │   │   # and question-type level
+  │   │
+  │   ├── 36_A_master_dataset_verification.R
+  │   │   # verifies dataset integrity, analytical completeness 
+  │   │   # and statistical readiness
+  │   │
+  │   ├── 36_B_visualise_EM_EX.R
+  │   │   # visualises overall EM and EX performance by question type 
+  │   │   # and database mode   
+  │   │
+  │   ├── 36_C_visualise_EM_EX_per_model.R
+  │   │   # visualises model-specific EM and EX performance across 
+  │   │   # database modes
+  │   │
+  │   ├── 37_A_EX_significance_tests.R
+  │   │   # tests whether EX performance differs significantly between LLM&#39;s 
+  │   │   # by question type
+  │   │
+  │   ├── 37_B_EX_performance_and_significance.R
+  │   │   # visualises EX performance together with statistical significance 
+  │   │   # results
+  │   │
+  │   ├── 38_A_VES_overall.R
+  │   │   # visualises overall VES performance by question type and 
+  │   │   # database mode
+  │   │
+  │   ├── 38_B_VES_per_model.R
+  │   │   # visualises model-specific VES performance across database modes
+  │   │ 
+  │   ├── 39_A_VES_significance_tests.R
+  │   │  # tests whether VES performance differs significantly between LLM&#39;s 
+  │   │  # by question type
+  │   │
+  │   ├── 39_B_VES_performance_and_significance.R
+  │   │   # visualises VES performance together with statistical significance 
+  │   │   # results
+  │   │
+  │   ├── 40_A_SQL_generation_quality.R
+  │   │    # analyses SQL generation quality to explain model performance 
+  │   │    # differences
+  │
+  ├── data/
+  │   ├── benchmark_questions.csv             
+  │   │   # benchmark specification containing research questions, expected SQL, 
+  │   │   #expected answers and question-type classifications
+  │   │    
+  │   ├── raw/
+  │   │   # immutable benchmark captures produced by 32_run_raw_data_capture.R
+  │   │   #
+  │   │   # naming convention:
+  │   │   # raw_capture_<model>_<db_mode>_<timestamp>.rds
+  │   │   #
+  │   │   # captures:
+  │   │   # - benchmark provenance (question_id, run_id, db_mode)
+  │   │   # - generated SQL
+  │   │   # - complete query results (result_full)
+  │   │   # - execution status
+  │   │   # - token metrics
+  │   │   # - end-to-end execution timing (VES)
+  │   │
+  │   ├── processed/
+  │   │   # evaluation-ready benchmark datasets generated 
+  │   │   # by 33_prepare_evaluation_data.R
+  │   │   #
+  │   │   # naming convention:
+  │   │   # raw_capture_&lt;...&gt;_evaluation_template.csv 
+  │   │   #
+  │   │   #combines raw benchmark captures with benchmark metadata
+  │   │   # and adds manual EM/EX scoring fields
+  │   │   
+  │   ├── analysis/
+  │   │   # manual evaluation, analytical datasets,
+  │   │   # statistical outputs and research reporting artefacts
+  │   │   │      
+  │   │   ├── scored/
+  │   │   │   # manually evaluated benchmark datasets containing
+  │   │   │   # EM and EX annotations assigned by the researcher
+  │   │   │   #
+  │   │   │   # naming convention:
+  │   │   │   # *_evaluation_scored-<iteration>.csv
+  │   │   │   # *_evaluation_scored-<iteration>.xlsx
+  │   │   │
+  │   │   ├── results/
+  │   │   │   # validated analytical datasets and statistical outputs
+  │   │   │   # generated throughout the evaluation pipeline
+  │   │   │   │
+  │   │   │   ├── 34_master_execution_level.csv
+  │   │   │   │   # trusted execution-level dataset combining
+  │   │   │   │   # machine-generated observations with manually
+  │   │   │   │   # assigned EM and EX scores
+  │   │   │   │
+  │   │   │   ├── 35_question_level.csv
+  │   │   │   │   # question-level performance summaries derived
+  │   │   │   │   # from five benchmark repetitions
+  │   │   │   │
+  │   │   │   ├── 35_question_type_level.csv
+  │   │   │   │   # question-type performance summaries for EM,
+  │   │   │   │   # EX and VES benchmarking
+  │   │   │   │
+  │   │   │   ├── 36_A_master_dataset_verification_report.txt
+  │   │   │   │   # analytical integrity, completeness and
+  │   │   │   │   # statistical-readiness verification report
+  │   │   │   │
+  │   │   │   ├── 36_A_variable_inventory.csv
+  │   │   │   │   # inventory of variables, datatypes,
+  │   │   │   │   # missing values and uniqueness characteristics
+  │   │   │   │
+  │   │   │   ├── 36_A_model_normality_summary.csv
+  │   │   │   │   # model-level VES normality assessment based on
+  │   │   │   │   # Shapiro-Wilk testing
+  │   │   │   │
+  │   │   │   ├── 36_A_VES_condition_summary.csv
+  │   │   │   │   # VES summaries per model and database mode
+  │   │   │   │
+  │   │   │   ├── 37_A_question_type_kruskal_wallis.csv
+  │   │   │   │   # EX significance testing between LLM&#39;s
+  │   │   │   │   # per benchmark question type
+  │   │   │   │
+  │   │   │   ├── 37_A_question_type_pairwise_wilcoxon.csv
+  │   │   │   │   # pairwise EX comparisons with Holm correction
+  │   │   │   │
+  │   │   │   ├── 39_A_question_type_kruskal_wallis.csv
+  │   │   │   │   # VES significance testing between LLM&#39;s
+  │   │   │   │   # per benchmark question type
+  │   │   │   │
+  │   │   │   └── 39_A_question_type_pairwise_wilcoxon.csv
+  │   │   │       # pairwise VES comparisons with Holm correction
+  │   │   │
+  │   │   ├── visualisations/
+  │   │   │   # publication-ready figures generated from validated
+  │   │   │   # analytical datasets and statistical outputs
+  │   │   │   │
+  │   │   │   ├── 36_B_EM_EX_by_question_type_overall.png
+  │   │   │   │   # overall EM and EX performance by question type and 
+  │   │   │   │   # database mode
+  │   │   │   │
+  │   │   │   ├── 36_C_EM_EX_<model>.png
+  │   │   │   │   # model-specific EM and EX performance by question type 
+  │   │   │   │   # and database mode
+  │   │   │   │
+  │   │   │   ├── 37_B_EX_performance_and_significance.png
+  │   │   │   │   # EX performance combined with Kruskal-Wallis
+  │   │   │   │   # and pairwise Wilcoxon significance results
+  │   │   │   │
+  │   │   │   ├── 38_A_VES_by_question_type_overall.png
+  │   │   │   │   # overall VES performance by question type and database mode
+  │   │   │   │
+  │   │   │   ├── 38_B_VES_<model>.png
+  │   │   │   │   # model-specific VES performance by question type 
+  │   │   │   │   # and database mode
+  │   │   │   │
+  │   │   │   ├── 39_B_VES_performance_and_significance.png
+  │   │   │   │   # VES performance combined with Kruskal-Wallis
+  │   │   │   │   # and pairwise Wilcoxon significance results
+  │   │   │   │
+  │   │   │   ├── 40_A_SQL_generation_quality.png
+  │   │   │   │   # SQL generation quality assessment explaining
+  │   │   │       # performance differences between evaluated LLM&#39;s
+  │   │   │ 
+  │   ├── triage/
+  │   │    # model-selection benchmark outputs generated by the 
+  │   │    # triage pipeline
+  │   │    │
+  │   │    ├── triage_raw_metrics.csv
+  │   │    │   # model execution metrics including token usage,
+  │   │    │   # latency, throughput and execution status
+  │   │    │
+  │   │    └── triage_decision_matrix.csv
+  │   │        # pass/fail suitability assessment for candidate LLM&#39;s
+  │   │ 
+  ├── utils/
+  |   ├── 100_checks_db_connection.R        
+  |   |   # validates DB connectivity and schema access
+  |   |
+  |   ├── 110_check_full_gdb_relationships.R
+  │   |   # validates Full-GDB table relationships and referential integrity
+  |   |
+  |   ├── 200_check_ollama_config.R         
+  |   |   # validates Ollama connection and model availability
+  |   |
+  |   ├── 300_check_query_execution.R       
+  |   |   # validates NL → SQL → DB execution pipeline
+  |   |
+  |   ├── 400_check_logging_pipeline.R      
+  |   |   # validates logging, timing, and output structure
+  |   |
+  |   ├── 500_check_shiny_ui.R              
+  |   |   # validates UI structure and components
+  |   |
+  |   ├── 600_check_shiny_server.R          
+  |   |   # validates server logic and pipeline integration
+  | 
+  ├── docs/
+  |   ├── methodology.md (planned)                   
+  |   |   # full methodological description (pipeline + evaluation)
+  |   |
+  |   ├── rvat-nlq-interface_project_structure.Rmd                  
+  │   │   # repository structure, research architecture and 
+  │   │   # reproducibility model
+  │   │   │
+  │   │   ├── figuren/
+  │   │   │   # architecture diagrams, workflow visualisations and
+  │   │   │   # application-sequence figures supporting system documentation
+  │   │   │   │
+  │   │   │   ├── Technical_Workflow_README_v1.0.png
+  │   │   │   │   # end-to-end RVAT NL → SQL workflow covering application
+  │   │   │   │   # initialisation, query execution, logging and persistence
+  
 </pre>
 </div>
 </div>
-<div id="components" class="section level1">
-<h1>🔍 Components</h1>
+<div id="system-architectur" class="section level1">
+<h1>🏗️ System Architectur</h1>
 <details open>
 <summary>
 <b>⚙️ Core Logic (R/)</b>
 </summary>
+<br>
 <div class="box">
+<p>The <code>R/</code> folder contains the authoritative production
+implementation of the RVAT NLQ system. These components power the Shiny
+application and are reused by the benchmark execution workflow to ensure
+that experimental observations are generated using the same query
+execution, logging and model configuration logic as the production
+environment. <br></p>
 <ul>
-<li>Database connection (<code>01_db_connection.R</code>)</li>
-<li>Ollama + system prompt (<code>02_ollama_config.R</code>)</li>
-<li>Pipeline NL → SQL → DB → result
-(<code>03_sql_pipeline.R</code>)</li>
-<li>Output logging + timing (VES) (<code>04_logging.R</code>)</li>
-<li>Shiny UI (<code>05_shiny_ui.R</code>)</li>
-<li>Shiny server (<code>06_shiny_server.R</code>)</li>
-</ul>
-</div>
-</details>
-<details>
-<summary>
-<b>🖥️ Application (app/)</b>
-</summary>
-<div class="box">
+<li><strong>01_db_connection.R</strong>
 <ul>
-<li><code>rvat_nlq_app.R</code>: Shiny-based NL → SQL interface<br />
-</li>
-<li><code>greeting.md</code>: UI onboarding content</li>
-</ul>
-</div>
-</details>
-<details>
-<summary>
-<b>🔄 Pipelines (scripts/)</b>
-</summary>
-<div class="box">
+<li>Establishes database connectivity and provides access to the active
+RVAT database context.</li>
+</ul></li>
+<li><strong>02_ollama_config.R</strong>
 <ul>
-<li><code>10_setup.R</code>: Environment setup<br />
-</li>
-<li><code>20_run_app.R</code>: Developer convenience script<br />
-</li>
-<li><code>30_process_logs.R</code>: Log processing (clean + transform
-logs)</li>
-<li><code>40_evaluate.R</code>: Evaluation pipeline (EM / EX / VES
-evaluation)</li>
-</ul>
-<p><strong>Exact Match (EM):</strong> Measured as whether the generated
-SQL query exactly matches the predefined golden (reference) SQL
-query.</p>
-<p><strong>Execution Match (EX):</strong><br />
-Measured as whether the result of executing the generated SQL query is
-identical to the result of executing the corresponding golden SQL
-query.</p>
-<p><strong>Latency (VES):</strong><br />
-Measured as total execution time from user query submission to database
-result return.</p>
-</div>
-</details>
-<details>
-<summary>
-<b>💾 Data Layer (data/)</b>
-</summary>
-<div class="box">
-<p><strong>Structure:</strong></p>
+<li>Configures Ollama models, prompt templates, model parameters and
+context construction.</li>
+</ul></li>
+<li><strong>03_query_execution.R</strong>
 <ul>
-<li><code>raw/</code> — raw outputs
-(<code>log_&lt;model&gt;_&lt;date&gt;.rds</code>)</li>
-<li><code>processed/</code> — cleaned and exported data (.csv)</li>
-<li><code>evaluation/</code> — golden dataset and evaluation
-outputs</li>
-</ul>
-<p><strong>Experiment Tracking:</strong></p>
-<p>Each experimental run is identified by:</p>
+<li>Executes the core Natural Language → SQL → Database workflow and
+retrieves query results.</li>
+</ul></li>
+<li><strong>04_logging_pipeline.R</strong>
 <ul>
-<li><code>model</code> — the LLM used (e.g., qwen2.5-coder)</li>
-<li><code>run_id</code> — unique identifier per run</li>
-</ul>
-<p>Logs are saved per run to enable reproducibility and model
-comparison.</p>
-</div>
-</details>
-<details>
-<summary>
-<b>📊 Analysis (analysis/)</b>
-</summary>
-<div class="box">
+<li>Captures execution telemetry, generated SQL, token usage, execution
+status, errors and VES metrics.</li>
+</ul></li>
+<li><strong>05_shiny_ui.R</strong>
 <ul>
-<li>Contains exploratory and evaluation reports</li>
-<li>Operates on processed logs (.csv derived from .rds)</li>
-<li>Produces visualisations and summaries for:
+<li>Defines the user interface layout, controls and presentation
+components.</li>
+</ul></li>
+<li><strong>06_shiny_server.R</strong>
 <ul>
-<li>Exact Match (EM)</li>
-<li>Execution Match (EX)</li>
-<li>Latency (VES)</li>
+<li>Coordinates user interactions and integrates the NLQ pipeline with
+the Shiny application.</li>
 </ul></li>
 </ul>
+<p><br> <b>Execution flow:</b> <br> User Query / Benchmark Question<br>
+↓<br> Database Context (01_db_connection.R)<br> ↓<br> Prompt
+Construction &amp; Model Configuration (02_ollama_config.R)<br> ↓<br>
+SQL Generation (LLM)<br> ↓<br> Query Execution
+(03_query_execution.R)<br> ↓<br> Logging &amp; Telemetry Collection
+(04_logging_pipeline.R)<br> ↓<br> Results<br> ↓<br> Shiny Interface
+(05_shiny_ui.R + 06_shiny_server.R)<br> or<br> Benchmark Data Capture
+(32_run_raw_data_capture.R)</p>
 </div>
 </details>
 <details>
 <summary>
-<b>✅ Testing (tests/)</b>
+<b>🧪 Research Pipeline (scripts/)</b>
 </summary>
+<br>
 <div class="box">
-<ul>
-<li>Verifies NL → SQL → DB pipeline behavior</li>
-<li>Includes functional checks used during development (demo validation
-steps)</li>
-</ul>
-<p><strong>Example test (future):</strong></p>
-<p>```r testthat::expect_true( grepl(“SELECT”, generate_sql_ollama(“show
-rows”)) )</p>
+<p>The <code>scripts/</code> folder contains the benchmarking,
+evaluation and analysis workflows used to assess Large Language Models
+(LLM’s) within the RVAT NLQ environment.</p>
+<p>Unlike the <code>R/</code> folder, which contains the authoritative
+production implementation, the research pipeline orchestrates data
+collection, manual evaluation, validation and statistical analysis
+around the production system. Benchmark executions deliberately reuse
+the production database, model configuration, query execution and
+logging components to ensure that experimental observations reflect
+production behaviour. <br></p>
+<p><br> <b>Research Workflow</b> <br></p>
+<p><b>1. Model Selection &amp; Triage</b> <br> Scripts:
+<code>20_select_model_guide.R</code>, <code>30_run_triage_llm.R</code>,
+<code>31_run_triage_executor.R</code> <br></p>
+<p>Purpose: Identify and benchmark candidate LLM’s before inclusion in
+the experimental workflow. <br><br></p>
+<p><b>2. Benchmark Data Collection</b> <br> Scripts:
+<code>32_run_raw_data_capture.R</code>,
+<code>33_prepare_evaluation_data.R</code>,
+<code>34_analyse_evaluation.R</code> <br></p>
+<p>Purpose: Execute benchmark questions through the production pipeline,
+prepare evaluation datasets and construct a validated execution-level
+master dataset. <br><br></p>
+<p><b>3. Performance Analysis &amp; Validation</b> <br> Scripts:
+<code>35_analyse_performance.R</code>,
+<code>36_A_master_dataset_verification.R</code> <br></p>
+<p>Purpose: Generate analytical datasets and verify completeness,
+consistency and statistical readiness. <br><br></p>
+<p><b>4. Visual Analytics</b> <br> Scripts:
+<code>36_B_visualise_EM_EX.R</code>,
+<code>36_C_visualise_EM_EX_per_model.R</code>,
+<code>38_A_VES_overall.R</code>, <code>38_B_VES_per_model.R</code>,
+<code>40_A_SQL_generation_quality.R</code> <br></p>
+<p>Purpose: Produce publication-ready figures used to interpret
+benchmark performance. <br><br></p>
+<p><b>5. Statistical Inference</b> <br> Scripts:
+<code>37_A_EX_significance_tests.R</code>,
+<code>37_B_EX_performance_and_significance.R</code>,
+<code>39_A_VES_significance_tests.R</code>,
+<code>39_B_VES_performance_and_significance.R</code> <br></p>
+<p>Purpose: Determine whether observed performance differences between
+LLM’s are statistically significant. <br><br></p>
+<p><b>Research Workflow</b> <br> Model Selection &amp; Triage<br> ↓<br>
+Benchmark Execution<br> ↓<br> Raw Data Capture<br> ↓<br> Manual EM / EX
+Evaluation<br> ↓<br> Master Dataset Construction<br> ↓<br> Performance
+Analysis<br> ↓<br> Dataset Validation<br> ↓<br> Visualisation &amp;
+Statistical Testing<br> ↓<br> Research Reporting <br> <br></p>
+<p><b>Benchmark Metrics</b> <br></p>
+<p><b>Exact Match (EM)</b><br> Manual assessment of whether the
+generated SQL corresponds to the benchmark reference query. <br></p>
+<p><b>Execution Match (EX)</b><br> Manual assessment of whether
+executing the generated SQL produces the expected benchmark result.
+<br></p>
+<p><b>Valid Execution Score (VES)</b><br> Execution-efficiency metric
+derived from end-to-end benchmark execution timing and used to compare
+performance across models and database configurations.</p>
 </div>
 </details>
 <details>
 <summary>
-<b>📚 Documentation (docs/)</b>
+<b>📊 Analysis &amp; Reporting (analysis/)</b>
 </summary>
+<br>
 <div class="box">
+<p>The <code>analysis/</code> folder contains the validated analytical
+outputs, statistical results and reporting artefacts generated by the
+benchmark pipeline. It forms the bridge between benchmark execution and
+research conclusions.</p>
+<p>Unlike the <code>scripts/</code> folder, which orchestrates the
+evaluation workflow, the <code>analysis/</code> folder stores the
+datasets, reports and visualisations that support interpretation,
+comparison and reporting of benchmark results.</p>
+<p>The analysis workflow operates on benchmark artefacts stored under
+<code>data/</code>, including raw benchmark captures, evaluation
+templates, manually scored datasets and validated analytical outputs.
+<br> <br></p>
+<p><b>Analytical Workflow</b> <br></p>
+<p>Raw Benchmark Data<br> ↓<br> Evaluation Templates<br> ↓<br> Manual EM
+/ EX Scoring<br> ↓<br> Execution-Level Dataset<br> ↓<br> Question-Level
+Analysis<br> ↓<br> Question-Type Analysis<br> ↓<br> Dataset
+Validation<br> ↓<br> Statistical Analysis<br> ↓<br> Visual Reporting
+<br></p>
+<p><br> <b>Scored Datasets</b> <br> Scripts:
+<code>33_prepare_evaluation_data.R</code>,
+<code>34_analyse_evaluation.R</code> <br></p>
+<p>Purpose: Preserve manually assigned EM and EX evaluations while
+maintaining a clear separation between machine-generated benchmark
+observations and human-generated assessment results. <br></p>
+<p><b>Validated Analytical Outputs</b> <br> Scripts:
+<code>34_analyse_evaluation.R</code>,
+<code>35_analyse_performance.R</code>,
+<code>36_A_master_dataset_verification.R</code>, <code>37_A_<em></code>,
+<code>39_A_</em></code> <br></p>
+<p>Purpose: Store trusted execution-level datasets, aggregated
+performance summaries, validation reports and statistical test results
+used throughout the research process. <br></p>
+<p><b>Visual Reporting</b> <br> Scripts:
+<code>36_B_visualise_EM_EX.R</code>,
+<code>36_C_visualise_EM_EX_per_model.R</code>,
+<code>37_B_EX_performance_and_significance.R</code>,
+<code>38_A_VES_overall.R</code>, <code>38_B_VES_per_model.R</code>,
+<code>39_B_VES_performance_and_significance.R</code>,
+<code>40_A_SQL_generation_quality.R</code> <br></p>
+<p>Purpose: Provide publication-ready visualisations for: - Exact Match
+(EM) - Execution Match (EX) - Valid Execution Score (VES) - SQL
+generation quality</p>
+<p>Visualisations support: - model comparisons; - database-mode
+comparisons; - performance interpretation; - statistical significance
+reporting. <br></p>
+<p><b>Research Outputs</b> <br> The artefacts generated within this
+folder provide the evidence base used to evaluate LLM behaviour, compare
+database configurations and report benchmark findings.</p>
+</div>
+</details>
+<details>
+<summary>
+<b>✅ Quality Assurance &amp; Validation (utils/)</b>
+</summary>
+<br>
+<div class="box">
+<p>The <code>utils/</code> folder contains diagnostic and validation
+scripts used to verify that the application, database configuration and
+execution pipeline behave as expected before benchmark experiments are
+performed. <br></p>
+<p><br> <b>Infrastructure Validation</b> <br> -
+<code>100_checks_db_connection.R</code> - Validates database
+connectivity and schema accessibility.</p>
 <ul>
-<li>Methodology<br />
-</li>
-<li>Architecture design</li>
+<li><code>110_check_full_gdb_relationships.R</code>
+<ul>
+<li>Validates Full-GDB table relationships and referential
+integrity.</li>
+</ul></li>
+<li><code>200_check_ollama_config.R</code>
+<ul>
+<li>Validates Ollama connectivity and model availability.</li>
+</ul></li>
 </ul>
+<p><br> <b>Pipeline Validation</b> <br> -
+<code>300_check_query_execution.R</code> - Validates end-to-end Natural
+Language → SQL → Database execution.</p>
+<ul>
+<li><code>400_check_logging_pipeline.R</code>
+<ul>
+<li>Validates execution logging, timing capture and metadata
+collection.</li>
+</ul></li>
+</ul>
+<p><br> <b>Application Validation</b> <br> -
+<code>500_check_shiny_ui.R</code> - Validates Shiny user-interface
+components and layout.</p>
+<ul>
+<li><code>600_check_shiny_server.R</code>
+<ul>
+<li>Validates server-side integration and application workflow.</li>
+</ul></li>
+</ul>
+<p><br> <b>Validation Workflow</b> <br> Database Connectivity<br> ↓<br>
+Database Integrity<br> ↓<br> Model Availability<br> ↓<br> Query
+Execution Pipeline<br> ↓<br> Logging &amp; Telemetry<br> ↓<br> User
+Interface<br> ↓<br> Application Integration <br></p>
+<p><b>Related Development Utilities</b> <br> Model-selection and
+benchmarking scripts in the <code>scripts/</code> folder complement
+these validation checks by helping developers assess model availability,
+benchmark candidate LLM’s and make informed model-selection decisions
+before proceeding with application deployment or experimental
+evaluation. <br></p>
+<p>Related scripts: - <code>20_select_model_guide.R</code> -
+<code>30_run_triage_llm.R</code> -
+<code>31_run_triage_executor.R</code></p>
+<p><br> These validation and benchmarking utilities help ensure that
+benchmark results and application behaviour originate from a verified,
+reproducible and operationally suitable execution environment.</p>
 </div>
 </details>
 </div>
 <div id="reproducibility" class="section level1">
 <h1>🔁 Reproducibility</h1>
 <div class="box">
-<p>Restore the environment:</p>
-<p>```r renv::restore()</p>
+<p>Reproducibility is a core design principle of the RVAT NLQ project.
+Application behaviour, benchmark executions and analytical results can
+be reproduced across development, research and deployment environments.
+<br></p>
+<p><b>Version Control</b> <br> - GitHub manages source-code, benchmark
+and documentation changes. - Repository history provides traceability
+for application and research developments. <br></p>
+<p><b>Environment Management</b> <br> - <code>renv</code> maintains a
+reproducible R environment. - Package versions are captured in
+<code>renv.lock</code>. - <code>.Rprofile</code> automatically activates
+the project environment. <br></p>
+<p>Restore the environment: ```r renv::restore()</p>
 </div>
 </div>
 
