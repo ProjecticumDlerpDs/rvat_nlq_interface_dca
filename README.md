@@ -4,8 +4,8 @@ output:
 ---
 RVAT NLQ Interface
 ================
-Version: 1.0 \
-Date:    2026.11.10
+Version: 1.1 \
+Date:    2026.11.22
 
 
 A Natural Language Query (NLQ) interface prototype for exploring RVAT genetic
