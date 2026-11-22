@@ -1,6 +1,5 @@
 ---
 output:
-  word_document: default
   html_document: default
 ---
 RVAT NLQ Interface
@@ -55,9 +54,25 @@ The project establishes three core technical objectives:
 ------------------------------------------------------------------------
 
 
-# Application Architecture Overview
+# RVAT NLQ Architecture Overview
 
-The application consists of six main components, grouped under /R folder:
+The RVAT NLQ Interface consists of a production application layer, a benchmark and 
+evaluation workflow, and supporting analysis, validation and reporting components. 
+Together these components enable reproducible evaluation of Large Language Models (LLM's) 
+against RVAT benchmark questions.
+
+For a detailed description of the repository structure, research workflow, validation strategy and reproducibility model, see:
+
+
+**[RVAT NLQ Interface Prototype Architecture and Project Structure](docs/rvat-nlq-interface_project_structure.html)**
+
+([RMarkdown source](docs/rvat-nlq-interface_project_structure.Rmd))
+
+
+
+## Production Application Components
+
+The production application consists of six core components located under the `/R/` folder:
 
 | Script                  | Purpose                                |
 | ----------------------- | -------------------------------------- |
@@ -70,21 +85,19 @@ The application consists of six main components, grouped under /R folder:
 
 
 These components are orchestrated through:
-"/app/rvat_nlq_app.R""
 
-This is the **only script that end users need to run **.
-All other scripts are loaded automatically.
+`/app/rvat_nlq_app.R`
+
+This is the only script end users need to run. All other production components are loaded automatically.
 
 
-# Technical Workflow Architecture 
+## Production Application Workflow
 
-![Figure 01: Technical Workflow Architecture. The figure presents the technical architecture of the RVAT NL→SQL application, divided into three main processes: (1) application initialisation, (2) natural-language-to-SQL query processing, and (3) query history storage and management. During initialisation, the required database, model and server components are loaded. During a query session, a natural-language question is translated into SQL, executed against the database, and returned to the user while execution data are logged simultaneously. Optional user actions support saving, retrieving and clearing query history. According to the legend, solid black arrows represent control and process flow, whereas blue dashed arrows represent data and information flow. The figure provides an overview of the analysis pipeline from user query to stored result](docs/figuren/Technical_Workflow_README_v1.0.png)
-* **Figure 01:** The figure presents the technical architecture of the RVAT NL→SQL application, divided into three main processes: (1) application initialisation, (2) natural-language-to-SQL query processing, and (3) query history storage and management. During initialisation, the required database, model and server components are loaded. During a query session, a natural-language question is translated into SQL, executed against the database, and returned to the user while execution data are logged simultaneously. Optional user actions support saving, retrieving and clearing query history. According to the legend, solid black arrows represent control and process flow, whereas blue dashed arrows represent data and information flow. The figure provides an overview of the analysis pipeline from user query to stored result.*
+![](docs/figuren/Technical_Workflow_README_v2.0.png){width=14in}
 
+*Figure 01. Production workflow of the RVAT NLQ application prototype. During application initialisation, database, model and server components are loaded. Natural-language questions are translated into SQL, executed against the database and returned to the user while execution metadata are logged. Optional user actions support saving, loading and clearing query history. Black arrows represent control flow and blue dashed arrows represent data flow.*
 
 ------------------------------------------------------------------------
-
-
 
 # System Requirements
 
@@ -154,7 +167,6 @@ For troubleshooting, see **Utilities and Troubleshooting** below.
 
 
 **Local Laptop Environment**\
-Experimental:\
 Local Windows laptop execution is supported although very experimental at this stage and much dependent on available hardware.\
 Local Windows laptop execution is thus provided on a best-effort basis for reproducibility and demonstration purposes.\
 
@@ -184,7 +196,7 @@ Configuration A:                    \
 • CPU: 4 cores                      \
 • 8 GB RAM                          \
 
-Configuration B:
+Configuration B:                    \
 • HP EliteBook 6 G1i                \
 • Windows 11 Enterprise (x64)       \
 • Intel Core Ultra 5 225U           \
@@ -206,12 +218,12 @@ Without a correctly installed and configured `Rtools45`, package restoration may
 **Setup Script for Laptop Users** \
 To streamline setup and resolve cross-platform dependency issues (especially on Windows), an automated setup script is included in the project root: `/scripts/00_renv_setup.R`.
 
-This script automatically:
-* Verifies and installs `renv` and `BiocManager` (ensuring correct Bioconductor repository mapping).
-* Restores the exact project dependencies via `renv::restore()`.
+This script automatically:        \
+* Verifies and installs `renv` and `BiocManager` (ensuring correct Bioconductor repository mapping). \
+* Restores the exact project dependencies via `renv::restore()`.                                     \
 * Conducts post-installation checks to ensure core packages (`shiny`, `dplyr`, `DBI`, `RSQLite`, `rvat`, `ollamar`) are ready.
 
-#### To Getting Started on Windows Laptop
+#### Getting Started on Windows Laptop
 
 1. Ensure at least:                                     \
 • Windows 11 Pro (x64)                                  \
@@ -268,10 +280,55 @@ The scripts follow the application pipeline sequentially and are intended for de
 | Script | Purpose | Use case |
 |---|---|---|
 | `100_check_db_connection.R` | Validates database connectivity, schema access, queries, and basic performance. | Run first to verify the database and active table are accessible and functioning correctly. |
+| `110_check_full_gdb_relationships.R` | Validates Full-GDB table relationships and referential integrity. | Run after the database connection check when using `full_gdb` to verify that required cross-table relationships are available. |
 | `200_check_ollama_config.R` | Validates Ollama connectivity, model availability, prompt construction, and SQL generation. | Use when configuring or troubleshooting the local LLM and NL → SQL generation. |
 | `300_check_query_execution.R` | Validates the complete NL → SQL → database execution layer, including output structure and error handling. | Use to verify that natural-language queries can be converted to SQL and executed successfully. |
 | `400_check_logging_pipeline.R` | Validates query logging, model metadata, execution timing, and log management. | Use to confirm that query execution is correctly captured by the logging pipeline. |
 | `500_check_shiny_ui.R` | Performs static validation of the Shiny UI structure, required components, and supporting files. | Use after UI changes to check that required inputs, outputs, and resources are present. |
-| `600_check_shiny_server.R` | Validates Shiny server logic and its integration with query execution, logging, and log saving. | Use to test backend integration without launching the full Shiny application. |
+| `600_check_shiny_server.R` | Validates Shiny server logic and its integration with query execution, logging, and log saving. | Use to test back-end integration without launching the full Shiny application. |
 
 
+## Model Selection and Triage
+
+The triage scripts support developers who configure, evaluate or extend the application. These scripts are not required for normal end-user operation but provide a structured approach for assessing candidate LLM's before inclusion in the benchmark workflow.
+
+| Script | Purpose |
+|----------|----------|
+| `20_select_model_guide.R` | Profiles locally available Ollama models and supports model-selection decisions. |
+| `30_run_triage_llm.R` | Generates SQL and captures LLM performance metrics for comparative evaluation. |
+| `31_run_triage_executor.R` | Executes reproducible triage benchmarks and evaluates model suitability. |
+
+
+## Software Dependencies and Citations
+
+This project builds upon several open-source tools and packages. If you use or extend this project, please consider citing the corresponding software according to the guidance provided by the maintainers.
+
+| Software | Role in this project |
+|-----------|---------------------|
+| RVAT / rvatData | Genetic association analysis framework and reference datasets |
+| Ollama | Local LLM hosting and inference platform |
+| ollamar | R interface for Ollama |
+| Shiny | Web application framework |
+| QueryChat (in demo) | Early proof-of-concept experimentation |
+| Ellmer (in demo) | Early QueryChat-based prototype experimentation |
+
+Formal citation records are available in [`docs/citations.bib`](docs/citations.bib)
+
+
+## Feedback
+
+Feedback and user experiences are welcome through the repository's GitHub Discussions page.
+
+👉 [Start a new discussion](https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose)
+
+If you use the RVAT NLQ Interface, it would be particularly interesting to hear about:
+
+- Research or analytical use cases;
+- Query quality and usability;
+- LLM's and configurations tested;
+- Laptop performance and hardware specifications.
+
+Community feedback helps identify improvement opportunities and supports future development of the project.
+
+👉 Start a new discussion:
+https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose

@@ -1,0 +1,54 @@
+cff-version: 1.2.0
+
+title: "RVAT NLQ Interface"
+
+message: >
+  If you use this software, please cite it using the metadata
+  provided in this file.
+
+type: software
+
+authors:
+  - family-names: "Cruz de Arcelino"
+    given-names: "Diógenes"
+
+version: "1.0"
+
+date-released: "2026-11-10"
+
+abstract: >
+  RVAT NLQ Interface is a Natural Language Query (NLQ) prototype that
+  evaluates the use of locally hosted Large Language Models (LLM's) for
+  translating natural-language questions into SQL queries against Rare
+  Variant Association Toolkit (RVAT) databases. The project includes
+  a production Shiny application, benchmark execution workflows,
+  manual Exact Match (EM) and Execution Match (EX) evaluation, as well as 
+  Valid Efficiency Score (VES), amongst other performance benchmarking, statistical analysis and reproducible
+  research reporting.
+
+keywords:
+  - RVAT
+  - Natural Language Query
+  - NLQ
+  - Large Language Model
+  - LLM
+  - SQL
+  - Ollama
+  - Shiny
+  - Benchmarking
+  - Reproducible Research
+
+license: "GPL-3.0"
+
+repository-code: "https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca"
+
+url: "https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca"
+
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Cruz de Arcelino"
+      given-names: "Diógenes"
+  title: "RVAT NLQ Interface"
+  version: "1.0"
+  date-released: "2026-11-10"
