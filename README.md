@@ -312,14 +312,14 @@ This project builds upon several open-source tools and packages. If you use or e
 | QueryChat (in demo) | Early proof-of-concept experimentation |
 | Ellmer (in demo) | Early QueryChat-based prototype experimentation |
 
+
 Formal citation records are available in [`docs/citations.bib`](docs/citations.bib)
 
 
 ## Feedback
 
 Feedback and user experiences are welcome through the repository's GitHub Discussions page.
-
-👉 [Start a new discussion](https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose)
+Community feedback helps identify improvement opportunities and supports future development of the project.
 
 If you use the RVAT NLQ Interface, it would be particularly interesting to hear about:
 
@@ -328,7 +328,5 @@ If you use the RVAT NLQ Interface, it would be particularly interesting to hear 
 - LLM's and configurations tested;
 - Laptop performance and hardware specifications.
 
-Community feedback helps identify improvement opportunities and supports future development of the project.
 
-👉 Start a new discussion:
-https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose
+👉 [Start a new discussion:](https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose)
