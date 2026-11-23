@@ -360,7 +360,7 @@ rvat-nlq-interface/
 
 
 
-# 🏗️ System Architectur
+# 🏗️ RVAT NLQ Architecture Overview
 
 <details open>
 <summary><b>⚙️ Core Logic (R/)</b></summary>
