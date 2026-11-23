@@ -329,4 +329,4 @@ If you use the RVAT NLQ Interface, it would be particularly interesting to hear 
 - Laptop performance and hardware specifications.
 
 
-👉 [Start a new discussion:](https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose)
+👉 [Start a new discussion](https://github.com/ProjecticumDlerpDs/rvat_nlq_interface_dca/discussions/new/choose)
